@@ -29,6 +29,7 @@ class Localization {
   }
 
   String get countries => _sentences['countries'];
+  String get noData => _sentences['no_data'];
 }
 
 class LocalizationDelegate extends LocalizationsDelegate<Localization> {

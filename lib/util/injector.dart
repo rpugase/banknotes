@@ -1,5 +1,6 @@
 import 'package:banknotes/data/repository/catalog.dart';
 import 'package:banknotes/domain/data_manager.dart';
+import 'package:banknotes/presentation/catalog/bloc.dart';
 
 class Injector {
   static final Injector _injector = Injector._internal();
@@ -11,8 +12,10 @@ class Injector {
 
   Injector._internal();
 
-  DataManager get dataManager => DataManager(_catalogRepository());
-
   CatalogRepository _catalogRepository() =>
       (_useMock) ? CatalogMockRepository() : CatalogDbRepository();
+
+  DataManager get _dataManager => DataManager(_catalogRepository());
+
+  CatalogBloc catalogBloc() => CatalogBloc(_dataManager);
 }

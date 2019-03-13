@@ -1,4 +1,4 @@
-import 'package:banknotes/presentation/catalog.dart';
+import 'package:banknotes/presentation/catalog/page.dart';
 import 'package:banknotes/util/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
