@@ -26,8 +26,8 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  Locale _localeResolutionCallback(
-      Locale locale, Iterable<Locale> supportedLocales) {
+  Locale _localeResolutionCallback(Locale locale,
+      Iterable<Locale> supportedLocales) {
     if (locale != null)
       for (Locale supportedLocale in supportedLocales) {
         if (supportedLocale.languageCode == locale.languageCode ||
