@@ -1,9 +1,9 @@
-import 'package:banknotes/domain/model/face_value.dart';
+import 'package:banknotes/domain/model/banknote.dart';
 
 class Modification {
-  Modification(this.id, this.name, [this.faceValues]);
+  Modification(this.id, this.name, [this.banknotes]);
 
   final int id;
   final String name;
-  final List<FaceValue> faceValues;
+  final List<Banknote> banknotes;
 }

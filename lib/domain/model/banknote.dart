@@ -1,16 +1,13 @@
 import 'package:banknotes/domain/model/image.dart';
+import 'package:banknotes/domain/model/own_banknote.dart';
 
 class Banknote {
-  Banknote(this.id, this.quality,
-      {this.price, this.currency, this.comment, this.images, this.date});
+  Banknote(this.id, this.name, this.description,
+      {this.images, this.ownBanknotes});
 
   final int id;
-  final String price;
-  final String currency;
-  final _QualityType quality;
-  final String comment;
+  final String name;
+  final String description;
   final List<Image> images;
-  final DateTime date;
+  final List<OwnBanknote> ownBanknotes;
 }
-
-enum _QualityType { good, bad }
