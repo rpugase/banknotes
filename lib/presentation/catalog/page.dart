@@ -15,8 +15,6 @@ class _CatalogPageState extends State<CatalogPage> {
 
   @override
   Widget build(BuildContext context) {
-    _bloc.loadCatalogs();
-
     return Scaffold(
       appBar: AppBar(
         title: Text(Localization.of(context).countries),
@@ -31,10 +29,13 @@ class _CatalogPageState extends State<CatalogPage> {
       ),
       body: StreamBuilder<CatalogState>(
         stream: _bloc.catalogStream,
+        initialData: CatalogInitState(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           CatalogState _catalogState = snapshot.data;
 
-          if (_catalogState is CatalogLoadingState) {
+          if (_catalogState is CatalogInitState) {
+            return _buildInit();
+          } else if (_catalogState is CatalogLoadingState) {
             return _buildLoading();
           }
           else if (_catalogState is CatalogEmptyDataState) {
@@ -47,6 +48,11 @@ class _CatalogPageState extends State<CatalogPage> {
         },
       ),
     );
+  }
+
+  Widget _buildInit() {
+    _bloc.loadCatalogs();
+    return Container();
   }
 
   Widget _buildLoading() {

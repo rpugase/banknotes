@@ -31,6 +31,7 @@ class CatalogState {
   factory CatalogState._catalogsData(List<Catalog> catalogs) = CatalogDataState;
 }
 
+class CatalogInitState extends CatalogState {}
 class CatalogLoadingState extends CatalogState {}
 class CatalogEmptyDataState extends CatalogState {}
 class CatalogDataState extends CatalogState {
