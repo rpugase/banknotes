@@ -1,5 +1,6 @@
 import 'package:banknotes/domain/model/catalog.dart';
 import 'package:banknotes/presentation/catalog/bloc.dart';
+import 'package:banknotes/presentation/full_catalog/page.dart';
 import 'package:banknotes/util/injector.dart';
 import 'package:banknotes/util/localization.dart';
 import 'package:flutter/material.dart';
@@ -18,13 +19,10 @@ class _CatalogPageState extends State<CatalogPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(Localization.of(context).countries),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: GestureDetector(
-              child: Icon(Icons.add),
-            ),
-          )
+        actions: <Widget>[
+          new IconButton(icon: new Icon(Icons.add),
+            onPressed: _goToFullCatalog,
+          ),
         ],
       ),
       body: StreamBuilder<CatalogState>(
@@ -82,6 +80,13 @@ class _CatalogPageState extends State<CatalogPage> {
   void dispose() {
     _bloc.dispose();
     super.dispose();
+  }
+
+  void _goToFullCatalog() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => FullCatalogPage()),
+    );
   }
 }
 

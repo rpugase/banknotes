@@ -29,6 +29,7 @@ class Localization {
   }
 
   String get countries => _sentences['countries'];
+  String get catalogs => _sentences['full_catalogs'];
   String get noData => _sentences['no_data'];
 }
 
