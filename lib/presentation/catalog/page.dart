@@ -82,11 +82,13 @@ class _CatalogPageState extends State<CatalogPage> {
     super.dispose();
   }
 
-  void _goToFullCatalog() {
-    Navigator.push(
+  void _goToFullCatalog() async {
+    await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => FullCatalogPage()),
     );
+
+    _bloc.loadCatalogs();
   }
 }
 

@@ -1,19 +1,19 @@
 import 'dart:async';
 
-import 'package:banknotes/domain/data_manager.dart';
+import 'package:banknotes/domain/catalog.dart';
 import 'package:banknotes/domain/model/catalog.dart';
 
 class FullCatalogBloc {
-  FullCatalogBloc(this._dataManager);
+  FullCatalogBloc(this._catalogRepository);
 
-  final DataManager _dataManager;
+  final CatalogRepository _catalogRepository;
 
   final _catalogStreamController = StreamController<FullCatalogState>();
   Stream<FullCatalogState> get catalogStream => _catalogStreamController.stream;
 
   void loadCatalogs() {
     _catalogStreamController.sink.add(FullCatalogState._loading());
-    _dataManager.getAllCatalogs().then((List<Catalog> catalogs) {
+    _catalogRepository.getAllCatalogs().then((List<Catalog> catalogs) {
       _catalogStreamController.sink.add(
           FullCatalogState._catalogsData(catalogs));
     });
