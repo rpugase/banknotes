@@ -3,7 +3,7 @@ import 'package:banknotes/domain/model/own_banknote.dart';
 
 class Banknote {
   Banknote(this.id, this.name, this.description,
-      {this.images, this.ownBanknotes});
+      { this.images = const [], this.ownBanknotes = const [] });
 
   final int id;
   final String name;

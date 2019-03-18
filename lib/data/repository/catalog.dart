@@ -7,7 +7,8 @@ import 'package:banknotes/domain/model/own_banknote.dart';
 abstract class CatalogRepository {
   Future<List<Catalog>> getFavouriteCatalogs();
   Future<List<Catalog>> getAllCatalogs();
-  Future<List<Catalog>> replaceCatalogsPositions(Catalog oldCatalog, Catalog newCatalog);
+  Future<List<Catalog>> replaceCatalogsPositions(int oldCatalogId, int newCatalogId);
+  Future<List<Modification>> getFullCatalog(int catalogId);
 }
 
 class CatalogDbRepository implements CatalogRepository {
@@ -18,8 +19,11 @@ class CatalogDbRepository implements CatalogRepository {
   Future<List<Catalog>> getAllCatalogs() async => throw UnimplementedError();
 
   @override
-  Future<List<Catalog>> replaceCatalogsPositions(Catalog oldCatalog, Catalog newCatalog)
+  Future<List<Catalog>> replaceCatalogsPositions(int oldCatalogId, int newCatalogId)
   async => throw UnimplementedError();
+
+  @override
+  Future<List<Modification>> getFullCatalog(int catalogId) async => throw UnimplementedError();
 }
 
 class CatalogMockRepository implements CatalogRepository {
@@ -62,10 +66,14 @@ class CatalogMockRepository implements CatalogRepository {
   }
 
   @override
-  Future<List<Catalog>> replaceCatalogsPositions(Catalog oldCatalog, Catalog newCatalog) async {
+  Future<List<Catalog>> replaceCatalogsPositions(int oldCatalogId, int newCatalogId) async {
+    return await Future.delayed(Duration(seconds: 1));
+  }
+
+  @override
+  Future<List<Modification>> getFullCatalog(int catalogId) async {
     await Future.delayed(Duration(seconds: 1));
 
-    _catalogs.insert(_catalogs.indexOf(newCatalog), _catalogs.removeAt(_catalogs.indexOf(oldCatalog)));
-    return _catalogs.where((catalog) => catalog.isFavourite).toList();
+    return _catalogs.where((catalog) => catalog.id == catalogId).first.modifications;
   }
 }

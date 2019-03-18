@@ -1,6 +1,7 @@
 import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/catalog.dart';
 import 'package:banknotes/presentation/full_catalog/page.dart';
+import 'package:banknotes/presentation/modification/page.dart';
 import 'package:banknotes/util/injector.dart';
 import 'package:banknotes/util/localization.dart';
 import 'package:flutter/material.dart';
@@ -79,6 +80,7 @@ class _CatalogPageState extends State<CatalogPage> {
       ),
       title: Text(catalog.name),
       trailing: Icon(Icons.menu),
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => ModificationPage(catalog))),
     );
   }
 
@@ -102,7 +104,7 @@ class _CatalogPageState extends State<CatalogPage> {
   void _openFullCatalogPage() async {
     await Navigator.of(context).push(MaterialPageRoute(builder: (context) => FullCatalogPage()));
 
-//    _loadData();
+    _loadData();
   }
 
   Iterable<Widget> _divideTiles({@required Iterable<Widget> tiles, Color color}) sync* {
