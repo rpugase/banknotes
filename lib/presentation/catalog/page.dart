@@ -1,5 +1,5 @@
+import 'package:banknotes/domain/catalog.dart';
 import 'package:banknotes/domain/model/catalog.dart';
-import 'package:banknotes/presentation/catalog/bloc.dart';
 import 'package:banknotes/presentation/full_catalog/page.dart';
 import 'package:banknotes/util/injector.dart';
 import 'package:banknotes/util/localization.dart';
@@ -12,7 +12,15 @@ class CatalogPage extends StatefulWidget {
 
 class _CatalogPageState extends State<CatalogPage> {
 
-  CatalogBloc _bloc = Injector().catalogBloc();
+  CatalogRepository _repository = Injector().catalogRepository;
+  bool _isLoading = true;
+  List<Catalog> _catalogs = [];
+  
+  @override
+  void initState() {
+    _loadData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,37 +28,17 @@ class _CatalogPageState extends State<CatalogPage> {
       appBar: AppBar(
         title: Text(Localization.of(context).countries),
         actions: <Widget>[
-          new IconButton(icon: new Icon(Icons.add),
-            onPressed: _goToFullCatalog,
+          new IconButton(icon: Icon(Icons.add),
+            onPressed: _openFullCatalogPage,
           ),
         ],
       ),
-      body: StreamBuilder<CatalogState>(
-        stream: _bloc.catalogStream,
-        initialData: CatalogInitState(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          CatalogState _catalogState = snapshot.data;
-
-          if (_catalogState is CatalogInitState) {
-            return _buildInit();
-          } else if (_catalogState is CatalogLoadingState) {
-            return _buildLoading();
-          }
-          else if (_catalogState is CatalogEmptyDataState) {
-            return _buildEmpty();
-          }
-          else if (_catalogState is CatalogDataState) {
-            CatalogDataState catalogDataState = _catalogState;
-            return _buildContent(catalogDataState.catalogs);
-          }
-        },
+      body: Container(
+        child : (_isLoading) ? _buildLoading()
+            : (_catalogs.isEmpty) ? _buildEmpty() 
+            : _buildContent(_catalogs),
       ),
     );
-  }
-
-  Widget _buildInit() {
-    _bloc.loadCatalogs();
-    return Container();
   }
 
   Widget _buildLoading() {
@@ -69,50 +57,77 @@ class _CatalogPageState extends State<CatalogPage> {
   }
 
   Widget _buildContent(List<Catalog> catalogs) {
-    return ListView.separated(
-      itemBuilder: (context, index) => _CatalogHolder(catalogs[index]),
-      itemCount: catalogs.length,
-      separatorBuilder: (BuildContext context, int index) => Divider(color: Colors.grey),
+    return Scrollbar(
+      child: ReorderableListView(
+        children: _divideTiles(
+          color: Colors.grey,
+          tiles: catalogs.map(_buildCategoryTile).toList(),
+        ).toList(),
+        onReorder: _replaceCatalogsPositions,
+      ),
     );
   }
 
-  @override
-  void dispose() {
-    _bloc.dispose();
-    super.dispose();
+  Widget _buildCategoryTile(Catalog catalog) {
+    return ListTile(
+      key: Key(catalog.id.toString()),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      leading: Image.network(
+        catalog.image.path,
+        width: 48.0,
+        height: 48.0,
+      ),
+      title: Text(catalog.name),
+      trailing: Icon(Icons.menu),
+    );
   }
 
-  void _goToFullCatalog() async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => FullCatalogPage()),
+  void _loadData() {
+    _repository.getFavouriteCatalogs().then((catalogs) {
+      setState(() {
+        _catalogs = catalogs;
+        _isLoading = false;
+      });
+    });
+  }
+
+  void _replaceCatalogsPositions(int oldIndex, int newIndex) {
+    _repository.replaceCatalogsPositions(_catalogs[oldIndex], _catalogs[newIndex]).then((catalogs) => {
+      setState(() {
+        _catalogs = catalogs;
+      })
+    }, onError: (error) => print(error.toString()));
+  }
+
+  void _openFullCatalogPage() async {
+    await Navigator.of(context).push(MaterialPageRoute(builder: (context) => FullCatalogPage()));
+
+//    _loadData();
+  }
+
+  Iterable<Widget> _divideTiles({@required Iterable<Widget> tiles, Color color}) sync* {
+    assert(tiles != null);
+    assert(color != null || context != null);
+
+    final Iterator<Widget> iterator = tiles.iterator;
+    final bool isNotEmpty = iterator.moveNext();
+
+    final Decoration decoration = BoxDecoration(
+      border: Border(
+        bottom: Divider.createBorderSide(context, color: color),
+      ),
     );
 
-    _bloc.loadCatalogs();
-  }
-}
-
-class _CatalogHolder extends StatelessWidget {
-  _CatalogHolder(this._country);
-
-  final Catalog _country;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-        child: Row(
-          children: [
-            Image.network(
-              _country.image.path,
-              width: 48.0,
-              height: 48.0,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(_country.name),
-            ),
-          ],
-        ));
+    Widget tile = iterator.current;
+    while (iterator.moveNext()) {
+      yield DecoratedBox(
+        key: UniqueKey(),
+        position: DecorationPosition.foreground,
+        decoration: decoration,
+        child: tile,
+      );
+      tile = iterator.current;
+    }
+    if (isNotEmpty) yield tile;
   }
 }

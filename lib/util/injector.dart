@@ -1,5 +1,4 @@
 import 'package:banknotes/domain/catalog.dart';
-import 'package:banknotes/presentation/catalog/bloc.dart';
 import 'package:banknotes/presentation/full_catalog/bloc.dart';
 
 class Injector {
@@ -12,8 +11,7 @@ class Injector {
 
   Injector._internal();
 
-  CatalogRepository _catalogRepository = (_useMock) ? CatalogMockRepository() : CatalogDbRepository();
+  CatalogRepository catalogRepository = (_useMock) ? CatalogMockRepository() : CatalogDbRepository();
 
-  CatalogBloc catalogBloc() => CatalogBloc(_catalogRepository);
-  FullCatalogBloc fullCatalogBloc() => FullCatalogBloc(_catalogRepository);
+  FullCatalogBloc fullCatalogBloc() => FullCatalogBloc(catalogRepository);
 }

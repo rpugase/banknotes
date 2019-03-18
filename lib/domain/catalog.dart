@@ -7,6 +7,7 @@ import 'package:banknotes/domain/model/own_banknote.dart';
 abstract class CatalogRepository {
   Future<List<Catalog>> getFavouriteCatalogs();
   Future<List<Catalog>> getAllCatalogs();
+  Future<List<Catalog>> replaceCatalogsPositions(Catalog oldIndex, Catalog newIndex);
 }
 
 class CatalogDbRepository implements CatalogRepository {
@@ -15,9 +16,14 @@ class CatalogDbRepository implements CatalogRepository {
 
   @override
   Future<List<Catalog>> getAllCatalogs() async => throw UnimplementedError();
+
+  @override
+  Future<List<Catalog>> replaceCatalogsPositions(Catalog oldIndex, Catalog newIndex)
+  async => throw UnimplementedError();
 }
 
 class CatalogMockRepository implements CatalogRepository {
+
   List<Catalog> _catalogs;
 
   CatalogMockRepository() {
@@ -48,13 +54,17 @@ class CatalogMockRepository implements CatalogRepository {
 
   @override
   Future<List<Catalog>> getFavouriteCatalogs() async {
-    await Future.delayed(Duration(seconds: 1));
     return _catalogs.where((catalog) => catalog.isFavourite).toList();
   }
 
   @override
   Future<List<Catalog>> getAllCatalogs() async {
-    await Future.delayed(Duration(seconds: 1));
     return _catalogs;
+  }
+
+  @override
+  Future<List<Catalog>> replaceCatalogsPositions(Catalog oldCatalog, Catalog newCatalog) async {
+    _catalogs.insert(_catalogs.indexOf(newCatalog), _catalogs.removeAt(_catalogs.indexOf(oldCatalog)));
+    return _catalogs.where((catalog) => catalog.isFavourite).toList();
   }
 }

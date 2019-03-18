@@ -9,4 +9,12 @@ class Catalog {
   final Image image;
   final List<Modification> modifications;
   bool isFavourite;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is Catalog &&
+              runtimeType == other.runtimeType &&
+              id == other.id;
+
 }
