@@ -1,4 +1,4 @@
-import 'package:banknotes/domain/catalog.dart';
+import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/catalog.dart';
 import 'package:banknotes/presentation/full_catalog/page.dart';
 import 'package:banknotes/util/injector.dart';
@@ -12,7 +12,7 @@ class CatalogPage extends StatefulWidget {
 
 class _CatalogPageState extends State<CatalogPage> {
 
-  CatalogRepository _repository = Injector().catalogRepository;
+  DataManager _dataManager = Injector().dataManager;
   bool _isLoading = true;
   List<Catalog> _catalogs = [];
   
@@ -83,7 +83,7 @@ class _CatalogPageState extends State<CatalogPage> {
   }
 
   void _loadData() {
-    _repository.getFavouriteCatalogs().then((catalogs) {
+    _dataManager.getFavouriteCatalogs().then((catalogs) {
       setState(() {
         _catalogs = catalogs;
         _isLoading = false;
@@ -92,7 +92,7 @@ class _CatalogPageState extends State<CatalogPage> {
   }
 
   void _replaceCatalogsPositions(int oldIndex, int newIndex) {
-    _repository.replaceCatalogsPositions(_catalogs[oldIndex], _catalogs[newIndex]).then((catalogs) => {
+    _dataManager.replaceCatalogsPositions(_catalogs[oldIndex], _catalogs[newIndex]).then((catalogs) => {
       setState(() {
         _catalogs = catalogs;
       })

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:banknotes/domain/catalog.dart';
+import 'package:banknotes/data/repository/catalog.dart';
 import 'package:banknotes/domain/model/catalog.dart';
 
 class FullCatalogBloc {
