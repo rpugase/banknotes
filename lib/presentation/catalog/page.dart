@@ -12,7 +12,7 @@ class CatalogPage extends StatefulWidget {
 
 class _CatalogPageState extends State<CatalogPage> {
 
-  DataManager _dataManager = Injector().dataManager;
+  final DataManager _dataManager = Injector().dataManager;
   bool _isLoading = true;
   List<Catalog> _catalogs = [];
   
