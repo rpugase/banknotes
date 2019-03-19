@@ -112,5 +112,8 @@ class MyWidgetState extends State<_FullCatalogHolder> {
       activeColor: Colors.purple,
     );
   }
-  void _changeFavouriteStatus(bool value) => setState(() => _dataManager.changeFavouriteStatus(_country));
+
+  void _changeFavouriteStatus(bool value) => _dataManager.changeFavouriteStatus(_country)
+      .then((_) => setState(() => {}),
+      onError: (error) => showError(context, error, () => setState(() => {})));
 }

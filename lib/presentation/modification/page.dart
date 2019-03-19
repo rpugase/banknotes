@@ -22,7 +22,7 @@ class _ModificationPageState extends State<ModificationPage> {
   final DataManager _dataManager = Injector().dataManager;
 
   bool _isLoading = true;
-  List<Modification> _modifications;
+  List<Modification> _modifications = [];
 
   @override
   void initState() {
