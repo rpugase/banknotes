@@ -40,6 +40,6 @@ class DataManager {
   }
 
   void changeFavouriteStatus(Catalog country) {
-    country.isFavourite = !country.isFavourite;
+    country.isFavourite = !country.isFavourite; // todo change status in the DB
   }
 }

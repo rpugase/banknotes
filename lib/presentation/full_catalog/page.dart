@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:banknotes/util/localization.dart';
 import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/catalog.dart';
+import 'package:banknotes/util/error_handler.dart';
 import 'package:banknotes/util/injector.dart';
+import 'package:banknotes/util/localization.dart';
+import 'package:flutter/material.dart';
 
 class FullCatalogPage extends StatefulWidget {
   @override
@@ -44,7 +45,7 @@ class _FullCatalogPageState extends State<FullCatalogPage> {
         _catalogs = catalogs;
         _isLoading = false;
       });
-    });
+    }, onError: (error) => showError(context, error, _onError));
   }
 
 
@@ -69,6 +70,12 @@ class _FullCatalogPageState extends State<FullCatalogPage> {
         style: TextStyle(fontSize: 20.0),
       ),
     );
+  }
+
+  void _onError() {
+    setState(() {
+      _isLoading = false;
+    });
   }
 }
 
