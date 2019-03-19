@@ -32,7 +32,6 @@ class Localization {
   String get catalogs => _sentences['full_catalogs'];
   String get noData => _sentences['no_data'];
   String get error => _sentences['error'];
-  String get cancel => _sentences['cancel'];
   String get close => _sentences['close'];
 }
 

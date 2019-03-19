@@ -11,7 +11,7 @@ void showError(BuildContext context, Error error, [Function func]) {
             content: Text(error.toString()),
             actions: <Widget>[
               FlatButton(
-                child: Text(Localization.of(context).cancel),
+                child: Text(Localization.of(context).close),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
