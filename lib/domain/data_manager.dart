@@ -3,12 +3,13 @@ import 'package:banknotes/data/repository/modification.dart';
 import 'package:banknotes/domain/model/catalog.dart';
 import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/modification.dart';
-
+import 'package:banknotes/data/repository/banknote.dart';
 
 class DataManager {
-  DataManager(this._catalogRepository, this._modificationRepository);
+  DataManager(this._catalogRepository, this._modificationRepository, this._banknoteRepository);
   final CatalogRepository _catalogRepository;
   final ModificationRepository _modificationRepository;
+  final BanknoteRepository _banknoteRepository;
 
   final List<Catalog> _catalogs = [];
 
@@ -19,12 +20,13 @@ class DataManager {
     return _catalogs;
   }
 
-//  Future<List<Banknote>> getBanknotes(Modification modification) async {
-//    Modification modification = modi
-//    if modification != null && modification.banknotes.isEmpty {
-//
-//    }
-//  }
+  Future<List<Banknote>> getBanknotes(Modification modification) async {
+    if (modification != null && modification.banknotes.isEmpty) {
+       modification.banknotes.addAll(await _banknoteRepository.getBanknotes(modification.id));
+    }
+    
+    return modification.banknotes;
+  }
 
   Future<List<Catalog>> getFavouriteCatalogs() async {
     if (_catalogs.isEmpty) {
@@ -42,7 +44,6 @@ class DataManager {
   }
 
   Future<List<Modification>> getModifications(Catalog catalog) async {
-    final Catalog catalog = _catalogs.firstWhere((catalog) => catalog == catalog);
     if (catalog != null && catalog.modifications.isEmpty) {
       catalog.modifications.addAll(await _modificationRepository.getFullModifications(catalog.id));
     }

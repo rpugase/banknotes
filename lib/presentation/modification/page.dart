@@ -72,13 +72,13 @@ class _ModificationPageState extends State<ModificationPage> {
       title: Text(modification.name),
       trailing: Text('${modification.ownBanknotesLength} / ${modification.banknotesLength}'),
       onTap: () {
-        _openBanknotePage();
+        _openBanknotePage(modification);
       },
     );
   }
 
-  void _openBanknotePage() async {
-    await Navigator.of(context).push(MaterialPageRoute(builder: (context) => BanknotePage()));
+  void _openBanknotePage(Modification modification) async {
+    await Navigator.of(context).push(MaterialPageRoute(builder: (context) => BanknotePage(modification)));
 
     _loadData();
   }
