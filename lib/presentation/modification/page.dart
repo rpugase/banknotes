@@ -1,6 +1,7 @@
 import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/catalog.dart';
 import 'package:banknotes/domain/model/modification.dart';
+import 'package:banknotes/util/error_handler.dart';
 import 'package:banknotes/util/injector.dart';
 import 'package:flutter/material.dart';
 
@@ -44,6 +45,12 @@ class _ModificationPageState extends State<ModificationPage> {
         _isLoading = false;
         _modifications = modifications;
       });
+    }, onError: (error) => showError(context, error, _onError));
+  }
+
+  void _onError() {
+    setState(() {
+      _isLoading = false;
     });
   }
 

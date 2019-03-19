@@ -2,6 +2,7 @@ import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/catalog.dart';
 import 'package:banknotes/presentation/full_catalog/page.dart';
 import 'package:banknotes/presentation/modification/page.dart';
+import 'package:banknotes/util/error_handler.dart';
 import 'package:banknotes/util/injector.dart';
 import 'package:banknotes/util/localization.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +17,11 @@ class _CatalogPageState extends State<CatalogPage> {
   final DataManager _dataManager = Injector().dataManager;
   bool _isLoading = true;
   List<Catalog> _catalogs = [];
-  
+
   @override
   void initState() {
-    _loadData();
     super.initState();
+    _loadData();
   }
 
   @override
@@ -90,15 +91,21 @@ class _CatalogPageState extends State<CatalogPage> {
         _catalogs = catalogs;
         _isLoading = false;
       });
-    });
+    }, onError: (error) => showError(context, error, _onError));
   }
 
   void _replaceCatalogsPositions(int oldIndex, int newIndex) {
-    _dataManager.replaceCatalogsPositions(_catalogs[oldIndex], _catalogs[newIndex]).then((catalogs) => {
+    _dataManager.replaceCatalogsPositions(_catalogs[oldIndex], _catalogs[newIndex]).then((catalogs) =>
       setState(() {
         _catalogs = catalogs;
       })
-    }, onError: (error) => print(error.toString()));
+    , onError: (error) => showError(context, error, _onError));
+  }
+
+  void _onError() {
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void _openFullCatalogPage() async {

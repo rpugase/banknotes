@@ -1,6 +1,8 @@
 {
   "countries" : "Страны",
   "no_data" : "Нет данных",
-  "full_catalogs": "Полный калатог",
+  "full_catalogs" : "Полный калатог",
+  "error" : "Ошибка",
+  "cancel" : "Отмена",
   "close": "Закрыть"
 }
