@@ -2,6 +2,7 @@ import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/catalog.dart';
 import 'package:banknotes/presentation/full_catalog/page.dart';
 import 'package:banknotes/presentation/modification/page.dart';
+import 'package:banknotes/presentation/widget/reorderable_list.dart';
 import 'package:banknotes/util/error_handler.dart';
 import 'package:banknotes/util/injector.dart';
 import 'package:banknotes/util/localization.dart';
@@ -60,11 +61,9 @@ class _CatalogPageState extends State<CatalogPage> {
 
   Widget _buildContent(List<Catalog> catalogs) {
     return Scrollbar(
-      child: ReorderableListView(
-        children: _divideTiles(
-          color: Colors.grey,
-          tiles: catalogs.map(_buildCategoryTile).toList(),
-        ).toList(),
+      child: ReorderableList(
+        color: Colors.grey,
+        tiles: catalogs.map(_buildCategoryTile).toList(),
         onReorder: _replaceCatalogsPositions,
       ),
     );
@@ -81,7 +80,7 @@ class _CatalogPageState extends State<CatalogPage> {
       ),
       title: Text(catalog.name),
       trailing: Icon(Icons.menu),
-      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => ModificationPage(catalog))),
+      onTap: () => _openModificationPage(catalog),
     );
   }
 
@@ -114,29 +113,7 @@ class _CatalogPageState extends State<CatalogPage> {
     _loadData();
   }
 
-  Iterable<Widget> _divideTiles({@required Iterable<Widget> tiles, Color color}) sync* {
-    assert(tiles != null);
-    assert(color != null || context != null);
-
-    final Iterator<Widget> iterator = tiles.iterator;
-    final bool isNotEmpty = iterator.moveNext();
-
-    final Decoration decoration = BoxDecoration(
-      border: Border(
-        bottom: Divider.createBorderSide(context, color: color),
-      ),
-    );
-
-    Widget tile = iterator.current;
-    while (iterator.moveNext()) {
-      yield DecoratedBox(
-        key: UniqueKey(),
-        position: DecorationPosition.foreground,
-        decoration: decoration,
-        child: tile,
-      );
-      tile = iterator.current;
-    }
-    if (isNotEmpty) yield tile;
+  void _openModificationPage(Catalog catalog) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ModificationPage(catalog)));
   }
 }

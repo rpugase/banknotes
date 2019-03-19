@@ -1,10 +1,12 @@
 import 'package:banknotes/data/repository/catalog.dart';
+import 'package:banknotes/data/repository/modification.dart';
 import 'package:banknotes/domain/model/catalog.dart';
 import 'package:banknotes/domain/model/modification.dart';
 
 class DataManager {
-  DataManager(this._catalogRepository);
+  DataManager(this._catalogRepository, this._modificationRepository);
   final CatalogRepository _catalogRepository;
+  final ModificationRepository _modificationRepository;
 
   final List<Catalog> _catalogs = [];
 
@@ -33,13 +35,14 @@ class DataManager {
   Future<List<Modification>> getModifications(Catalog catalog) async {
     final Catalog catalog = _catalogs.firstWhere((catalog) => catalog == catalog);
     if (catalog != null && catalog.modifications.isEmpty) {
-      catalog.modifications.addAll(await _catalogRepository.getFullCatalog(catalog.id));
+      catalog.modifications.addAll(await _modificationRepository.getFullModifications(catalog.id));
     }
 
     return catalog.modifications;
   }
 
-  void changeFavouriteStatus(Catalog country) {
-    country.isFavourite = !country.isFavourite; // todo change status in the DB
+  Future changeFavouriteStatus(Catalog country) async {
+    // TODO: change status in DB
+    country.isFavourite = !country.isFavourite;
   }
 }

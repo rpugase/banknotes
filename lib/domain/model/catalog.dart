@@ -2,12 +2,12 @@ import 'package:banknotes/domain/model/image.dart';
 import 'package:banknotes/domain/model/modification.dart';
 
 class Catalog {
-  Catalog(this.id, this.name, this.image, [this.modifications = const [], this.isFavourite = false]);
+  Catalog(this.id, this.name, this.image, {this.isFavourite = false});
 
   final int id;
   final String name;
   final Image image;
-  final List<Modification> modifications;
+  final List<Modification> modifications = [];
   bool isFavourite;
 
   @override
@@ -16,5 +16,4 @@ class Catalog {
           other is Catalog &&
               runtimeType == other.runtimeType &&
               id == other.id;
-
 }
