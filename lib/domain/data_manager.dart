@@ -1,6 +1,8 @@
 import 'package:banknotes/data/repository/catalog.dart';
 import 'package:banknotes/domain/model/catalog.dart';
+import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/modification.dart';
+
 
 class DataManager {
   DataManager(this._catalogRepository);
@@ -14,6 +16,13 @@ class DataManager {
     }
     return _catalogs;
   }
+
+//  Future<List<Banknote>> getBanknotes(Modification modification) async {
+//    Modification modification = modi
+//    if modification != null && modification.banknotes.isEmpty {
+//
+//    }
+//  }
 
   Future<List<Catalog>> getFavouriteCatalogs() async {
     if (_catalogs.isEmpty) {

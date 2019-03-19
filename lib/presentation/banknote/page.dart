@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:banknotes/domain/model/banknote.dart';
+import 'package:banknotes/util/injector.dart';
+import 'package:banknotes/domain/data_manager.dart';
 
 class BanknotePage extends StatefulWidget {
   @override
@@ -6,6 +9,18 @@ class BanknotePage extends StatefulWidget {
 }
 
 class _BanknotePageState extends State<BanknotePage> {
+
+  final DataManager _dataManager = Injector().dataManager;
+  bool _isLoading = true;
+  List<Banknote> _banknotes = [];
+
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,4 +35,8 @@ class _BanknotePageState extends State<BanknotePage> {
     );
   }
 
+
+  List<Banknote> _loadData() {
+
+  }
 }

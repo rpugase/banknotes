@@ -4,7 +4,7 @@ import 'package:banknotes/domain/model/modification.dart';
 import 'package:banknotes/util/error_handler.dart';
 import 'package:banknotes/util/injector.dart';
 import 'package:flutter/material.dart';
-import '';
+import 'package:banknotes/presentation/banknote/page.dart';
 
 class ModificationPage extends StatefulWidget {
 
