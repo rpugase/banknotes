@@ -88,12 +88,13 @@ class MyWidgetState extends State<_FullCatalogHolder> {
   MyWidgetState(this._country);
 
   final Catalog _country;
+  final DataManager _dataManager = Injector().dataManager;
 
   @override
   Widget build(BuildContext context) {
     return CheckboxListTile(
       value: _country.isFavourite,
-      onChanged: _changeFalouriteStatus,
+      onChanged: _changeFavouriteStatus,
       title: Text(_country.name),
       controlAffinity: ListTileControlAffinity.trailing,
       secondary:  Image.network(
@@ -101,8 +102,8 @@ class MyWidgetState extends State<_FullCatalogHolder> {
         width: 48.0,
         height: 48.0,
       ),
-      activeColor: Colors.cyan,
+      activeColor: Colors.purple,
     );
   }
-  void _changeFalouriteStatus(bool value) => setState(() => _country.isFavourite = !_country.isFavourite);
+  void _changeFavouriteStatus(bool value) => setState(() => _dataManager.changeFavouriteStatus(_country));
 }

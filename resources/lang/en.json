@@ -2,6 +2,5 @@
   "countries" : "Countries",
   "no_data" : "No data",
   "full_catalogs": "Full catalog",
-  "close": "Close",
-  "db_error" : "DB error"
+  "close": "Close"
 }

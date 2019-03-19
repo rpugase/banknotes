@@ -38,4 +38,8 @@ class DataManager {
 
     return catalog.modifications;
   }
+
+  void changeFavouriteStatus(Catalog country) {
+    country.isFavourite = !country.isFavourite;
+  }
 }
