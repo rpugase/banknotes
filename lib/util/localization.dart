@@ -31,6 +31,8 @@ class Localization {
   String get countries => _sentences['countries'];
   String get catalogs => _sentences['full_catalogs'];
   String get noData => _sentences['no_data'];
+  String get close => _sentences['close'];
+  String get dbError => _sentences['db_error'];
 }
 
 class LocalizationDelegate extends LocalizationsDelegate<Localization> {

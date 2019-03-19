@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:banknotes/util/localization.dart';
-import 'package:banknotes/util/injector.dart';
-import 'package:banknotes/presentation/full_catalog/bloc.dart';
+import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/catalog.dart';
+import 'package:banknotes/util/injector.dart';
 
 class FullCatalogPage extends StatefulWidget {
   @override
@@ -11,7 +11,15 @@ class FullCatalogPage extends StatefulWidget {
 
 class _FullCatalogPageState extends State<FullCatalogPage> {
 
-  FullCatalogBloc _bloc = Injector().fullCatalogBloc();
+  final DataManager _dataManager = Injector().dataManager;
+  bool _isLoading = true;
+  List<Catalog> _catalogs = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,31 +28,25 @@ class _FullCatalogPageState extends State<FullCatalogPage> {
         title: Text(Localization.of(context).catalogs),
 
       ),
-      body: StreamBuilder<FullCatalogState>(
-        stream: _bloc.catalogStream,
-        initialData: CatalogInitState(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          FullCatalogState _catalogState = snapshot.data;
 
-          if (_catalogState is CatalogInitState) {
-            return _buildInit();
-          } else if (_catalogState is CatalogLoadingState) {
-            return _buildLoading();
-          }
-          else if (_catalogState is CatalogDataState) {
-            CatalogDataState catalogDataState = _catalogState;
-            return _buildContent(catalogDataState.catalogs);
-          }
-        },
+      body: Container(
+        child : (_isLoading) ? _buildLoading()
+            : (_catalogs.isEmpty) ? _buildEmpty()
+            : _buildContent(_catalogs),
       ),
 
     );
   }
 
-  Widget _buildInit() {
-    _bloc.loadCatalogs();
-    return Container();
+  void _loadData() {
+    _dataManager.getAllCatalogs().then((catalogs) {
+      setState(() {
+        _catalogs = catalogs;
+        _isLoading = false;
+      });
+    });
   }
+
 
   Widget _buildLoading() {
     return Center(
@@ -60,7 +62,14 @@ class _FullCatalogPageState extends State<FullCatalogPage> {
     );
   }
 
-
+  Widget _buildEmpty() {
+    return Center(
+      child: Text(
+        Localization.of(context).noData,
+        style: TextStyle(fontSize: 20.0),
+      ),
+    );
+  }
 }
 
 class _FullCatalogHolder extends StatefulWidget {
@@ -72,8 +81,6 @@ class _FullCatalogHolder extends StatefulWidget {
   State<StatefulWidget> createState() {
     return MyWidgetState(_country);
   }
-
-
 }
 
 class MyWidgetState extends State<_FullCatalogHolder> {
@@ -94,7 +101,7 @@ class MyWidgetState extends State<_FullCatalogHolder> {
         width: 48.0,
         height: 48.0,
       ),
-      activeColor: Colors.red,
+      activeColor: Colors.cyan,
     );
   }
   void _changeFalouriteStatus(bool value) => setState(() => _country.isFavourite = !_country.isFavourite);

@@ -1,5 +1,7 @@
 {
   "countries" : "Countries",
   "no_data" : "No data",
-  "full_catalogs": "Full catalog"
+  "full_catalogs": "Full catalog",
+  "close": "Close",
+  "db_error" : "DB error"
 }
