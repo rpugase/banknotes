@@ -3,6 +3,7 @@ import 'package:banknotes/domain/model/catalog.dart';
 import 'package:banknotes/domain/model/modification.dart';
 import 'package:banknotes/util/injector.dart';
 import 'package:flutter/material.dart';
+import '';
 
 class ModificationPage extends StatefulWidget {
 
@@ -63,6 +64,15 @@ class _ModificationPageState extends State<ModificationPage> {
     return ListTile(
       title: Text(modification.name),
       trailing: Text('${modification.ownBanknotesLength} / ${modification.banknotesLength}'),
+      onTap: () {
+        _openBanknotePage();
+      },
     );
+  }
+
+  void _openBanknotePage() async {
+    await Navigator.of(context).push(MaterialPageRoute(builder: (context) => BanknotePage()));
+
+    _loadData();
   }
 }
