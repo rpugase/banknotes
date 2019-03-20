@@ -4,6 +4,7 @@ import 'package:banknotes/util/injector.dart';
 import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/modification.dart';
 import 'package:banknotes/util/error_handler.dart';
+import 'package:banknotes/presentation/widget/reorderable_list.dart';
 
 class BanknotePage extends StatefulWidget {
 
@@ -32,8 +33,6 @@ class _BanknotePageState extends State<BanknotePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget._modification.name),
-        actions: <Widget>[
-        ],
       ),
       body: _isLoading ? _buildLoading() : _buildBanknotes(),
     );
@@ -41,10 +40,35 @@ class _BanknotePageState extends State<BanknotePage> {
 
   Widget _buildBanknotes() {
     return ListView.separated(
-      itemBuilder: (context, index) => _BanknoteHolder(_banknotes[index]),
+      itemBuilder: (context, index) => _buildBanknoteList(index),
       itemCount: _banknotes.length,
       separatorBuilder: (BuildContext context, int index) => Divider(color: Colors.grey),
     );
+  }
+
+  Widget _buildBanknoteList(int index) {
+    var banknote = _banknotes[index];
+
+    return FutureBuilder(
+      future: banknote.getFirstBanknoteImage(),
+      builder: (context, text){
+
+        return ListTile (
+          title: Text(banknote.name),
+          key: Key(banknote.id.toString()),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          leading: text.hasData ? Image.asset(
+              text.data,
+          width: 50.0,
+          height: 50.0,
+        ) :  _buildLoading(),
+        trailing: Icon(Icons.check, color: Colors.green,),
+//      onTap: () =>(){},
+        );
+      }
+    );
+
+
   }
 
   Widget _buildLoading() {
@@ -55,7 +79,6 @@ class _BanknotePageState extends State<BanknotePage> {
     setState(() {  _isLoading = false; });
   }
 
-
   void _loadData() {
       _dataManager.getBanknotes(widget._modification).then((banknotes) {
         setState(() {
@@ -63,34 +86,5 @@ class _BanknotePageState extends State<BanknotePage> {
           _banknotes = banknotes;
         });
       }, onError: (error) => showError(context, error, _onError));
-  }
-}
-
-class _BanknoteHolder extends StatefulWidget {
-  _BanknoteHolder(this._banknote);
-
-  final Banknote _banknote;
-
-  @override
-  State<StatefulWidget> createState() {
-    return MyWidgetState(_banknote);
-  }
-}
-
-class MyWidgetState extends State<_BanknoteHolder> {
-
-  MyWidgetState(this._banknote);
-
-  final Banknote _banknote;
-
-  @override
-  Widget build(BuildContext context) {
-    return CheckboxListTile(
-      value: _banknote.ownBanknotes.length > 0,
-      title: Text(_banknote.name),
-      controlAffinity: ListTileControlAffinity.trailing,
-
-      activeColor: Colors.purple,
-    );
   }
 }

@@ -10,4 +10,8 @@ class Banknote {
   final String description;
   final List<Image> images;
   final List<OwnBanknote> ownBanknotes;
+
+  Future<String> getFirstBanknoteImage() async {
+    return images.isNotEmpty ? images.first.path : Image('resources/images/no_image_icon.png', ImageType.assets).path;
+  }
 }
