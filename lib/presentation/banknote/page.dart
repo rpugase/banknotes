@@ -50,7 +50,7 @@ class _BanknotePageState extends State<BanknotePage> {
       title: Text(banknote.name),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       leading:  Image.asset(
-        banknote.getFirstBanknoteImage(),
+        banknote.firstBanknoteImage.path,
         width: 50.0,
         height: 50.0,
       ) ,
