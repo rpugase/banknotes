@@ -11,7 +11,7 @@ class Banknote {
   final List<Image> images;
   final List<OwnBanknote> ownBanknotes;
 
-  Future<String> getFirstBanknoteImage() async {
+  String getFirstBanknoteImage() {
     return images.isNotEmpty ? images.first.path : Image('resources/images/no_image_icon.png', ImageType.assets).path;
   }
 }
