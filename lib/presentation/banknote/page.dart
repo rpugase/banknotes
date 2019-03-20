@@ -1,3 +1,4 @@
+import 'package:banknotes/presentation/banknote_details/page.dart';
 import 'package:flutter/material.dart';
 import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/util/injector.dart';
@@ -55,7 +56,7 @@ class _BanknotePageState extends State<BanknotePage> {
         height: 50.0,
       ) ,
       trailing: Icon(Icons.check, color: Colors.green,),
-//      onTap: () =>(){},
+      onTap: () => _openBanknoteDetailsPage(banknote),
     );
 
   }
@@ -75,5 +76,9 @@ class _BanknotePageState extends State<BanknotePage> {
           _banknotes = banknotes;
         });
       }, onError: (error) => showError(context, error, _onError));
+  }
+
+  void _openBanknoteDetailsPage(Banknote banknote) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => BanknoteDetailsPage(banknote)));
   }
 }
