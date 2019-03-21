@@ -1,5 +1,6 @@
 import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
+import 'package:banknotes/presentation/own_banknote_detail/page.dart';
 import 'package:banknotes/util/localization.dart';
 import 'package:flutter/material.dart';
 
@@ -81,30 +82,35 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
   }
 
   Widget _createOwnBanknoteCell(OwnBanknote ownBanknote) {
-    return Row(
-      children: <Widget>[
-        Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Image.asset(
-              'resources/images/quality.png',
-              width: 30.0,
-              height: 30.0,
-            )),
-        Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  '${Localization.of(context).shoppingPrice}${ownBanknote.price} ${ownBanknote.currency.symbol}',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
-                ),
-                Text(
-                  '${Localization.of(context).shoppingDate}${ownBanknote.formatDate()}',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
-                ),
-              ],
-            )),
+    return GestureDetector(
+      onTap: () => _showOwnBanknote(ownBanknote),
+      child: Container (
+        color: Colors.pinkAccent,
+        child: Row(
+          children: <Widget>[
+            Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Image.asset(
+                  'resources/images/quality.png',
+                  width: 30.0,
+                  height: 30.0,
+                )),
+            Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+
+                      '${Localization.of(context).shoppingPrice}${ownBanknote.price} ${ownBanknote.currency.symbol}',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
+                    ),
+                    Text(
+                      '${Localization.of(context).shoppingDate}${ownBanknote.formatDate()}',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
+                    ),
+                  ],
+                )),
 //        Padding(
 //          padding: EdgeInsets.all(8.0),
 //          child: Text(
@@ -113,8 +119,15 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
 //            style: TextStyle(fontWeight: FontWeight.normal, fontSize: 8),
 //          ),
 //        ),
-      ],
+          ],
+        ),
+      ),
     );
+  }
+  
+  void _showOwnBanknote(OwnBanknote ownBanknote) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => OwnBanknoteDetailPage(ownBanknote)));
+
   }
 
 }
