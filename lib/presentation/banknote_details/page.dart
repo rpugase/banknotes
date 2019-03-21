@@ -1,5 +1,7 @@
 import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
+import 'package:banknotes/presentation/attachment_own_banknote/page.dart';
+import 'package:banknotes/presentation/banknote_image_detail/page.dart';
 import 'package:banknotes/presentation/own_banknote_detail/page.dart';
 import 'package:banknotes/util/localization.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +16,6 @@ class BanknoteDetailsPage extends StatefulWidget {
 }
 
 class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
-
   @override
   Widget build(BuildContext context) {
     AppBar appBar = AppBar(
@@ -39,17 +40,17 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
     );
   }
 
-  void _addOwnBanknote() {}
-
   Widget _createImageView() {
-    return Container(
-      color: Colors.blueGrey,
-      child: Image.asset(
-        widget._banknote.firstBanknoteImage.path,
-        width: MediaQuery.of(context).size.width,
-        height: 200.0,
-      ),
-    );
+    return GestureDetector(
+        onTap: () =>  _openAllImages(widget._banknote),
+        child: Container(
+          color: Colors.blueGrey,
+          child: Image.asset(
+            widget._banknote.firstBanknoteImage.path,
+            width: MediaQuery.of(context).size.width,
+            height: 200.0,
+          ),
+        ));
   }
 
   Widget _createDescriptionView() {
@@ -84,8 +85,8 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
   Widget _createOwnBanknoteCell(OwnBanknote ownBanknote) {
     return GestureDetector(
       onTap: () => _showOwnBanknote(ownBanknote),
-      child: Container (
-        color: Colors.pinkAccent,
+      child: Container(
+        color: Colors.grey[200],
         child: Row(
           children: <Widget>[
             Padding(
@@ -101,13 +102,14 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-
                       '${Localization.of(context).shoppingPrice}${ownBanknote.price} ${ownBanknote.currency.symbol}',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
                     ),
                     Text(
                       '${Localization.of(context).shoppingDate}${ownBanknote.formatDate()}',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
                     ),
                   ],
                 )),
@@ -124,11 +126,19 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
       ),
     );
   }
-  
-  void _showOwnBanknote(OwnBanknote ownBanknote) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => OwnBanknoteDetailPage(ownBanknote)));
 
+  void _showOwnBanknote(OwnBanknote ownBanknote) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => OwnBanknoteDetailPage(ownBanknote)));
   }
 
-}
+  void _openAllImages(Banknote banknote) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => BanknoteImageDetailPage(banknote)));
+  } //AttachmentOwnBanknotePage
 
+  void _addOwnBanknote() {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => AttachmentOwnBanknotePage()));
+  }
+}

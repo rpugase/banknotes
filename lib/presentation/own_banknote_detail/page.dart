@@ -17,7 +17,7 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
     return Scaffold(
       appBar: AppBar(
       ),
-      body: Text('Hello'),
+      body: Text('Тут будет детализация купленной банкноты'),
     );
   }
 }
