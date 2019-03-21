@@ -33,6 +33,9 @@ class Localization {
   String get noData => _sentences['no_data'];
   String get error => _sentences['error'];
   String get close => _sentences['close'];
+  String get shoppingPrice => _sentences['shopping_price'];
+  String get shoppingDate => _sentences['shopping_date'];
+
 }
 
 class LocalizationDelegate extends LocalizationsDelegate<Localization> {

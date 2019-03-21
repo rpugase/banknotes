@@ -3,5 +3,7 @@
   "no_data" : "Нет данных",
   "full_catalogs" : "Полный калатог",
   "error" : "Ошибка",
-  "close": "Закрыть"
+  "close": "Закрыть",
+  "shopping_price" : "Цена покупки: ",
+  "shopping_date" : "Дата покупки: "
 }

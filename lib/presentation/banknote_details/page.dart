@@ -1,4 +1,6 @@
 import 'package:banknotes/domain/model/banknote.dart';
+import 'package:banknotes/domain/model/own_banknote.dart';
+import 'package:banknotes/util/localization.dart';
 import 'package:flutter/material.dart';
 
 class BanknoteDetailsPage extends StatefulWidget {
@@ -11,7 +13,6 @@ class BanknoteDetailsPage extends StatefulWidget {
 }
 
 class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
-  double _heightAppBar = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +26,13 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
       ],
     );
 
-    _heightAppBar = appBar.preferredSize.height;
     return Scaffold(
       appBar: appBar,
       body: ListView(
         children: <Widget>[
           _createImageView(),
+          _createDescriptionView(),
+          _createOwnBanknoteList(widget._banknote.ownBanknotes)
         ],
       ),
     );
@@ -48,4 +50,72 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
       ),
     );
   }
+
+  Widget _createDescriptionView() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'Description',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(right: 8, left: 8, bottom: 8),
+            child: Text(
+              '1 гривна — наименьшая по номиналу банкнота в денежном обороте современной Украины. Введена в обращение Национальным банком в 1996 году.',
+              style: TextStyle(fontWeight: FontWeight.normal),
+            ),
+          )
+        ]);
+  }
+
+  Widget _createOwnBanknoteList(List<OwnBanknote> ownBanknotes) {
+    final children = <Widget>[];
+    for (var ownBanknote in ownBanknotes) {
+      children.add(_createOwnBanknoteCell(ownBanknote));
+    }
+    return Column(children: children);
+  }
+
+  Widget _createOwnBanknoteCell(OwnBanknote ownBanknote) {
+    return Row(
+      children: <Widget>[
+        Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Image.asset(
+              'resources/images/quality.png',
+              width: 30.0,
+              height: 30.0,
+            )),
+        Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  '${Localization.of(context).shoppingPrice}${ownBanknote.price} ${ownBanknote.currency.symbol}',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
+                ),
+                Text(
+                  '${Localization.of(context).shoppingDate}${ownBanknote.formatDate()}',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
+                ),
+              ],
+            )),
+//        Padding(
+//          padding: EdgeInsets.all(8.0),
+//          child: Text(
+//
+//            'Очень важная банкнота, купленная в Киеве, летом 2014',
+//            style: TextStyle(fontWeight: FontWeight.normal, fontSize: 8),
+//          ),
+//        ),
+      ],
+    );
+  }
+
 }
+

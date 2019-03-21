@@ -13,8 +13,14 @@ class BanknoteMockRepository implements BanknoteRepository {
 
   List<Banknote> get banknotes => [
     Banknote(0, "1 uah", "desc", ownBanknotes: []),
-    Banknote(1, "2 uah", "desc", ownBanknotes: [OwnBanknote(0, QualityType.good, price: 12.5, currency: Currency(), date: DateTime.now())]),
-    Banknote(2, "5 uah", "desc", ownBanknotes: []),
+    Banknote(1, "2 uah", "desc", ownBanknotes: [
+      OwnBanknote(0, QualityType.good, price: 12.5, currency: Currency(), date: DateTime.now()),
+      OwnBanknote(1, QualityType.good, price: 2.5, currency: Currency(), date: DateTime.now())
+    ]),
+    Banknote(2, "5 uah", "desc", ownBanknotes: [
+      OwnBanknote(0, QualityType.good, price: 12.5, currency: Currency(), date: DateTime.now()),
+      OwnBanknote(1, QualityType.good, price: 2.5, currency: Currency(), date: DateTime.now())
+    ]),
     Banknote(3, "10 uah", "desc", ownBanknotes: []),
     Banknote(4, "20 uah", "desc", ownBanknotes: []),
     Banknote(5, "50 uah", "desc", ownBanknotes: []),
