@@ -1,8 +1,9 @@
+import 'package:banknotes/data/model/banknote.dart';
 import 'package:banknotes/data/model/catalog.dart';
 import 'package:banknotes/data/model/emission.dart';
+import 'package:banknotes/data/repository/banknote.dart';
 import 'package:banknotes/data/repository/catalog.dart';
 import 'package:banknotes/data/repository/modification.dart';
-import 'package:banknotes/data/repository/banknote.dart';
 import 'package:banknotes/domain/data_manager.dart';
 import 'package:jaguar_query_sqflite/jaguar_query_sqflite.dart';
 
@@ -27,6 +28,7 @@ class Injector {
   /// Bean
   static CatalogBean get _catalogBean => CatalogBean(_sqfliteAdapter);
   static EmissionBean get _emissionBean => EmissionBean(_sqfliteAdapter);
+  static BanknoteBean get _banknoteBean => BanknoteBean(_sqfliteAdapter);
 
   /// Repository
   static CatalogRepository get _catalogRepository
@@ -36,9 +38,9 @@ class Injector {
   => (_useMock) ? ModificationMockRepository() : ModificationDbRepository(_emissionBean);
 
   static BanknoteMockRepository get _banknoteRepository
-  => (_useMock) ? BanknoteMockRepository() : BanknoteDBRepository();
+  => (_useMock) ? BanknoteMockRepository() : BanknoteDBRepository(_banknoteBean);
 
   /// DataManager
-  DataManager dataManager = DataManager(_catalogRepository, _modificationRepository);
+  DataManager dataManager = DataManager(_catalogRepository, _modificationRepository, _banknoteRepository);
 
 }

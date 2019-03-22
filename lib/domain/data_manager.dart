@@ -1,11 +1,12 @@
+import 'package:banknotes/data/model/banknote.dart';
 import 'package:banknotes/data/model/catalog.dart';
 import 'package:banknotes/data/model/emission.dart';
+import 'package:banknotes/data/repository/banknote.dart';
 import 'package:banknotes/data/repository/catalog.dart';
 import 'package:banknotes/data/repository/modification.dart';
-import 'package:banknotes/domain/model/catalog.dart';
 import 'package:banknotes/domain/model/banknote.dart';
+import 'package:banknotes/domain/model/catalog.dart';
 import 'package:banknotes/domain/model/modification.dart';
-import 'package:banknotes/data/repository/banknote.dart';
 
 class DataManager {
   DataManager(this._catalogRepository, this._modificationRepository, this._banknoteRepository);
@@ -25,7 +26,8 @@ class DataManager {
 
   Future<List<Banknote>> getBanknotes(Modification modification) async {
     if (modification != null && modification.banknotes.isEmpty) {
-       modification.banknotes.addAll(await _banknoteRepository.getBanknotes(modification.id));
+      final List<BanknoteEntity> banknotes = await _banknoteRepository.getBanknotes(modification.id);
+      modification.banknotes.addAll(banknotes.map((banknote) => Banknote.fromEntity(banknote)));
     }
 
     return modification.banknotes;
