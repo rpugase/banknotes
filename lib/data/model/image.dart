@@ -9,7 +9,7 @@ class ImageEntity {
   ImageEntity();
   ImageEntity.make(this.path, this.main);
 
-  @PrimaryKey()
+  @PrimaryKey(auto: true)
   int id;
 
   @Column()

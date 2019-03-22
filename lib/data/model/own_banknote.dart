@@ -11,7 +11,7 @@ class OwnBanknoteEntity {
   OwnBanknoteEntity.make(this.quality, this.price, this.currency,
       this.comment, this.images, this.date);
 
-  @PrimaryKey()
+  @PrimaryKey(auto: true)
   int id;
 
   @BelongsTo(BanknoteBean)
