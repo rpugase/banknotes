@@ -1,3 +1,4 @@
+import 'package:banknotes/data/model/own_banknote.dart';
 import 'package:banknotes/domain/model/image.dart';
 
 class OwnBanknote {
@@ -11,6 +12,24 @@ class OwnBanknote {
   final String comment;
   final List<Image> images;
   final DateTime date;
+  
+  OwnBanknote.fromEntity(OwnBanknoteEntity entity) :
+        id = entity.id, 
+        price = entity.price, 
+        currency = Currency.fromStringCode(entity.currency), 
+        quality = QualityType.values.firstWhere((quality) => quality.toString() == entity.quality),
+        comment = entity.comment, 
+        images = entity.images.map((image) => Image.fromEntity(image)).toList(),
+        date = entity.date;
+
+  OwnBanknoteEntity toEntity() => OwnBanknoteEntity.make(
+      quality.toString(),
+      price,
+      currency.toString(),
+      comment,
+      images.map((image) => image.toEntity()).toList(),
+      date
+  );
 }
 
 class Currency {

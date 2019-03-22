@@ -5,9 +5,9 @@ part 'catalog.jorm.dart';
 
 class CatalogEntity {
   CatalogEntity();
-  CatalogEntity.make(this.name, this.image, this.isFavourite, this.position, this.modifications);
+  CatalogEntity.make(this.name, this.image, this.isFavourite, this.emissions);
 
-  @PrimaryKey()
+  @PrimaryKey(auto: true)
   int id;
 
   @Column()
@@ -23,7 +23,7 @@ class CatalogEntity {
   int position;
 
   @HasMany(EmissionBean)
-  List<EmissionEntity> modifications;
+  List<EmissionEntity> emissions;
 }
 
 @GenBean()

@@ -8,8 +8,8 @@ part 'own_banknote.jorm.dart';
 class OwnBanknoteEntity {
 
   OwnBanknoteEntity();
-  OwnBanknoteEntity.make(this.id, this.quality, this.price,
-      this.currency, this.comment, this.date);
+  OwnBanknoteEntity.make(this.quality, this.price, this.currency,
+      this.comment, this.images, this.date);
 
   @PrimaryKey()
   int id;

@@ -6,9 +6,9 @@ part 'emission.jorm.dart';
 
 class EmissionEntity {
   EmissionEntity();
-  EmissionEntity.make(this.catalogId, this.shortName, this.banknotes);
+  EmissionEntity.make(this.shortName, this.banknotes);
 
-  @PrimaryKey()
+  @PrimaryKey(auto: true)
   int id;
 
   @BelongsTo(CatalogBean)

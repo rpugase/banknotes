@@ -1,3 +1,4 @@
+import 'package:banknotes/data/model/emission.dart';
 import 'package:banknotes/domain/model/banknote.dart';
 
 class Modification {
@@ -9,4 +10,14 @@ class Modification {
 
   int get banknotesLength => banknotes.length;
   int get ownBanknotesLength => banknotes.where((banknote) => banknote.ownBanknotes.isNotEmpty).length;
+
+  Modification.fromEntity(EmissionEntity entity) :
+        id = entity.id,
+        name = entity.shortName,
+        banknotes = entity.banknotes.map((banknote) => Banknote.fromEntity(banknote)).toList();
+
+  EmissionEntity toEntity() => EmissionEntity.make(
+      name,
+      banknotes.map((banknote) => banknote.toEntity()).toList()
+  );
 }

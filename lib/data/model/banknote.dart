@@ -10,7 +10,7 @@ class BanknoteEntity {
   BanknoteEntity();
   BanknoteEntity.make(this.name, this.description, this.images, this.ownBanknotes);
 
-  @PrimaryKey()
+  @PrimaryKey(auto: true)
   int id;
 
   @BelongsTo(EmissionBean)

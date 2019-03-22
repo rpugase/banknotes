@@ -68,11 +68,11 @@ abstract class _CatalogBean implements Bean<CatalogEntity> {
     var retId = await adapter.insert(insert);
     if (cascade) {
       CatalogEntity newModel;
-      if (model.modifications != null) {
+      if (model.emissions != null) {
         newModel ??= await find(model.id);
-        model.modifications.forEach(
+        model.emissions.forEach(
             (x) => emissionEntityBean.associateCatalogEntity(x, newModel));
-        for (final child in model.modifications) {
+        for (final child in model.emissions) {
           await emissionEntityBean.insert(child);
         }
       }
@@ -103,11 +103,11 @@ abstract class _CatalogBean implements Bean<CatalogEntity> {
     var retId = await adapter.upsert(upsert);
     if (cascade) {
       CatalogEntity newModel;
-      if (model.modifications != null) {
+      if (model.emissions != null) {
         newModel ??= await find(model.id);
-        model.modifications.forEach(
+        model.emissions.forEach(
             (x) => emissionEntityBean.associateCatalogEntity(x, newModel));
-        for (final child in model.modifications) {
+        for (final child in model.emissions) {
           await emissionEntityBean.upsert(child);
         }
       }
@@ -144,13 +144,13 @@ abstract class _CatalogBean implements Bean<CatalogEntity> {
     final ret = adapter.update(update);
     if (cascade) {
       CatalogEntity newModel;
-      if (model.modifications != null) {
+      if (model.emissions != null) {
         if (associate) {
           newModel ??= await find(model.id);
-          model.modifications.forEach(
+          model.emissions.forEach(
               (x) => emissionEntityBean.associateCatalogEntity(x, newModel));
         }
-        for (final child in model.modifications) {
+        for (final child in model.emissions) {
           await emissionEntityBean.update(child);
         }
       }
@@ -212,21 +212,21 @@ abstract class _CatalogBean implements Bean<CatalogEntity> {
 
   Future<CatalogEntity> preload(CatalogEntity model,
       {bool cascade: false}) async {
-    model.modifications = await emissionEntityBean.findByCatalogEntity(model.id,
+    model.emissions = await emissionEntityBean.findByCatalogEntity(model.id,
         preload: cascade, cascade: cascade);
     return model;
   }
 
   Future<List<CatalogEntity>> preloadAll(List<CatalogEntity> models,
       {bool cascade: false}) async {
-    models.forEach((CatalogEntity model) => model.modifications ??= []);
+    models.forEach((CatalogEntity model) => model.emissions ??= []);
     await OneToXHelper.preloadAll<CatalogEntity, EmissionEntity>(
         models,
         (CatalogEntity model) => [model.id],
         emissionEntityBean.findByCatalogEntityList,
         (EmissionEntity model) => [model.catalogId],
         (CatalogEntity model, EmissionEntity child) =>
-            model.modifications.add(child),
+            model.emissions.add(child),
         cascade: cascade);
     return models;
   }
