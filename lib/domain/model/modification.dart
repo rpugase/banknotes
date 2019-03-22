@@ -5,8 +5,13 @@ class Modification {
 
   final int id;
   final String name;
-  final List<Banknote> banknotes;
+  final Map<int, List<Banknote>> banknotes;
 
-  int get banknotesLength => banknotes.length;
-  int get ownBanknotesLength => banknotes.where((banknote) => banknote.ownBanknotes.isNotEmpty).length;
+  int get banknotesLength => banknotes.values
+      .map((banknotes) => banknotes.length)
+      .reduce((value, element) => value + element);
+
+  int get ownBanknotesLength => banknotes.values
+      .map((banknotes) => banknotes.where((banknote) => banknote.ownBanknotes.isNotEmpty).length)
+      .reduce((value, element) => value + element);
 }

@@ -25,14 +25,20 @@ class ModificationMockRepository implements ModificationRepository {
     Banknote(6, "100 uah", "desc", ownBanknotes: []),
     Banknote(7, "500 uah", "desc", ownBanknotes: []),
   ];
+
+  Map<int, List<Banknote>> get map => {
+    1: [Banknote(0, "1 uah", "desc", ownBanknotes: [])],
+    2: [Banknote(1, "2 uah", "desc", ownBanknotes: [OwnBanknote(0, QualityType.good, price: 12.5, currency: Currency(), date: DateTime.now())])],
+    3: banknotes
+  };
   
   List<Modification> get modifications => [
-    Modification(0, "1994", banknotes),
-    Modification(1, "1997", banknotes),
-    Modification(2, "2001", banknotes),
-    Modification(3, "2008", banknotes),
-    Modification(4, "2010", banknotes),
-    Modification(5, "2015", banknotes),
+    Modification(0, "1994", map),
+    Modification(1, "1997", map),
+    Modification(2, "2001", map),
+    Modification(3, "2008", map),
+    Modification(4, "2010", map),
+    Modification(5, "2015", map),
   ];
   
   @override

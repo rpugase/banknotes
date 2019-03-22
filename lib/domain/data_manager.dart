@@ -1,9 +1,9 @@
+import 'package:banknotes/data/repository/banknote.dart';
 import 'package:banknotes/data/repository/catalog.dart';
 import 'package:banknotes/data/repository/modification.dart';
-import 'package:banknotes/domain/model/catalog.dart';
 import 'package:banknotes/domain/model/banknote.dart';
+import 'package:banknotes/domain/model/catalog.dart';
 import 'package:banknotes/domain/model/modification.dart';
-import 'package:banknotes/data/repository/banknote.dart';
 
 class DataManager {
   DataManager(this._catalogRepository, this._modificationRepository, this._banknoteRepository);
@@ -20,7 +20,7 @@ class DataManager {
     return _catalogs;
   }
 
-  Future<List<Banknote>> getBanknotes(Modification modification) async {
+  Future<Map<int, List<Banknote>>> getBanknotes(Modification modification) async {
     if (modification != null && modification.banknotes.isEmpty) {
        modification.banknotes.addAll(await _banknoteRepository.getBanknotes(modification.id));
     }
