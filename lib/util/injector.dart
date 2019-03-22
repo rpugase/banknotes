@@ -31,7 +31,7 @@ class Injector {
   static CatalogRepository get _catalogRepository
   => (_useMock) ? CatalogMockRepository() : CatalogDbRepository(_catalogBean);
 
-  static ModificationRepository get _modificationRepository
+  static EmissionRepository get _modificationRepository
   => (_useMock) ? ModificationMockRepository() : ModificationDbRepository(_emissionBean);
 
 
