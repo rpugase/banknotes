@@ -1,3 +1,4 @@
+import 'package:banknotes/data/model/emission.dart';
 import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/modification.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
@@ -9,6 +10,9 @@ abstract class ModificationRepository {
 }
 
 class ModificationDbRepository implements ModificationRepository {
+  ModificationDbRepository(this.emissionBean);
+  final EmissionBean emissionBean;
+
   @override
   Future<List<Modification>> getFullModifications(int catalogId) => throw UnimplementedError();
 }

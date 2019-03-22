@@ -15,10 +15,18 @@ class OwnBanknote {
 
 class Currency {
 
-  Currency([this.code = CurrencyCode.usd]);
+  Currency([this._code = CurrencyCode.usd]);
+  Currency.fromStringCode(String codeString) {
+    _code = (codeString == CurrencyCode.usd.toString()) ? CurrencyCode.usd : CurrencyCode.eur;
+  }
 
-  final CurrencyCode code;
-  String get symbol => (code == CurrencyCode.usd) ? '\$' : '€';
+  CurrencyCode _code;
+  CurrencyCode get code => _code;
+
+  String get symbol => (_code == CurrencyCode.usd) ? '\$' : '€';
+
+  @override
+  String toString() => _code.toString();
 }
 
 enum CurrencyCode { usd, eur }
