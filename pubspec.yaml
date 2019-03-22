@@ -27,3 +27,4 @@ flutter:
   assets:
   - resources/lang/en.json
   - resources/lang/ru.json
+  - resources/images/no_image_icon.png

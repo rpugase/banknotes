@@ -2,6 +2,7 @@ import 'package:banknotes/data/model/catalog.dart';
 import 'package:banknotes/data/model/emission.dart';
 import 'package:banknotes/data/repository/catalog.dart';
 import 'package:banknotes/data/repository/modification.dart';
+import 'package:banknotes/data/repository/banknote.dart';
 import 'package:banknotes/domain/data_manager.dart';
 import 'package:jaguar_query_sqflite/jaguar_query_sqflite.dart';
 
@@ -34,6 +35,8 @@ class Injector {
   static EmissionRepository get _modificationRepository
   => (_useMock) ? ModificationMockRepository() : ModificationDbRepository(_emissionBean);
 
+  static BanknoteMockRepository get _banknoteRepository
+  => (_useMock) ? BanknoteMockRepository() : BanknoteDBRepository();
 
   /// DataManager
   DataManager dataManager = DataManager(_catalogRepository, _modificationRepository);

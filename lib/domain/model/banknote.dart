@@ -12,6 +12,10 @@ class Banknote {
   final List<Image> images;
   final List<OwnBanknote> ownBanknotes;
 
+  Image get firstBanknoteImage =>
+     images.isNotEmpty ? images.first : Image('resources/images/no_image_icon.png', ImageType.assets);
+
+
   Banknote.fromEntity(BanknoteEntity entity) :
         id = entity.id,
         name = entity.name,
