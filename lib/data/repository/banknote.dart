@@ -1,37 +1,38 @@
+import 'package:banknotes/data/model/banknote.dart';
+import 'package:banknotes/data/model/own_banknote.dart';
 import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
 
 abstract class BanknoteRepository {
-  Future<Map<int, List<Banknote>>> getBanknotes(int modificationId);
+  Future<List<BanknoteEntity>> getBanknotes(int modificationId);
 }
 
 class BanknoteDBRepository implements BanknoteRepository {
-  Future<Map<int, List<Banknote>>> getBanknotes(int modificationId) => throw UnimplementedError();
+  BanknoteDBRepository(this.banknoteBean);
+  final BanknoteBean banknoteBean;
+
+  Future<List<BanknoteEntity>> getBanknotes(int modificationId) => throw UnimplementedError();
 }
 
 class BanknoteMockRepository implements BanknoteRepository {
 
-  List<Banknote> get banknotes => [
-    Banknote(0, "1 uah", "desc", ownBanknotes: []),
-    Banknote(1, "2 uah", "desc", ownBanknotes: [OwnBanknote(0, QualityType.good, price: 12.5, currency: Currency(), date: DateTime.now())]),
-    Banknote(2, "5 uah", "desc", ownBanknotes: []),
-    Banknote(3, "10 uah", "desc", ownBanknotes: []),
-    Banknote(4, "20 uah", "desc", ownBanknotes: []),
-    Banknote(5, "50 uah", "desc", ownBanknotes: []),
-    Banknote(6, "100 uah", "desc", ownBanknotes: []),
-    Banknote(7, "500 uah", "desc", ownBanknotes: []),
+  Description _description = Description.test();
+
+  List<BanknoteEntity> get banknotes => [
+    BanknoteEntity.make(0, "1 uah", _description.text, _description.year, _description.printer, _description.entryDate, 1, [], [])..id = 0,
+    BanknoteEntity.make(0, "2 uah", _description.text, _description.year, _description.printer, _description.entryDate, 1, [], [OwnBanknoteEntity.make(1, QualityType.good.toString(), 12.5, Currency().code.toString(), 'comment', [], DateTime.now())])..id = 1,
+    BanknoteEntity.make(0, "5 uah", _description.text, _description.year, _description.printer, _description.entryDate, 2, [], [])..id = 2,
+    BanknoteEntity.make(0, "10 uah", _description.text, _description.year, _description.printer, _description.entryDate, 2, [], [])..id = 3,
+    BanknoteEntity.make(0, "20 uah", _description.text, _description.year, _description.printer, _description.entryDate, 2, [], [])..id = 4,
+    BanknoteEntity.make(0, "50 uah", _description.text, _description.year, _description.printer, _description.entryDate, 3, [], [])..id = 5,
+    BanknoteEntity.make(0, "100 uah", _description.text, _description.year, _description.printer, _description.entryDate, 4, [], [])..id = 6,
+    BanknoteEntity.make(0, "500 uah", _description.text, _description.year, _description.printer, _description.entryDate, 4, [], [])..id = 7,
   ];
 
-  Map<int, List<Banknote>> get map => {
-    1: [Banknote(0, "1 uah", "desc", ownBanknotes: [])],
-    2: [Banknote(1, "2 uah", "desc", ownBanknotes: [OwnBanknote(0, QualityType.good, price: 12.5, currency: Currency(), date: DateTime.now())])],
-    3: banknotes
-  };
-
   @override
-  Future<Map<int, List<Banknote>>> getBanknotes(int modificationId) async {
+  Future<List<BanknoteEntity>> getBanknotes(int modificationId) async {
     await Future.delayed(Duration(seconds: 1));
 
-    return map;
+    return banknotes;
   }
 }

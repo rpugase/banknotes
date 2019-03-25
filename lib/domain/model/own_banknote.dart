@@ -1,3 +1,4 @@
+import 'package:banknotes/data/model/own_banknote.dart';
 import 'package:banknotes/domain/model/image.dart';
 
 class OwnBanknote {
@@ -11,14 +12,41 @@ class OwnBanknote {
   final String comment;
   final List<Image> images;
   final DateTime date;
+  
+  OwnBanknote.fromEntity(OwnBanknoteEntity entity) :
+        id = entity.id, 
+        price = entity.price, 
+        currency = Currency.fromStringCode(entity.currency), 
+        quality = QualityType.values.firstWhere((quality) => quality.toString() == entity.quality),
+        comment = entity.comment, 
+        images = entity.images.map((image) => Image.fromEntity(image)).toList(),
+        date = entity.date;
+
+  OwnBanknoteEntity toEntity(int banknotesId) => OwnBanknoteEntity.make(
+      banknotesId,
+      quality.toString(),
+      price,
+      currency.toString(),
+      comment,
+      images.map((image) => image.toEntity()).toList(),
+      date
+  );
 }
 
 class Currency {
 
-  Currency([this.code = CurrencyCode.usd]);
+  Currency([this._code = CurrencyCode.usd]);
+  Currency.fromStringCode(String codeString) {
+    _code = (codeString == CurrencyCode.usd.toString()) ? CurrencyCode.usd : CurrencyCode.eur;
+  }
 
-  final CurrencyCode code;
-  String get symbol => (code == CurrencyCode.usd) ? '\$' : '€';
+  CurrencyCode _code;
+  CurrencyCode get code => _code;
+
+  String get symbol => (_code == CurrencyCode.usd) ? '\$' : '€';
+
+  @override
+  String toString() => _code.toString();
 }
 
 enum CurrencyCode { usd, eur }
