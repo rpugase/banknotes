@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 void showError(BuildContext context, Error error, [Function func]) {
   if (func != null) func();
 
+  print(error.stackTrace);
+
   showDialog(
       context: context,
       builder: (context) => AlertDialog(
