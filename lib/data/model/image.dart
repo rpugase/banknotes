@@ -7,7 +7,7 @@ part 'image.jorm.dart';
 
 class ImageEntity {
   ImageEntity();
-  ImageEntity.make(this.path, this.main);
+  ImageEntity.make(this.path, this.main, this.type);
 
   @PrimaryKey(auto: true)
   int id;
@@ -17,6 +17,9 @@ class ImageEntity {
 
   @Column()
   bool main;
+
+  @Column()
+  String type;
 
   @ManyToMany(BanknotesImageBean, BanknoteBean)
   List<BanknoteEntity> banknotes;

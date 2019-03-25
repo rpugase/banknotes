@@ -9,10 +9,10 @@ class Image {
 
   Image.fromEntity(ImageEntity entity) :
         path = entity.path,
-        imageType = ImageType.assets,
+        imageType = ImageType.values.firstWhere((type) => type.toString() == entity.type),
         main = entity.main;
 
-  ImageEntity toEntity() => ImageEntity.make(path, main);
+  ImageEntity toEntity() => ImageEntity.make(path, main, imageType.toString());
 }
 
-enum ImageType { network, assets, device }
+enum ImageType { assets, device }

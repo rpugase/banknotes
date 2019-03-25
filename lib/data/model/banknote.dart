@@ -8,7 +8,8 @@ part 'banknote.jorm.dart';
 
 class BanknoteEntity {
   BanknoteEntity();
-  BanknoteEntity.make(this.name, this.description, this.images, this.ownBanknotes);
+  BanknoteEntity.make(this.name, this.description, this.year, this.printer,
+      this.entryDate, this.parentId, this.images, this.ownBanknotes);
 
   @PrimaryKey(auto: true)
   int id;
@@ -21,6 +22,18 @@ class BanknoteEntity {
 
   @Column()
   String description;
+
+  @Column(length: 4)
+  String year;
+
+  @Column()
+  String printer;
+
+  @Column()
+  String entryDate;
+
+  @Column()
+  int parentId;
 
   @ManyToMany(BanknotesImageBean, ImageBean)
   List<ImageEntity> images;
