@@ -32,6 +32,11 @@ class OwnBanknote {
       images.map((image) => image.toEntity()).toList(),
       date
   );
+
+  String formatDate() {
+    var formatter = new DateFormat('yyyy-MM-dd');
+    return formatter.format(date);
+  }
 }
 
 class Currency {
