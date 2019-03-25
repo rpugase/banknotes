@@ -3,12 +3,12 @@ import 'package:banknotes/domain/model/own_banknote.dart';
 import 'package:banknotes/presentation/attachment_own_banknote/page.dart';
 import 'package:banknotes/presentation/banknote_image_detail/page.dart';
 import 'package:banknotes/presentation/own_banknote_detail/page.dart';
-import 'package:banknotes/presentation/widget/reordeble_list_with_scrollView.dart';
+import 'package:banknotes/presentation/widget/reordeble_list_with_scroll_view.dart';
 import 'package:banknotes/util/localization.dart';
 import 'package:flutter/material.dart';
 
 class BanknoteDetailsPage extends StatefulWidget {
-  Banknote _banknote;
+  final Banknote _banknote;
 
   BanknoteDetailsPage(this._banknote);
 
@@ -22,9 +22,10 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
     AppBar appBar = AppBar(
       title: Text(widget._banknote.name),
       actions: <Widget>[
-        new IconButton(
+        IconButton(
           icon: Icon(Icons.add),
-          onPressed: () => _addOwnBanknote(),
+          onPressed
+              : () => _addOwnBanknote(),
         ),
       ],
     );
@@ -33,14 +34,11 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
       appBar: appBar,
       body: ReorderableList(
         onReorder: _reorderCallback,
-        onReorderDone: _reorderDone,
         child: CustomScrollView(slivers: <Widget>[
           SliverToBoxAdapter(
-            // Put here all widgets that are not slivers.
             child: _createImageView(),
           ),
           SliverToBoxAdapter(
-            // Put here all widgets that are not slivers.
             child: _createDescriptionView(),
           ),
           SliverPadding(
@@ -48,21 +46,17 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
                   bottom: MediaQuery.of(context).padding.bottom),
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                        return Item(
-                          data: widget._banknote.ownBanknotes[index],
-                          // first and last attributes affect border drawn during dragging
-                          isFirst: index == 0,
-                          isLast: index == widget._banknote.ownBanknotes.length - 1,
-
-                        );
+                  (BuildContext context, int index) {
+                    return Item(
+                      data: widget._banknote.ownBanknotes[index],
+                      isFirst: index == 0,
+                      isLast: index == widget._banknote.ownBanknotes.length - 1,
+                    );
                   },
                   childCount: widget._banknote.ownBanknotes.length,
                 ),
               )),
-        ]
-//
-            ),
+        ]),
       ),
     );
   }
@@ -81,25 +75,19 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
   }
 
   bool _reorderCallback(Key item, Key newPosition) {
-    int draggingIndex =  _indexOfKey(item);
-    int newPositionIndex = _indexOfKey(newPosition);
+    int draggingIndex = _getIndexByKey(item);
+    int newPositionIndex = _getIndexByKey(newPosition);
 
-    final draggedItem = widget._banknote.ownBanknotes[draggingIndex];
     setState(() {
-      debugPrint("Reordering $item -> $newPosition");
-      widget._banknote.ownBanknotes.removeAt(draggingIndex);
+      final draggedItem = widget._banknote.ownBanknotes.removeAt(draggingIndex);
       widget._banknote.ownBanknotes.insert(newPositionIndex, draggedItem);
     });
     return true;
   }
 
-  int _indexOfKey(Key key) {
-    return widget._banknote.ownBanknotes.indexWhere((OwnBanknote d) => Key(d.id.toString()) == key);
-  }
-
-  void _reorderDone(Key item) {
-    final draggedItem = widget._banknote.ownBanknotes[_indexOfKey(item)];
-    debugPrint("Reordering finished for ${draggedItem.price}");
+  int _getIndexByKey(Key key) {
+    return widget._banknote.ownBanknotes.indexWhere(
+        (OwnBanknote ownBanknote) => Key(ownBanknote.id.toString()) == key);
   }
 
   Widget _createDescriptionView() {
@@ -107,14 +95,14 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.only(right: 16, left: 16, top: 16),
             child: Text(
               'Description',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(right: 8, left: 8, bottom: 8),
+            padding: EdgeInsets.only(right: 16, left: 16, bottom: 16, top: 8),
             child: Text(
               '1 гривна — наименьшая по номиналу банкнота в денежном обороте современной Украины. Введена в обращение Национальным банком в 1996 году.',
               style: TextStyle(fontWeight: FontWeight.normal),
@@ -126,7 +114,7 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
   void _openAllImages(Banknote banknote) {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => BanknoteImageDetailPage(banknote)));
-  } //AttachmentOwnBanknotePage
+  }
 
   void _addOwnBanknote() {
     Navigator.of(context).push(
@@ -150,24 +138,19 @@ class Item extends StatelessWidget {
 
     if (state == ReorderableItemState.dragProxy ||
         state == ReorderableItemState.dragProxyFinished) {
-      // slightly transparent background white dragging (just like on iOS)
       decoration = BoxDecoration(color: Color(0xD0FFFFFF));
     } else {
       bool placeholder = state == ReorderableItemState.placeholder;
       decoration = BoxDecoration(
           border: Border(
               top: isFirst && !placeholder
-                  ? Divider.createBorderSide(context) //
+                  ? Divider.createBorderSide(context)
                   : BorderSide.none,
               bottom: isLast && placeholder
-                  ? BorderSide.none //
+                  ? BorderSide.none
                   : Divider.createBorderSide(context)),
           color: placeholder ? null : Colors.white);
     }
-
-    // For iOS dragging mdoe, there will be drag handle on the right that triggers
-    // reordering; For android mode it will be just an empty container
-    Widget dragHandle = Container();
 
     Widget content = Container(
       decoration: decoration,
@@ -175,7 +158,6 @@ class Item extends StatelessWidget {
           top: false,
           bottom: false,
           child: Opacity(
-            // hide content for placeholder
             opacity: state == ReorderableItemState.placeholder ? 0.0 : 1.0,
             child: IntrinsicHeight(
               child: Row(
@@ -183,22 +165,20 @@ class Item extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                       child: Padding(
-                        padding:
+                    padding:
                         EdgeInsets.symmetric(vertical: 14.0, horizontal: 14.0),
-                        child:
-                        _createOwnBanknoteCell(data, context),
-                      )),
-                  // Triggers the reordering
-                  dragHandle,
+                    child: _createOwnBanknoteCell(data, context),
+                  )),
+                  Container(),
                 ],
               ),
             ),
           )),
     );
 
-      content = DelayedReorderableListener(
-        child: content,
-      );
+    content = DelayedReorderableListener(
+      child: content,
+    );
 
     return content;
   }
@@ -206,50 +186,35 @@ class Item extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ReorderableItem(
-        key: Key(data.id.toString()), //
-        childBuilder: _buildChild);
+        key: Key(data.id.toString()), childBuilder: _buildChild);
   }
 
   Widget _createOwnBanknoteCell(OwnBanknote ownBanknote, BuildContext context) {
     return GestureDetector(
       onTap: () => _showOwnBanknote(ownBanknote, context),
       child: Container(
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-            Padding(
-                padding: EdgeInsets.all(10),
-                child: Image.asset(
-                  'resources/images/quality.png',
-                  width: 30.0,
-                  height: 30.0,
-                )),
-            Padding(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      '${Localization.of(context).shoppingPrice}${ownBanknote.price} ${ownBanknote.currency.symbol}',
-                      style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                    ),
-                    Text(
-                      '${Localization.of(context).shoppingDate}${ownBanknote.formatDate()}',
-                      style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                    ),
-                  ],
-                )),
-            Padding(
-
-                padding: EdgeInsets.all(10),
-                child: Icon(Icons.menu),
+          child: ListTile(
+        onTap: () => _showOwnBanknote(ownBanknote, context),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              '${Localization.of(context).shoppingPrice}${ownBanknote.price} ${ownBanknote.currency.symbol}',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            ),
+            Text(
+              '${Localization.of(context).shoppingDate}${ownBanknote.formatDate()}',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
             ),
           ],
         ),
-      ),
+        leading: Image.asset(
+          'resources/images/quality.png',
+          width: 30.0,
+          height: 30.0,
+        ),
+        trailing: Icon(Icons.menu),
+      )),
     );
   }
 
