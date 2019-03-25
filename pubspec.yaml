@@ -12,9 +12,15 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  jaguar_orm: ^2.2.6
+  jaguar_query_sqflite: ^2.2.9
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  jaguar_orm_gen: ^2.2.0
+  build_runner: ^0.10.0
 
 flutter:
   uses-material-design: true

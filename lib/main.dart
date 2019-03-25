@@ -1,9 +1,16 @@
 import 'package:banknotes/presentation/catalog/page.dart';
+import 'package:banknotes/util/injector.dart';
 import 'package:banknotes/util/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:jaguar_query_sqflite/jaguar_query_sqflite.dart';
+import 'package:sqflite/sqflite.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  Injector().init(SqfliteAdapter(await getDatabasesPath(), version: 1));
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override

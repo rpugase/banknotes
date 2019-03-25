@@ -1,49 +1,51 @@
+import 'package:banknotes/data/model/banknote.dart';
+import 'package:banknotes/data/model/emission.dart';
+import 'package:banknotes/data/model/own_banknote.dart';
 import 'package:banknotes/domain/model/banknote.dart';
-import 'package:banknotes/domain/model/modification.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
 
-abstract class ModificationRepository {
+abstract class EmissionRepository {
 
   /// Get all modifications with Banknotes and OwnBanknotes.
-  Future<List<Modification>> getFullModifications(int catalogId);
+  Future<List<EmissionEntity>> getFullModifications(int catalogId);
 }
 
-class ModificationDbRepository implements ModificationRepository {
+class ModificationDbRepository implements EmissionRepository {
+  ModificationDbRepository(this.emissionBean);
+  final EmissionBean emissionBean;
+
   @override
-  Future<List<Modification>> getFullModifications(int catalogId) => throw UnimplementedError();
+  Future<List<EmissionEntity>> getFullModifications(int catalogId) => throw UnimplementedError();
 }
 
-class ModificationMockRepository implements ModificationRepository {
+class ModificationMockRepository implements EmissionRepository {
 
-  List<Banknote> get banknotes => [
-    Banknote(0, "1 uah", "desc", ownBanknotes: []),
-    Banknote(1, "2 uah", "desc", ownBanknotes: [
-      OwnBanknote(0, QualityType.good, price: 12.5, currency: Currency(), date: DateTime.now()),
-      OwnBanknote(1, QualityType.good, price: 2.5, currency: Currency(), date: DateTime.now()),
-      OwnBanknote(2, QualityType.good, price: 0.5, currency: Currency(), date: DateTime.now())
-    ]),
-    Banknote(2, "5 uah", "desc", ownBanknotes: []),
-    Banknote(3, "10 uah", "desc", ownBanknotes: []),
-    Banknote(4, "20 uah", "desc", ownBanknotes: []),
-    Banknote(5, "50 uah", "desc", ownBanknotes: []),
-    Banknote(6, "100 uah", "desc", ownBanknotes: []),
-    Banknote(7, "500 uah", "desc", ownBanknotes: []),
+  Description _description = Description.test();
+
+  List<BanknoteEntity> get banknotes => [
+    BanknoteEntity.make(0, "1 uah", _description.text, _description.year, _description.printer, _description.entryDate, 1, [], [])..id = 0,
+    BanknoteEntity.make(0, "2 uah", _description.text, _description.year, _description.printer, _description.entryDate, 1, [], [OwnBanknoteEntity.make(1, QualityType.good.toString(), 12.5, Currency().code.toString(), 'comment', [], DateTime.now())])..id = 1,
+    BanknoteEntity.make(0, "5 uah", _description.text, _description.year, _description.printer, _description.entryDate, 2, [], [])..id = 2,
+    BanknoteEntity.make(0, "10 uah", _description.text, _description.year, _description.printer, _description.entryDate, 2, [], [])..id = 3,
+    BanknoteEntity.make(0, "20 uah", _description.text, _description.year, _description.printer, _description.entryDate, 2, [], [])..id = 4,
+    BanknoteEntity.make(0, "50 uah", _description.text, _description.year, _description.printer, _description.entryDate, 3, [], [])..id = 5,
+    BanknoteEntity.make(0, "100 uah", _description.text, _description.year, _description.printer, _description.entryDate, 4, [], [])..id = 6,
+    BanknoteEntity.make(0, "500 uah", _description.text, _description.year, _description.printer, _description.entryDate, 4, [], [])..id = 7,
   ];
-  
-  List<Modification> get modifications => [
-    Modification(0, "1994", banknotes),
-    Modification(1, "1997", banknotes),
-    Modification(2, "2001", banknotes),
-    Modification(3, "2008", banknotes),
-    Modification(4, "2010", banknotes),
-    Modification(5, "2015", banknotes),
+
+  List<EmissionEntity> get modifications => [
+    EmissionEntity.make(0, "1994", banknotes)..id = 0,
+    EmissionEntity.make(0, "1997", banknotes)..id = 1,
+    EmissionEntity.make(0, "2001", banknotes)..id = 2,
+    EmissionEntity.make(0, "2008", banknotes)..id = 3,
+    EmissionEntity.make(0, "2010", banknotes)..id = 4,
+    EmissionEntity.make(0, "2015", banknotes)..id = 5,
   ];
-  
+
   @override
-  Future<List<Modification>> getFullModifications(int catalogId) async {
+  Future<List<EmissionEntity>> getFullModifications(int catalogId) async {
     await Future.delayed(Duration(seconds: 1));
 
     return modifications;
   }
-  
 }
