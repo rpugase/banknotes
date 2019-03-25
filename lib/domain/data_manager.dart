@@ -2,7 +2,6 @@ import 'package:banknotes/data/model/banknote.dart';
 import 'package:banknotes/data/model/catalog.dart';
 import 'package:banknotes/data/model/emission.dart';
 import 'package:banknotes/data/repository/banknote.dart';
-import 'package:banknotes/data/repository/banknote.dart';
 import 'package:banknotes/data/repository/catalog.dart';
 import 'package:banknotes/data/repository/modification.dart';
 import 'package:banknotes/domain/model/banknote.dart';
@@ -28,7 +27,16 @@ class DataManager {
   Future<Map<int, List<Banknote>>> getBanknotes(Modification modification) async {
     if (modification != null && modification.banknotes.isEmpty) {
       final List<BanknoteEntity> banknotes = await _banknoteRepository.getBanknotes(modification.id);
-      modification.banknotes.addAll(banknotes.map((banknote) => Banknote.fromEntity(banknote)));
+      final Map<int, List<Banknote>> map = {};
+      banknotes.forEach((banknote) {
+        if (map[banknote.parentId] == null) {
+          map[banknote.parentId] = [Banknote.fromEntity(banknote)];
+        } else {
+          map[banknote.parentId].add(Banknote.fromEntity(banknote));
+        }
+      });
+
+      modification.banknotes.addAll(map);
     }
 
     return modification.banknotes;

@@ -19,11 +19,14 @@ class Modification {
   Modification.fromEntity(EmissionEntity entity) :
         id = entity.id,
         name = entity.shortName,
-        banknotes = entity.banknotes.map((banknote) => Banknote.fromEntity(banknote)).toList();
+        banknotes = Banknote.toMap(entity.banknotes);
 
   EmissionEntity toEntity(int catalogId) => EmissionEntity.make(
       catalogId,
       name,
-      banknotes.map((banknote) => banknote.toEntity(id)).toList()
+      banknotes.values.reduce((value, element) {
+        value.addAll(element);
+        return value;
+      }).map((banknote) => banknote.toEntity(id)).toList()
   );
 }

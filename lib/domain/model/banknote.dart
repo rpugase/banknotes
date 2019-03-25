@@ -36,6 +36,20 @@ class Banknote {
       images.map((image) => image.toEntity()).toList(),
       ownBanknotes.map((ownBanknote) => ownBanknote.toEntity(id)).toList()
   );
+
+  static Map<int, List<Banknote>> toMap(List<BanknoteEntity> banknotes) {
+    final Map<int, List<Banknote>> map = {};
+
+    banknotes.forEach((banknote) {
+      if (map[banknote.parentId] == null) {
+        map[banknote.parentId] = [Banknote.fromEntity(banknote)];
+      } else {
+        map[banknote.parentId].add(Banknote.fromEntity(banknote));
+      }
+    });
+
+    return map;
+  }
 }
 
 class Description {
