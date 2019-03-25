@@ -24,10 +24,19 @@ class DataManager {
     return _catalogs;
   }
 
-  Future<List<Banknote>> getBanknotes(Modification modification) async {
+  Future<Map<int, List<Banknote>>> getBanknotes(Modification modification) async {
     if (modification != null && modification.banknotes.isEmpty) {
       final List<BanknoteEntity> banknotes = await _banknoteRepository.getBanknotes(modification.id);
-      modification.banknotes.addAll(banknotes.map((banknote) => Banknote.fromEntity(banknote)));
+      final Map<int, List<Banknote>> map = {};
+      banknotes.forEach((banknote) {
+        if (map[banknote.parentId] == null) {
+          map[banknote.parentId] = [Banknote.fromEntity(banknote)];
+        } else {
+          map[banknote.parentId].add(Banknote.fromEntity(banknote));
+        }
+      });
+
+      modification.banknotes.addAll(map);
     }
 
     return modification.banknotes;

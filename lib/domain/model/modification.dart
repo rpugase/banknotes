@@ -6,19 +6,27 @@ class Modification {
 
   final int id;
   final String name;
-  final List<Banknote> banknotes;
+  final Map<int, List<Banknote>> banknotes;
 
-  int get banknotesLength => banknotes.length;
-  int get ownBanknotesLength => banknotes.where((banknote) => banknote.ownBanknotes.isNotEmpty).length;
+  int get banknotesLength => banknotes.values
+      .map((banknotes) => banknotes.length)
+      .reduce((value, element) => value + element);
+
+  int get ownBanknotesLength => banknotes.values
+      .map((banknotes) => banknotes.where((banknote) => banknote.ownBanknotes.isNotEmpty).length)
+      .reduce((value, element) => value + element);
 
   Modification.fromEntity(EmissionEntity entity) :
         id = entity.id,
         name = entity.shortName,
-        banknotes = entity.banknotes.map((banknote) => Banknote.fromEntity(banknote)).toList();
+        banknotes = Banknote.toMap(entity.banknotes);
 
   EmissionEntity toEntity(int catalogId) => EmissionEntity.make(
       catalogId,
       name,
-      banknotes.map((banknote) => banknote.toEntity(id)).toList()
+      banknotes.values.reduce((value, element) {
+        value.addAll(element);
+        return value;
+      }).map((banknote) => banknote.toEntity(id)).toList()
   );
 }
