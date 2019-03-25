@@ -87,7 +87,7 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
 
   int _getIndexByKey(Key key) {
     return widget._banknote.ownBanknotes.indexWhere(
-        (OwnBanknote ownBanknote) => Key(ownBanknote.id.toString()) == key);
+        (ownBanknote) => Key(ownBanknote.id.toString()) == key);
   }
 
   Widget _createDescriptionView() {
