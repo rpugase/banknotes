@@ -25,7 +25,8 @@ class Banknote {
         images = entity.images.map((image) => Image.fromEntity(image)).toList(),
         ownBanknotes = entity.ownBanknotes.map((ownBanknote) => OwnBanknote.fromEntity(ownBanknote)).toList();
 
-  BanknoteEntity toEntity() => BanknoteEntity.make(
+  BanknoteEntity toEntity(int emissionId) => BanknoteEntity.make(
+      emissionId,
       name,
       description.text,
       description.year,
@@ -33,7 +34,7 @@ class Banknote {
       description.entryDate,
       parentId,
       images.map((image) => image.toEntity()).toList(),
-      ownBanknotes.map((ownBanknote) => ownBanknote.toEntity()).toList()
+      ownBanknotes.map((ownBanknote) => ownBanknote.toEntity(id)).toList()
   );
 }
 

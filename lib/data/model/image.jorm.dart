@@ -10,17 +10,20 @@ abstract class _ImageBean implements Bean<ImageEntity> {
   final id = IntField('id');
   final path = StrField('path');
   final main = BoolField('main');
+  final type = StrField('type');
   Map<String, Field> _fields;
   Map<String, Field> get fields => _fields ??= {
         id.name: id,
         path.name: path,
         main.name: main,
+        type.name: type,
       };
   ImageEntity fromMap(Map map) {
     ImageEntity model = ImageEntity();
     model.id = adapter.parseValue(map['id']);
     model.path = adapter.parseValue(map['path']);
     model.main = adapter.parseValue(map['main']);
+    model.type = adapter.parseValue(map['type']);
 
     return model;
   }
@@ -30,13 +33,19 @@ abstract class _ImageBean implements Bean<ImageEntity> {
     List<SetColumn> ret = [];
 
     if (only == null) {
-      ret.add(id.set(model.id));
+      if (model.id != null) {
+        ret.add(id.set(model.id));
+      }
       ret.add(path.set(model.path));
       ret.add(main.set(model.main));
+      ret.add(type.set(model.type));
     } else {
-      if (only.contains(id.name)) ret.add(id.set(model.id));
+      if (model.id != null) {
+        if (only.contains(id.name)) ret.add(id.set(model.id));
+      }
       if (only.contains(path.name)) ret.add(path.set(model.path));
       if (only.contains(main.name)) ret.add(main.set(model.main));
+      if (only.contains(type.name)) ret.add(type.set(model.type));
     }
 
     return ret;
@@ -44,26 +53,27 @@ abstract class _ImageBean implements Bean<ImageEntity> {
 
   Future<void> createTable({bool ifNotExists: false}) async {
     final st = Sql.create(tableName, ifNotExists: ifNotExists);
-    st.addInt(id.name, primary: true, isNullable: false);
+    st.addInt(id.name, primary: true, autoIncrement: true, isNullable: false);
     st.addStr(path.name, isNullable: false);
     st.addBool(main.name, isNullable: false);
+    st.addStr(type.name, isNullable: false);
     return adapter.createTable(st);
   }
 
   Future<dynamic> insert(ImageEntity model, {bool cascade: false}) async {
-    final Insert insert = inserter.setMany(toSetColumns(model));
+    final Insert insert = inserter.setMany(toSetColumns(model)).id(id.name);
     var retId = await adapter.insert(insert);
     if (cascade) {
       ImageEntity newModel;
       if (model.banknotes != null) {
-        newModel ??= await find(model.id);
+        newModel ??= await find(retId);
         for (final child in model.banknotes) {
           await banknoteEntityBean.insert(child);
           await banknotesImageEntityBean.attach(model, child);
         }
       }
       if (model.ownBanknotes != null) {
-        newModel ??= await find(model.id);
+        newModel ??= await find(retId);
         for (final child in model.ownBanknotes) {
           await ownBanknoteEntityBean.insert(child);
           await ownBanknotesImageEntityBean.attach(child, model);
@@ -92,19 +102,19 @@ abstract class _ImageBean implements Bean<ImageEntity> {
   }
 
   Future<dynamic> upsert(ImageEntity model, {bool cascade: false}) async {
-    final Upsert upsert = upserter.setMany(toSetColumns(model));
+    final Upsert upsert = upserter.setMany(toSetColumns(model)).id(id.name);
     var retId = await adapter.upsert(upsert);
     if (cascade) {
       ImageEntity newModel;
       if (model.banknotes != null) {
-        newModel ??= await find(model.id);
+        newModel ??= await find(retId);
         for (final child in model.banknotes) {
           await banknoteEntityBean.upsert(child);
           await banknotesImageEntityBean.attach(model, child);
         }
       }
       if (model.ownBanknotes != null) {
-        newModel ??= await find(model.id);
+        newModel ??= await find(retId);
         for (final child in model.ownBanknotes) {
           await ownBanknoteEntityBean.upsert(child);
           await ownBanknotesImageEntityBean.attach(child, model);

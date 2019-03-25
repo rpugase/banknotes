@@ -22,7 +22,8 @@ class OwnBanknote {
         images = entity.images.map((image) => Image.fromEntity(image)).toList(),
         date = entity.date;
 
-  OwnBanknoteEntity toEntity() => OwnBanknoteEntity.make(
+  OwnBanknoteEntity toEntity(int banknotesId) => OwnBanknoteEntity.make(
+      banknotesId,
       quality.toString(),
       price,
       currency.toString(),

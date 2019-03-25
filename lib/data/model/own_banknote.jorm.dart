@@ -42,7 +42,9 @@ abstract class _OwnBanknoteBean implements Bean<OwnBanknoteEntity> {
     List<SetColumn> ret = [];
 
     if (only == null) {
-      ret.add(id.set(model.id));
+      if (model.id != null) {
+        ret.add(id.set(model.id));
+      }
       ret.add(banknoteId.set(model.banknoteId));
       ret.add(price.set(model.price));
       ret.add(currency.set(model.currency));
@@ -50,7 +52,9 @@ abstract class _OwnBanknoteBean implements Bean<OwnBanknoteEntity> {
       ret.add(comment.set(model.comment));
       ret.add(date.set(model.date));
     } else {
-      if (only.contains(id.name)) ret.add(id.set(model.id));
+      if (model.id != null) {
+        if (only.contains(id.name)) ret.add(id.set(model.id));
+      }
       if (only.contains(banknoteId.name))
         ret.add(banknoteId.set(model.banknoteId));
       if (only.contains(price.name)) ret.add(price.set(model.price));
@@ -65,7 +69,7 @@ abstract class _OwnBanknoteBean implements Bean<OwnBanknoteEntity> {
 
   Future<void> createTable({bool ifNotExists: false}) async {
     final st = Sql.create(tableName, ifNotExists: ifNotExists);
-    st.addInt(id.name, primary: true, isNullable: false);
+    st.addInt(id.name, primary: true, autoIncrement: true, isNullable: false);
     st.addInt(banknoteId.name,
         foreignTable: banknoteEntityBean.tableName,
         foreignCol: 'id',
@@ -79,12 +83,12 @@ abstract class _OwnBanknoteBean implements Bean<OwnBanknoteEntity> {
   }
 
   Future<dynamic> insert(OwnBanknoteEntity model, {bool cascade: false}) async {
-    final Insert insert = inserter.setMany(toSetColumns(model));
+    final Insert insert = inserter.setMany(toSetColumns(model)).id(id.name);
     var retId = await adapter.insert(insert);
     if (cascade) {
       OwnBanknoteEntity newModel;
       if (model.images != null) {
-        newModel ??= await find(model.id);
+        newModel ??= await find(retId);
         for (final child in model.images) {
           await imageEntityBean.insert(child);
           await ownBanknotesImageEntityBean.attach(model, child);
@@ -113,12 +117,12 @@ abstract class _OwnBanknoteBean implements Bean<OwnBanknoteEntity> {
   }
 
   Future<dynamic> upsert(OwnBanknoteEntity model, {bool cascade: false}) async {
-    final Upsert upsert = upserter.setMany(toSetColumns(model));
+    final Upsert upsert = upserter.setMany(toSetColumns(model)).id(id.name);
     var retId = await adapter.upsert(upsert);
     if (cascade) {
       OwnBanknoteEntity newModel;
       if (model.images != null) {
-        newModel ??= await find(model.id);
+        newModel ??= await find(retId);
         for (final child in model.images) {
           await imageEntityBean.upsert(child);
           await ownBanknotesImageEntityBean.attach(model, child);

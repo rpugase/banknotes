@@ -26,5 +26,5 @@ class Catalog {
         modifications = catalogEntity.emissions.map((emission) => Modification.fromEntity(emission)).toList();
 
   CatalogEntity toEntity() => CatalogEntity.make(name, image.path, isFavourite,
-      modifications.map((modification) => modification.toEntity()).toList());
+      modifications.map((modification) => modification.toEntity(id)).toList());
 }

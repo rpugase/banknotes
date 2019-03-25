@@ -30,11 +30,15 @@ abstract class _EmissionBean implements Bean<EmissionEntity> {
     List<SetColumn> ret = [];
 
     if (only == null) {
-      ret.add(id.set(model.id));
+      if (model.id != null) {
+        ret.add(id.set(model.id));
+      }
       ret.add(catalogId.set(model.catalogId));
       ret.add(shortName.set(model.shortName));
     } else {
-      if (only.contains(id.name)) ret.add(id.set(model.id));
+      if (model.id != null) {
+        if (only.contains(id.name)) ret.add(id.set(model.id));
+      }
       if (only.contains(catalogId.name))
         ret.add(catalogId.set(model.catalogId));
       if (only.contains(shortName.name))
@@ -46,7 +50,7 @@ abstract class _EmissionBean implements Bean<EmissionEntity> {
 
   Future<void> createTable({bool ifNotExists: false}) async {
     final st = Sql.create(tableName, ifNotExists: ifNotExists);
-    st.addInt(id.name, primary: true, isNullable: false);
+    st.addInt(id.name, primary: true, autoIncrement: true, isNullable: false);
     st.addInt(catalogId.name,
         foreignTable: catalogEntityBean.tableName,
         foreignCol: 'id',
@@ -56,12 +60,12 @@ abstract class _EmissionBean implements Bean<EmissionEntity> {
   }
 
   Future<dynamic> insert(EmissionEntity model, {bool cascade: false}) async {
-    final Insert insert = inserter.setMany(toSetColumns(model));
+    final Insert insert = inserter.setMany(toSetColumns(model)).id(id.name);
     var retId = await adapter.insert(insert);
     if (cascade) {
       EmissionEntity newModel;
       if (model.banknotes != null) {
-        newModel ??= await find(model.id);
+        newModel ??= await find(retId);
         model.banknotes.forEach(
             (x) => banknoteEntityBean.associateEmissionEntity(x, newModel));
         for (final child in model.banknotes) {
@@ -91,12 +95,12 @@ abstract class _EmissionBean implements Bean<EmissionEntity> {
   }
 
   Future<dynamic> upsert(EmissionEntity model, {bool cascade: false}) async {
-    final Upsert upsert = upserter.setMany(toSetColumns(model));
+    final Upsert upsert = upserter.setMany(toSetColumns(model)).id(id.name);
     var retId = await adapter.upsert(upsert);
     if (cascade) {
       EmissionEntity newModel;
       if (model.banknotes != null) {
-        newModel ??= await find(model.id);
+        newModel ??= await find(retId);
         model.banknotes.forEach(
             (x) => banknoteEntityBean.associateEmissionEntity(x, newModel));
         for (final child in model.banknotes) {

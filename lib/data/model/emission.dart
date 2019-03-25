@@ -6,7 +6,7 @@ part 'emission.jorm.dart';
 
 class EmissionEntity {
   EmissionEntity();
-  EmissionEntity.make(this.shortName, this.banknotes);
+  EmissionEntity.make(this.catalogId, this.shortName, this.banknotes);
 
   @PrimaryKey(auto: true)
   int id;

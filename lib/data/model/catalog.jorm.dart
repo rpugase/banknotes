@@ -36,13 +36,17 @@ abstract class _CatalogBean implements Bean<CatalogEntity> {
     List<SetColumn> ret = [];
 
     if (only == null) {
-      ret.add(id.set(model.id));
+      if (model.id != null) {
+        ret.add(id.set(model.id));
+      }
       ret.add(name.set(model.name));
       ret.add(image.set(model.image));
       ret.add(isFavourite.set(model.isFavourite));
       ret.add(position.set(model.position));
     } else {
-      if (only.contains(id.name)) ret.add(id.set(model.id));
+      if (model.id != null) {
+        if (only.contains(id.name)) ret.add(id.set(model.id));
+      }
       if (only.contains(name.name)) ret.add(name.set(model.name));
       if (only.contains(image.name)) ret.add(image.set(model.image));
       if (only.contains(isFavourite.name))
@@ -55,7 +59,7 @@ abstract class _CatalogBean implements Bean<CatalogEntity> {
 
   Future<void> createTable({bool ifNotExists: false}) async {
     final st = Sql.create(tableName, ifNotExists: ifNotExists);
-    st.addInt(id.name, primary: true, isNullable: false);
+    st.addInt(id.name, primary: true, autoIncrement: true, isNullable: false);
     st.addStr(name.name, isNullable: false);
     st.addStr(image.name, isNullable: false);
     st.addBool(isFavourite.name, isNullable: false);
@@ -64,12 +68,12 @@ abstract class _CatalogBean implements Bean<CatalogEntity> {
   }
 
   Future<dynamic> insert(CatalogEntity model, {bool cascade: false}) async {
-    final Insert insert = inserter.setMany(toSetColumns(model));
+    final Insert insert = inserter.setMany(toSetColumns(model)).id(id.name);
     var retId = await adapter.insert(insert);
     if (cascade) {
       CatalogEntity newModel;
       if (model.emissions != null) {
-        newModel ??= await find(model.id);
+        newModel ??= await find(retId);
         model.emissions.forEach(
             (x) => emissionEntityBean.associateCatalogEntity(x, newModel));
         for (final child in model.emissions) {
@@ -99,12 +103,12 @@ abstract class _CatalogBean implements Bean<CatalogEntity> {
   }
 
   Future<dynamic> upsert(CatalogEntity model, {bool cascade: false}) async {
-    final Upsert upsert = upserter.setMany(toSetColumns(model));
+    final Upsert upsert = upserter.setMany(toSetColumns(model)).id(id.name);
     var retId = await adapter.upsert(upsert);
     if (cascade) {
       CatalogEntity newModel;
       if (model.emissions != null) {
-        newModel ??= await find(model.id);
+        newModel ??= await find(retId);
         model.emissions.forEach(
             (x) => emissionEntityBean.associateCatalogEntity(x, newModel));
         for (final child in model.emissions) {

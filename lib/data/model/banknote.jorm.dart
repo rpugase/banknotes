@@ -11,12 +11,20 @@ abstract class _BanknoteBean implements Bean<BanknoteEntity> {
   final emissionId = IntField('emission_id');
   final name = StrField('name');
   final description = StrField('description');
+  final year = StrField('year');
+  final printer = StrField('printer');
+  final entryDate = StrField('entry_date');
+  final parentId = IntField('parent_id');
   Map<String, Field> _fields;
   Map<String, Field> get fields => _fields ??= {
         id.name: id,
         emissionId.name: emissionId,
         name.name: name,
         description.name: description,
+        year.name: year,
+        printer.name: printer,
+        entryDate.name: entryDate,
+        parentId.name: parentId,
       };
   BanknoteEntity fromMap(Map map) {
     BanknoteEntity model = BanknoteEntity();
@@ -24,6 +32,10 @@ abstract class _BanknoteBean implements Bean<BanknoteEntity> {
     model.emissionId = adapter.parseValue(map['emission_id']);
     model.name = adapter.parseValue(map['name']);
     model.description = adapter.parseValue(map['description']);
+    model.year = adapter.parseValue(map['year']);
+    model.printer = adapter.parseValue(map['printer']);
+    model.entryDate = adapter.parseValue(map['entry_date']);
+    model.parentId = adapter.parseValue(map['parent_id']);
 
     return model;
   }
@@ -33,17 +45,30 @@ abstract class _BanknoteBean implements Bean<BanknoteEntity> {
     List<SetColumn> ret = [];
 
     if (only == null) {
-      ret.add(id.set(model.id));
+      if (model.id != null) {
+        ret.add(id.set(model.id));
+      }
       ret.add(emissionId.set(model.emissionId));
       ret.add(name.set(model.name));
       ret.add(description.set(model.description));
+      ret.add(year.set(model.year));
+      ret.add(printer.set(model.printer));
+      ret.add(entryDate.set(model.entryDate));
+      ret.add(parentId.set(model.parentId));
     } else {
-      if (only.contains(id.name)) ret.add(id.set(model.id));
+      if (model.id != null) {
+        if (only.contains(id.name)) ret.add(id.set(model.id));
+      }
       if (only.contains(emissionId.name))
         ret.add(emissionId.set(model.emissionId));
       if (only.contains(name.name)) ret.add(name.set(model.name));
       if (only.contains(description.name))
         ret.add(description.set(model.description));
+      if (only.contains(year.name)) ret.add(year.set(model.year));
+      if (only.contains(printer.name)) ret.add(printer.set(model.printer));
+      if (only.contains(entryDate.name))
+        ret.add(entryDate.set(model.entryDate));
+      if (only.contains(parentId.name)) ret.add(parentId.set(model.parentId));
     }
 
     return ret;
@@ -51,30 +76,34 @@ abstract class _BanknoteBean implements Bean<BanknoteEntity> {
 
   Future<void> createTable({bool ifNotExists: false}) async {
     final st = Sql.create(tableName, ifNotExists: ifNotExists);
-    st.addInt(id.name, primary: true, isNullable: false);
+    st.addInt(id.name, primary: true, autoIncrement: true, isNullable: false);
     st.addInt(emissionId.name,
         foreignTable: emissionEntityBean.tableName,
         foreignCol: 'id',
         isNullable: false);
     st.addStr(name.name, isNullable: false);
     st.addStr(description.name, isNullable: false);
+    st.addStr(year.name, length: 4, isNullable: false);
+    st.addStr(printer.name, isNullable: false);
+    st.addStr(entryDate.name, isNullable: false);
+    st.addInt(parentId.name, isNullable: false);
     return adapter.createTable(st);
   }
 
   Future<dynamic> insert(BanknoteEntity model, {bool cascade: false}) async {
-    final Insert insert = inserter.setMany(toSetColumns(model));
+    final Insert insert = inserter.setMany(toSetColumns(model)).id(id.name);
     var retId = await adapter.insert(insert);
     if (cascade) {
       BanknoteEntity newModel;
       if (model.images != null) {
-        newModel ??= await find(model.id);
+        newModel ??= await find(retId);
         for (final child in model.images) {
           await imageEntityBean.insert(child);
           await banknotesImageEntityBean.attach(child, model);
         }
       }
       if (model.ownBanknotes != null) {
-        newModel ??= await find(model.id);
+        newModel ??= await find(retId);
         model.ownBanknotes.forEach(
             (x) => ownBanknoteEntityBean.associateBanknoteEntity(x, newModel));
         for (final child in model.ownBanknotes) {
@@ -104,19 +133,19 @@ abstract class _BanknoteBean implements Bean<BanknoteEntity> {
   }
 
   Future<dynamic> upsert(BanknoteEntity model, {bool cascade: false}) async {
-    final Upsert upsert = upserter.setMany(toSetColumns(model));
+    final Upsert upsert = upserter.setMany(toSetColumns(model)).id(id.name);
     var retId = await adapter.upsert(upsert);
     if (cascade) {
       BanknoteEntity newModel;
       if (model.images != null) {
-        newModel ??= await find(model.id);
+        newModel ??= await find(retId);
         for (final child in model.images) {
           await imageEntityBean.upsert(child);
           await banknotesImageEntityBean.attach(child, model);
         }
       }
       if (model.ownBanknotes != null) {
-        newModel ??= await find(model.id);
+        newModel ??= await find(retId);
         model.ownBanknotes.forEach(
             (x) => ownBanknoteEntityBean.associateBanknoteEntity(x, newModel));
         for (final child in model.ownBanknotes) {

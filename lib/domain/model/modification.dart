@@ -16,8 +16,9 @@ class Modification {
         name = entity.shortName,
         banknotes = entity.banknotes.map((banknote) => Banknote.fromEntity(banknote)).toList();
 
-  EmissionEntity toEntity() => EmissionEntity.make(
+  EmissionEntity toEntity(int catalogId) => EmissionEntity.make(
+      catalogId,
       name,
-      banknotes.map((banknote) => banknote.toEntity()).toList()
+      banknotes.map((banknote) => banknote.toEntity(id)).toList()
   );
 }
