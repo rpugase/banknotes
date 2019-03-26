@@ -3,5 +3,11 @@
   "no_data" : "No data",
   "full_catalogs": "Full catalog",
   "close": "Close",
-  "error" : "Error"
+  "error" : "Error",
+  "shopping_price" : "Shopping price",
+  "shopping_date" : "Shopping date",
+  "printer" : "Printer",
+  "description": "Description",
+  "description_year": "Modification date",
+  "entry_date": "Entry date"
 }

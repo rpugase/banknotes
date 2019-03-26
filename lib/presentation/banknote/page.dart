@@ -1,3 +1,7 @@
+import 'package:banknotes/presentation/banknote_details/page.dart';
+import 'package:flutter/material.dart';
+import 'package:banknotes/domain/model/banknote.dart';
+import 'package:banknotes/util/injector.dart';
 import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/modification.dart';
@@ -39,15 +43,14 @@ class _BanknotePageState extends State<BanknotePage> {
 
   Widget _buildBanknotes() {
     List<Widget> items = [];
-
     _banknotes.forEach((parentId, banknotes) {
       items.add(_ExpansionBanknoteItem(Key(parentId.toString()), banknotes));
     });
-
     return ListView.separated(
       itemBuilder: (context, index) => items[index],
       itemCount: items.length,
-      separatorBuilder: (BuildContext context, int index) => Divider(color: Colors.grey, height: 0),
+      separatorBuilder: (BuildContext context, int index) =>
+          Divider(color: Colors.grey, height: 0),
     );
   }
 
@@ -56,16 +59,18 @@ class _BanknotePageState extends State<BanknotePage> {
   }
 
   void _onError() {
-    setState(() {  _isLoading = false; });
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void _loadData() {
-      _dataManager.getBanknotes(widget._modification).then((banknotes) {
-        setState(() {
-          _isLoading = false;
-          _banknotes = banknotes;
-        });
-      }, onError: (error) => showError(context, error, _onError));
+    _dataManager.getBanknotes(widget._modification).then((banknotes) {
+      setState(() {
+        _isLoading = false;
+        _banknotes = banknotes;
+      });
+    }, onError: (error) => showError(context, error, _onError));
   }
 }
 
@@ -76,10 +81,10 @@ class _ExpansionBanknoteItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _banknotes.length == 1 ? _buildSimple(_banknotes.first, true) : _buildExpansion();
+    return _banknotes.length == 1 ? _buildSimple(_banknotes.first, true, context) : _buildExpansion(context);
   }
 
-  Widget _buildExpansion() {
+  Widget _buildExpansion(BuildContext context) {
     return ExpansionTile(
       title: Text(_banknotes.first.name),
       leading: Image.asset(
@@ -88,11 +93,11 @@ class _ExpansionBanknoteItem extends StatelessWidget {
         height: 50.0,
       ) ,
       trailing: Icon(Icons.keyboard_arrow_down),
-      children: _banknotes.map((banknote) => _buildSimple(banknote, false)).toList(),
+      children: _banknotes.map((banknote) => _buildSimple(banknote, false, context)).toList(),
     );
   }
 
-  Widget _buildSimple(Banknote banknote, final bool main) {
+  Widget _buildSimple(Banknote banknote, final bool main, BuildContext context) {
     return ListTile(
       dense: false,
       title: Text(banknote.name),
@@ -103,6 +108,11 @@ class _ExpansionBanknoteItem extends StatelessWidget {
         height: 50.0,
       ) ,
       trailing: banknote.ownBanknotes.isNotEmpty ? Icon(Icons.check, color: Colors.green) : null,
+      onTap: () => _openBanknoteDetailsPage(banknote, context),
     );
+  }
+
+  void _openBanknoteDetailsPage(Banknote banknote, BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => BanknoteDetailsPage(banknote)));
   }
 }
