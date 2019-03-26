@@ -93,23 +93,23 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          _createDescriptionColumn(
+          _createDescriptionLine(
               '${Localization.of(context).banknoteDescriptionEntryDate}',
               widget._banknote.description.entryDate),
-          _createDescriptionColumn(
+          _createDescriptionLine(
               '${Localization.of(context).banknoteDescription}',
               widget._banknote.description.text),
 
-          _createDescriptionColumn(
+          _createDescriptionLine(
               '${Localization.of(context).banknoteDescriptionYear}',
               widget._banknote.description.year),
-          _createDescriptionColumn(
+          _createDescriptionLine(
               '${Localization.of(context).banknoteDescriptionPrinter}',
               widget._banknote.description.printer),
         ]);
   }
 
-  Widget _createDescriptionColumn(String title, String value) {
+  Widget _createDescriptionLine(String title, String value) {
     return Padding(
         padding: EdgeInsets.only(right: 16, left: 16, top: 8, bottom: 8),
             child: RichText(
