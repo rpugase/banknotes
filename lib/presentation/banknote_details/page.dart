@@ -24,8 +24,7 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.add),
-          onPressed
-              : () => _addOwnBanknote(),
+          onPressed: () => _addOwnBanknote(),
         ),
       ],
     );
@@ -86,29 +85,45 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
   }
 
   int _getIndexByKey(Key key) {
-    return widget._banknote.ownBanknotes.indexWhere(
-        (ownBanknote) => Key(ownBanknote.id.toString()) == key);
+    return widget._banknote.ownBanknotes
+        .indexWhere((ownBanknote) => Key(ownBanknote.id.toString()) == key);
   }
 
   Widget _createDescriptionView() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(right: 16, left: 16, top: 16),
-            child: Text(
-              'Description',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(right: 16, left: 16, bottom: 16, top: 8),
-            child: Text(
-              '1 гривна — наименьшая по номиналу банкнота в денежном обороте современной Украины. Введена в обращение Национальным банком в 1996 году.',
-              style: TextStyle(fontWeight: FontWeight.normal),
-            ),
-          )
+          _createDescriptionColumn(
+              '${Localization.of(context).banknoteDescriptionEntryDate}',
+              widget._banknote.description.entryDate),
+          _createDescriptionColumn(
+              '${Localization.of(context).banknoteDescription}',
+              widget._banknote.description.text),
+
+          _createDescriptionColumn(
+              '${Localization.of(context).banknoteDescriptionYear}',
+              widget._banknote.description.year),
+          _createDescriptionColumn(
+              '${Localization.of(context).banknoteDescriptionPrinter}',
+              widget._banknote.description.printer),
         ]);
+  }
+
+  Widget _createDescriptionColumn(String title, String value) {
+    return Padding(
+        padding: EdgeInsets.only(right: 16, left: 16, top: 8, bottom: 8),
+            child: RichText(
+              text:  TextSpan(
+                text: '$title: ',
+                style: TextStyle(fontSize: 15.0, color: Colors.black, fontWeight: FontWeight.bold),
+                children: <TextSpan>[
+                   TextSpan(
+                      text: value,
+                      style: TextStyle(fontWeight: FontWeight.normal)),
+                ],
+              ),
+            ),
+    );
   }
 
   void _openAllImages(Banknote banknote) {
@@ -199,12 +214,12 @@ class Item extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              '${Localization.of(context).shoppingPrice}${ownBanknote.price} ${ownBanknote.currency.symbol}',
+              '${Localization.of(context).shoppingPrice}: ${ownBanknote.price} ${ownBanknote.currency.symbol}',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
             ),
             Text(
-              '${Localization.of(context).shoppingDate}${ownBanknote.formatDate()}',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              '${Localization.of(context).shoppingDate}: ${ownBanknote.formatDate()}',
+              style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
             ),
           ],
         ),

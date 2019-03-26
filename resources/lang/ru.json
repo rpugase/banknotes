@@ -4,6 +4,10 @@
   "full_catalogs" : "Полный калатог",
   "error" : "Ошибка",
   "close": "Закрыть",
-  "shopping_price" : "Цена покупки: ",
-  "shopping_date" : "Дата покупки: "
+  "shopping_price" : "Цена покупки",
+  "shopping_date" : "Дата покупки",
+  "printer" : "Типография",
+  "description": "Описание",
+  "description_year": "Дата создания",
+  "entry_date": "Дата выпуска"
 }

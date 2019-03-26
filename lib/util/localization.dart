@@ -35,6 +35,10 @@ class Localization {
   String get close => _sentences['close'];
   String get shoppingPrice => _sentences['shopping_price'];
   String get shoppingDate => _sentences['shopping_date'];
+  String get banknoteDescriptionPrinter => _sentences['printer'];
+  String get banknoteDescription => _sentences['description'];
+  String get banknoteDescriptionYear => _sentences['description_year'];
+  String get banknoteDescriptionEntryDate => _sentences['entry_date'];
 
 }
 
