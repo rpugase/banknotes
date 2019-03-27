@@ -33,75 +33,60 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
           )
         ],
       ),
-      body: _createListView(),
+      body: _loadView(),
     );
   }
 
-  Widget _createListView() {
-    return ListView(
-      children: <Widget>[_createDescriptionView()],
+  Widget _loadView() {
+    return Container(
+      child: CustomScrollView(
+        slivers: <Widget>[
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                DescriptionWidget(widget._banknote, widget._ownBanknote),
+              ],
+            ),
+          ),
+          SliverGrid(
+            gridDelegate:
+                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+            delegate: SliverChildListDelegate(_showAllImages()),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _createDescriptionView() {
+  List<ImageWidget> _showAllImages() {
+    return widget._ownBanknote.images
+        .map((image) => ImageWidget(image.path))
+        .toList();
+  }
+}
+
+class DescriptionWidget extends StatelessWidget {
+  final Banknote _banknote;
+  final OwnBanknote _ownBanknote;
+  DescriptionWidget(this._banknote, this._ownBanknote);
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          _createDescriptionLine('${Localization.of(context).faceValue}',
-              '${widget._banknote.name}'),
+          _createDescriptionLine(
+              '${Localization.of(context).faceValue}', '${_banknote.name}'),
           _createDescriptionLine('${Localization.of(context).shoppingPrice}',
-              '${widget._ownBanknote.price}${widget._ownBanknote.currency.symbol}'),
+              '${_ownBanknote.price}${_ownBanknote.currency.symbol}'),
           _createDescriptionLine(
               '${Localization.of(context).banknoteDescriptionYear}',
-              widget._banknote.description.year),
-          _createDescriptionLine('${Localization.of(context).quality}',
-              '${widget._ownBanknote.quality}'),
-          _createDescriptionLine('${Localization.of(context).comment}',
-              '${widget._ownBanknote.comment}'),
-          _showExistingImages()
+              _banknote.description.year),
+          _createDescriptionLine(
+              '${Localization.of(context).quality}', '${_ownBanknote.quality}'),
+          _createDescriptionLine(
+              '${Localization.of(context).comment}', '${_ownBanknote.comment}'),
         ]);
-  }
-
-  List<Widget> _performImage(int rowCount) {
-    List<Widget> items = [];
-    for (var i = 0; i < 3; i++) {
-      items.add(Padding(
-        padding: EdgeInsets.all(MediaQuery.of(context).size.width / 24),
-        child: GestureDetector(
-          onTap: () {},
-          child: Image.asset(
-              widget._ownBanknote.images[(rowCount * 3) + i].path,
-              width: MediaQuery.of(context).size.width / 4,
-              height: MediaQuery.of(context).size.width / 4,
-              alignment: Alignment.center,
-              fit: BoxFit.cover),
-        ),
-      ));
-    }
-
-    return items;
-  }
-
-  Widget _showExistingImages() {
-    List<Widget> items = [];
-    var imagesCount = widget._ownBanknote.images.length;
-    var multiplicityImagesCount = imagesCount / 3;
-    if (multiplicityImagesCount != multiplicityImagesCount.toInt()) {
-      multiplicityImagesCount += 1;
-    }
-
-    while (multiplicityImagesCount.toInt() > 0) {
-      items.add(Container(
-        child: Column(
-          children: <Widget>[Row(children: _performImage(0))],
-        ),
-      ));
-      multiplicityImagesCount -= 1;
-    }
-
-    return Column(
-      children: items,
-    );
   }
 
   Widget _createDescriptionLine(String title, String value) {
@@ -119,5 +104,28 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
         ),
       ),
     );
+  }
+}
+
+class ImageWidget extends StatelessWidget {
+  final String _imagePath;
+
+  ImageWidget(this._imagePath);
+
+  @override
+  Widget build(BuildContext context) {
+    return _createImage();
+  }
+
+  Widget _createImage() {
+    return GestureDetector(
+        onTap: () {
+          print('jjjj');
+        },
+        child: Image.asset(
+          _imagePath,
+          width: 30,
+          height: 30.0,
+        ));
   }
 }
