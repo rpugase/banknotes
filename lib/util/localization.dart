@@ -40,6 +40,10 @@ class Localization {
   String get banknoteDescriptionYear => _sentences['description_year'];
   String get banknoteDescriptionEntryDate => _sentences['entry_date'];
 
+
+  String get faceValue => _sentences['face_value'];
+  String get quality => _sentences['quality'];
+  String get comment => _sentences['comment'];
 }
 
 class LocalizationDelegate extends LocalizationsDelegate<Localization> {

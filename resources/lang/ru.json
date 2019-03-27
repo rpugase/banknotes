@@ -9,5 +9,8 @@
   "printer" : "Типография",
   "description": "Описание",
   "description_year": "Дата создания",
-  "entry_date": "Дата выпуска"
+  "entry_date": "Дата выпуска",
+  "face_value" : "Номинал",
+  "quality":  "Качество",
+  "comment": "Примечание"
 }

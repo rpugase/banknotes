@@ -9,5 +9,8 @@
   "printer" : "Printer",
   "description": "Description",
   "description_year": "Modification date",
-  "entry_date": "Entry date"
+  "entry_date": "Entry date",
+  "face_value" : "Face value",
+  "quality":  "Quality",
+  "comment": "Note"
 }
