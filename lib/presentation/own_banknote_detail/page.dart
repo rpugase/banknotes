@@ -33,11 +33,11 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
           )
         ],
       ),
-      body: _loadView(),
+      body: _buildView(),
     );
   }
 
-  Widget _loadView() {
+  Widget _buildView() {
     return Container(
       child: Padding(padding: EdgeInsets.all(8),
       child: CustomScrollView(
@@ -77,16 +77,16 @@ class DescriptionWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           _createDescriptionLine(
-              '${Localization.of(context).faceValue}', '${_banknote.name}'),
-          _createDescriptionLine('${Localization.of(context).shoppingPrice}',
+              Localization.of(context).faceValue, _banknote.name),
+          _createDescriptionLine(Localization.of(context).shoppingPrice,
               '${_ownBanknote.price}${_ownBanknote.currency.symbol}'),
           _createDescriptionLine(
-              '${Localization.of(context).banknoteDescriptionYear}',
+              Localization.of(context).banknoteDescriptionYear,
               _banknote.description.year),
           _createDescriptionLine(
-              '${Localization.of(context).quality}', '${_ownBanknote.quality}'),
+              Localization.of(context).quality, _ownBanknote.quality.toString()),
           _createDescriptionLine(
-              '${Localization.of(context).comment}', '${_ownBanknote.comment}'),
+              Localization.of(context).comment, _ownBanknote.comment),
         ]);
   }
 
@@ -115,10 +115,6 @@ class ImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _createImage(context);
-  }
-
-  Widget _createImage(BuildContext context) {
     var image = Padding(
         padding: EdgeInsets.only(right: 8, left: 8, top: 8, bottom: 8),
         child: Image.asset(

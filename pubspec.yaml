@@ -14,7 +14,6 @@ dependencies:
 
   jaguar_orm: ^2.2.6
   jaguar_query_sqflite: ^2.2.9
-  photo_view: ^0.2.2
 
 dev_dependencies:
   flutter_test:
