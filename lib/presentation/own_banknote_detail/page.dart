@@ -39,6 +39,7 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
 
   Widget _loadView() {
     return Container(
+      child: Padding(padding: EdgeInsets.all(8),
       child: CustomScrollView(
         slivers: <Widget>[
           SliverList(
@@ -50,11 +51,11 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
           ),
           SliverGrid(
             gridDelegate:
-                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
             delegate: SliverChildListDelegate(_showAllImages()),
           ),
         ],
-      ),
+      ),)
     );
   }
 
@@ -91,7 +92,7 @@ class DescriptionWidget extends StatelessWidget {
 
   Widget _createDescriptionLine(String title, String value) {
     return Padding(
-      padding: EdgeInsets.only(right: 16, left: 16, top: 8, bottom: 8),
+      padding: EdgeInsets.all(8),
       child: RichText(
         text: TextSpan(
           text: '$title: ',
@@ -118,17 +119,18 @@ class ImageWidget extends StatelessWidget {
   }
 
   Widget _createImage(BuildContext context) {
-    var image =  Image.asset(
-      _imagePath,
-      fit: BoxFit.cover,
-    );
+    var image = Padding(
+        padding: EdgeInsets.only(right: 8, left: 8, top: 8, bottom: 8),
+        child: Image.asset(
+          _imagePath,
+          fit: BoxFit.cover,
+        ));
 
     return Container(
       child: GestureDetector(
-        onTap: (){},
+        onTap: () {},
         child: image,
       ),
     );
   }
-
 }
