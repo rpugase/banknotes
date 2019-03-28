@@ -13,7 +13,7 @@ class Localization {
     return Localizations.of<Localization>(context, Localization);
   }
 
-  Map<String, String> _sentences;
+  Map<String, dynamic> _sentences;
 
   Future<bool> load() async {
     String data = await rootBundle
@@ -22,7 +22,7 @@ class Localization {
 
     this._sentences = new Map();
     _result.forEach((String key, dynamic value) {
-      this._sentences[key] = value.toString();
+      this._sentences[key] = value is String ? value.toString() : Map<String, String>.from(value);
     });
 
     return true;
@@ -33,6 +33,11 @@ class Localization {
   String get noData => _sentences['no_data'];
   String get error => _sentences['error'];
   String get close => _sentences['close'];
+  String get price => _sentences['price'];
+  String get comment => _sentences['comment'];
+  String get errorEmpty => _sentences['error_empty'];
+  String get add => _sentences['add'];
+  Map<String, String> get qualityMap => _sentences['quality_map'];
 }
 
 class LocalizationDelegate extends LocalizationsDelegate<Localization> {

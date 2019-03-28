@@ -2,8 +2,8 @@ import 'package:banknotes/data/model/own_banknote.dart';
 import 'package:banknotes/domain/model/image.dart';
 
 class OwnBanknote {
-  OwnBanknote(this.id, this.quality,
-      {this.price, this.currency, this.comment, this.images, this.date});
+  OwnBanknote(this.quality, this.price, this.currency, this.comment, this.images, {this.id, DateTime date})
+      : this.date = date ?? DateTime.now();
 
   final int id;
   final double price;
@@ -43,12 +43,27 @@ class Currency {
   CurrencyCode _code;
   CurrencyCode get code => _code;
 
-  String get symbol => (_code == CurrencyCode.usd) ? '\$' : '€';
+  String get symbol => getSymbolByCode(_code);
+
+  static List<String> get codes => CurrencyCode.values.map(getSymbolByCode).toList();
+  static List<Currency> get all => CurrencyCode.values.map((code) => Currency(code)).toList();
+  static String getSymbolByCode(CurrencyCode currencyCode) => (currencyCode == CurrencyCode.usd) ? '\$' : '€';
 
   @override
   String toString() => _code.toString();
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is Currency &&
+              runtimeType == other.runtimeType &&
+              _code == other._code;
+
+  @override
+  int get hashCode => _code.hashCode;
+
 }
 
 enum CurrencyCode { usd, eur }
 
-enum QualityType { good, bad }
+enum QualityType { pr, fr, g, vg, f, vf, ef, au, unc }
