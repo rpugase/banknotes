@@ -114,18 +114,21 @@ class ImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _createImage();
+    return _createImage(context);
   }
 
-  Widget _createImage() {
-    return GestureDetector(
-        onTap: () {
-          print('jjjj');
-        },
-        child: Image.asset(
-          _imagePath,
-          width: 30,
-          height: 30.0,
-        ));
+  Widget _createImage(BuildContext context) {
+    var image =  Image.asset(
+      _imagePath,
+      fit: BoxFit.cover,
+    );
+
+    return Container(
+      child: GestureDetector(
+        onTap: (){},
+        child: image,
+      ),
+    );
   }
+
 }

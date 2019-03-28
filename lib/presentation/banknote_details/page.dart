@@ -128,7 +128,7 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
 
   void _openAllImages(Banknote banknote) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => BanknoteImageDetailPage(banknote)));
+        builder: (context) => BanknoteImageDetailPage()));
   }
 
   void _addOwnBanknote() {
