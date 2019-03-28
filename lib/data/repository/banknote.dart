@@ -22,9 +22,6 @@ class BanknoteMockRepository implements BanknoteRepository {
     BanknoteEntity.make(0, "1 uah", _description.text, _description.year, _description.printer, _description.entryDate, 1, [], [])..id = 0,
     BanknoteEntity.make(0, "2 uah", _description.text, _description.year, _description.printer, _description.entryDate, 1, [], [
       OwnBanknoteEntity.make(1, QualityType.good.toString(), 12.5, Currency().code.toString(), 'comment', [], DateTime.now()),
-      OwnBanknoteEntity.make(2, QualityType.good.toString(), 2.5, Currency().code.toString(), 'comment', [], DateTime.now()),
-      OwnBanknoteEntity.make(3, QualityType.good.toString(), 1.3, Currency().code.toString(), 'comment', [], DateTime.now()),
-      OwnBanknoteEntity.make(4, QualityType.good.toString(), 4.2, Currency().code.toString(), 'comment', [], DateTime.now()),
     ])..id = 1,
     BanknoteEntity.make(0, "5 uah", _description.text, _description.year, _description.printer, _description.entryDate, 2, [], [])..id = 2,
     BanknoteEntity.make(0, "10 uah", _description.text, _description.year, _description.printer, _description.entryDate, 2, [], [])..id = 3,

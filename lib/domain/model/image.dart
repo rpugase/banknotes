@@ -1,4 +1,5 @@
 import 'package:banknotes/data/model/image.dart';
+import 'package:flutter/foundation.dart';
 
 class Image {
   Image(this.path, this.imageType, [this.main = true]);
@@ -9,7 +10,7 @@ class Image {
 
   Image.fromEntity(ImageEntity entity) :
         path = entity.path,
-        imageType = ImageType.values.firstWhere((type) => type.toString() == entity.type),
+        imageType = ImageType.values.firstWhere((type) => describeEnum(type) == entity.type),
         main = entity.main;
 
   ImageEntity toEntity() => ImageEntity.make(path, main, imageType.toString());

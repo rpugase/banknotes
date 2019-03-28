@@ -1,8 +1,11 @@
 import 'package:banknotes/data/model/banknote.dart';
 import 'package:banknotes/data/model/emission.dart';
+import 'package:banknotes/data/model/image.dart';
 import 'package:banknotes/data/model/own_banknote.dart';
 import 'package:banknotes/domain/model/banknote.dart';
+import 'package:banknotes/domain/model/image.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class EmissionRepository {
 
@@ -25,7 +28,14 @@ class ModificationMockRepository implements EmissionRepository {
   List<BanknoteEntity> get banknotes => [
     BanknoteEntity.make(0, "1 uah", _description.text, _description.year, _description.printer, _description.entryDate, 1, [], [])..id = 0,
     BanknoteEntity.make(0, "2 uah", _description.text, _description.year, _description.printer, _description.entryDate, 1, [], [
-      OwnBanknoteEntity.make(1, QualityType.good.toString(), 12.5, Currency().code.toString(), 'comment', [], DateTime.now())..id = 1,
+      OwnBanknoteEntity.make(1, QualityType.good.toString(), 12.5, Currency().code.toString(), 'comment', [
+        ImageEntity.make("resources/images/grn1.jpg", true, describeEnum(ImageType.assets))..id = 0,
+        ImageEntity.make("resources/images/grn100.jpg", true, describeEnum(ImageType.assets))..id = 1,
+        ImageEntity.make("resources/images/grn1001.jpg", true, describeEnum(ImageType.assets))..id = 2,
+        ImageEntity.make("resources/images/grn1.jpg", true, describeEnum(ImageType.assets))..id = 3,
+        ImageEntity.make("resources/images/grn100.jpg", true, describeEnum(ImageType.assets))..id = 4,
+        ImageEntity.make("resources/images/grn1001.jpg", true, describeEnum(ImageType.assets))..id = 5
+      ], DateTime.now())..id = 1,
       OwnBanknoteEntity.make(1, QualityType.good.toString(), 2.5, Currency().code.toString(), 'comment', [], DateTime.now())..id = 2,
       OwnBanknoteEntity.make(1, QualityType.good.toString(), 1.6, Currency().code.toString(), 'comment', [], DateTime.now())..id = 3,
       OwnBanknoteEntity.make(1, QualityType.good.toString(), 14.4, Currency().code.toString(), 'comment', [], DateTime.now())..id = 4

@@ -46,7 +46,7 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                    return Item(
+                    return Item(widget._banknote,
                       data: widget._banknote.ownBanknotes[index],
                       isFirst: index == 0,
                       isLast: index == widget._banknote.ownBanknotes.length - 1,
@@ -128,7 +128,7 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
 
   void _openAllImages(Banknote banknote) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => BanknoteImageDetailPage(banknote)));
+        builder: (context) => BanknoteImageDetailPage()));
   }
 
   void _addOwnBanknote() {
@@ -138,12 +138,14 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
 }
 
 class Item extends StatelessWidget {
-  Item({
+  Item(this._banknote, {
     this.data,
     this.isFirst,
     this.isLast,
+
   });
 
+  final Banknote _banknote;
   final OwnBanknote data;
   final bool isFirst;
   final bool isLast;
@@ -235,6 +237,6 @@ class Item extends StatelessWidget {
 
   void _showOwnBanknote(OwnBanknote ownBanknote, BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => OwnBanknoteDetailPage(ownBanknote)));
+        builder: (context) => OwnBanknoteDetailPage(ownBanknote, _banknote)));
   }
 }

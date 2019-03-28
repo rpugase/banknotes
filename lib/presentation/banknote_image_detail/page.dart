@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 
 class BanknoteImageDetailPage extends StatefulWidget {
 
-  final Banknote _banknote;
-  BanknoteImageDetailPage(this._banknote);
+  BanknoteImageDetailPage();
 
   @override
   State<StatefulWidget> createState()  => _BanknoteImageDetailState();
