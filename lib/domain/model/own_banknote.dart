@@ -1,5 +1,6 @@
 import 'package:banknotes/data/model/own_banknote.dart';
 import 'package:banknotes/domain/model/image.dart';
+import 'package:intl/intl.dart';
 
 class OwnBanknote {
   OwnBanknote(this.quality, this.price, this.currency, this.comment, this.images, {this.id, DateTime date})
@@ -31,6 +32,11 @@ class OwnBanknote {
       images.map((image) => image.toEntity()).toList(),
       date
   );
+
+  String formatDate() {
+    var formatter = new DateFormat('yyyy-MM-dd');
+    return formatter.format(date);
+  }
 }
 
 class Currency {
