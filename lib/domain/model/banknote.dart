@@ -16,7 +16,7 @@ class Banknote {
   List<Image> _images = [];
   List<OwnBanknote> _ownBanknotes = [];
 
-  List<Image> get image => _images;
+  List<Image> get images => _images;
   List<OwnBanknote> get ownBanknotes => _ownBanknotes;
   Image get firstBanknoteImage =>
      _images.isNotEmpty ? _images.first : Image('resources/images/no_image_icon.png', ImageType.assets);

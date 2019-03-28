@@ -4,14 +4,15 @@ import 'package:flutter/material.dart';
 
 class QualityTypeWidget extends StatelessWidget {
 
-  QualityTypeWidget(this.qualityType) : _color = _getColor(qualityType);
+  QualityTypeWidget(this.qualityType, [this.size]) : _color = _getColor(qualityType);
 
   final QualityType qualityType;
   final Color _color;
+  final int size;
 
   @override
   Widget build(BuildContext context) {
-    final boxSize = MediaQuery.of(context).size.width / QualityType.values.length - 4;
+    final boxSize = size ?? MediaQuery.of(context).size.width / QualityType.values.length - 4;
 
     return Padding(
       padding: const EdgeInsets.all(2.0),
