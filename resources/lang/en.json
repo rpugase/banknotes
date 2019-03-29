@@ -12,5 +12,19 @@
   "entry_date": "Entry date",
   "face_value" : "Face value",
   "quality":  "Quality",
-  "comment": "Note"
+  "comment": "Note",
+  "price" : "Price",
+  "error_empty" : "Field can't be empty",
+  "add" : "Add",
+  "quality_map" : {
+    "pr" : "Rag",
+    "fr" : "Poor",
+    "g" : "Good",
+    "vg" : "Very Good",
+    "f" : "Fine",
+    "vf" : "Very Fine",
+    "ef" : "Extremely Fine",
+    "au" : "AboutUncirculated",
+    "unc" : "Uncirculated"
+  }
 }

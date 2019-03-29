@@ -28,7 +28,7 @@ class ModificationMockRepository implements EmissionRepository {
   List<BanknoteEntity> get banknotes => [
     BanknoteEntity.make(0, "1 uah", _description.text, _description.year, _description.printer, _description.entryDate, 1, [], [])..id = 0,
     BanknoteEntity.make(0, "2 uah", _description.text, _description.year, _description.printer, _description.entryDate, 1, [], [
-      OwnBanknoteEntity.make(1, QualityType.good.toString(), 12.5, Currency().code.toString(), 'comment', [
+      OwnBanknoteEntity.make(1, QualityType.fr.toString(), 12.5, Currency().code.toString(), 'comment', [
         ImageEntity.make("resources/images/grn1.jpg", true, describeEnum(ImageType.assets))..id = 0,
         ImageEntity.make("resources/images/grn100.jpg", true, describeEnum(ImageType.assets))..id = 1,
         ImageEntity.make("resources/images/grn1001.jpg", true, describeEnum(ImageType.assets))..id = 2,
@@ -36,9 +36,9 @@ class ModificationMockRepository implements EmissionRepository {
         ImageEntity.make("resources/images/grn100.jpg", true, describeEnum(ImageType.assets))..id = 4,
         ImageEntity.make("resources/images/grn1001.jpg", true, describeEnum(ImageType.assets))..id = 5
       ], DateTime.now())..id = 1,
-      OwnBanknoteEntity.make(1, QualityType.good.toString(), 2.5, Currency().code.toString(), 'comment', [], DateTime.now())..id = 2,
-      OwnBanknoteEntity.make(1, QualityType.good.toString(), 1.6, Currency().code.toString(), 'comment', [], DateTime.now())..id = 3,
-      OwnBanknoteEntity.make(1, QualityType.good.toString(), 14.4, Currency().code.toString(), 'comment', [], DateTime.now())..id = 4
+      OwnBanknoteEntity.make(1, QualityType.fr.toString(), 2.5, Currency().code.toString(), 'comment', [], DateTime.now())..id = 2,
+      OwnBanknoteEntity.make(1, QualityType.unc.toString(), 1.6, Currency().code.toString(), 'comment', [], DateTime.now())..id = 3,
+      OwnBanknoteEntity.make(1, QualityType.g.toString(), 14.4, Currency().code.toString(), 'comment', [], DateTime.now())..id = 4
     ])..id = 1,
     BanknoteEntity.make(0, "5 uah", _description.text, _description.year, _description.printer, _description.entryDate, 2, [], [])..id = 2,
     BanknoteEntity.make(0, "10 uah", _description.text, _description.year, _description.printer, _description.entryDate, 2, [], [])..id = 3,

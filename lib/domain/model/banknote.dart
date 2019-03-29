@@ -4,17 +4,22 @@ import 'package:banknotes/domain/model/own_banknote.dart';
 
 class Banknote {
   Banknote(this.id, this.name, this.description, this.parentId,
-      { this.images = const [], this.ownBanknotes = const [] });
+      { List<Image> images, List<OwnBanknote> ownBanknotes }) {
+    if (images != null) _images.addAll(images);
+    if (ownBanknotes != null) _ownBanknotes.addAll(ownBanknotes);
+  }
 
   final int id;
   final String name;
   final Description description;
   final int parentId;
-  final List<Image> images;
-  final List<OwnBanknote> ownBanknotes;
+  List<Image> _images = [];
+  List<OwnBanknote> _ownBanknotes = [];
 
+  List<Image> get images => _images;
+  List<OwnBanknote> get ownBanknotes => _ownBanknotes;
   Image get firstBanknoteImage =>
-     images.isNotEmpty ? images.first : Image('resources/images/no_image_icon.png', ImageType.assets);
+     _images.isNotEmpty ? _images.first : Image('resources/images/no_image_icon.png', ImageType.assets);
 
 
   Banknote.fromEntity(BanknoteEntity entity) :
@@ -22,8 +27,8 @@ class Banknote {
         name = entity.name,
         description = Description(entity.description, entity.year, entity.printer, entity.entryDate),
         parentId = entity.parentId,
-        images = entity.images.map((image) => Image.fromEntity(image)).toList(),
-        ownBanknotes = entity.ownBanknotes.map((ownBanknote) => OwnBanknote.fromEntity(ownBanknote)).toList();
+        _images = entity.images.map((image) => Image.fromEntity(image)).toList(),
+        _ownBanknotes = entity.ownBanknotes.map((ownBanknote) => OwnBanknote.fromEntity(ownBanknote)).toList();
 
   BanknoteEntity toEntity(int emissionId) => BanknoteEntity.make(
       emissionId,
@@ -33,8 +38,8 @@ class Banknote {
       description.printer,
       description.entryDate,
       parentId,
-      images.map((image) => image.toEntity()).toList(),
-      ownBanknotes.map((ownBanknote) => ownBanknote.toEntity(id)).toList()
+      _images.map((image) => image.toEntity()).toList(),
+      _ownBanknotes.map((ownBanknote) => ownBanknote.toEntity(id)).toList()
   );
 
   static Map<int, List<Banknote>> toMap(List<BanknoteEntity> banknotes) {

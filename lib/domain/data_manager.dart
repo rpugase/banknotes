@@ -7,6 +7,7 @@ import 'package:banknotes/data/repository/modification.dart';
 import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/catalog.dart';
 import 'package:banknotes/domain/model/modification.dart';
+import 'package:banknotes/domain/model/own_banknote.dart';
 
 class DataManager {
   DataManager(this._catalogRepository, this._modificationRepository, this._banknoteRepository);
@@ -70,5 +71,10 @@ class DataManager {
   Future changeFavouriteStatus(Catalog country) async {
     // TODO: change status in DB
     country.isFavourite = !country.isFavourite;
+  }
+
+  Future addOwnBanknote(Banknote banknote, OwnBanknote ownBanknote) async {
+    // TODO: add own banknote to DB
+    banknote.ownBanknotes.add(ownBanknote);
   }
 }
