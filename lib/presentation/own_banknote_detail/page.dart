@@ -1,5 +1,6 @@
 import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
+import 'package:banknotes/presentation/widget/image_viewer.dart';
 import 'package:banknotes/util/localization.dart';
 import 'package:flutter/material.dart';
 
@@ -60,9 +61,12 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
   }
 
   List<ImageWidget> _showAllImages() {
-    return widget._ownBanknote.images
-        .map((image) => ImageWidget(image.path))
-        .toList();
+    final List<ImageWidget> imageWidgets = [];
+
+    for (int i = 0; i < widget._ownBanknote.images.length; i++) {
+      imageWidgets.add(ImageWidget(widget._ownBanknote.images[i].path, widget._ownBanknote, i));
+    }
+    return imageWidgets;
   }
 }
 
@@ -110,23 +114,40 @@ class DescriptionWidget extends StatelessWidget {
 
 class ImageWidget extends StatelessWidget {
   final String _imagePath;
+  final OwnBanknote _ownBanknote;
+  final int _numberImageInGrid;
 
-  ImageWidget(this._imagePath);
+  final String _heroTag = 'OwnBanknoteDetailPage';
+
+  ImageWidget(this._imagePath, this._ownBanknote, this._numberImageInGrid);
 
   @override
   Widget build(BuildContext context) {
     var image = Padding(
         padding: EdgeInsets.only(right: 8, left: 8, top: 8, bottom: 8),
-        child: Image.asset(
-          _imagePath,
-          fit: BoxFit.cover,
-        ));
+        child: Hero(
+          tag: "$_heroTag$_numberImageInGrid",
+          child: Image.asset(
+            _imagePath,
+            fit: BoxFit.cover,
+          )),
+        )
+        ;
 
     return Container(
       child: GestureDetector(
-        onTap: () {},
+        onTap: () => _showAllImages(context),
         child: image,
       ),
     );
+  }
+
+  void _showAllImages(BuildContext context) {
+    List<String> images = [];
+     _ownBanknote.images.map((image) => images.add(image.path)).toList();
+    print(images);
+
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ImageViewerPage(images, _numberImageInGrid, _heroTag)));
+
   }
 }
