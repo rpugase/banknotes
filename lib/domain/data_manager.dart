@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:banknotes/data/model/banknote.dart';
 import 'package:banknotes/data/model/catalog.dart';
 import 'package:banknotes/data/model/emission.dart';
@@ -74,7 +76,13 @@ class DataManager {
   }
 
   Future addOwnBanknote(Banknote banknote, OwnBanknote ownBanknote) async {
-    // TODO: add own banknote to DB
-    banknote.ownBanknotes.add(ownBanknote);
+    // TODO: add own banknote to DB and remove random
+    banknote.ownBanknotes.add(OwnBanknote(ownBanknote.quality, ownBanknote.price,
+        ownBanknote.currency, ownBanknote.comment, ownBanknote.images, id: Random().nextInt(10000)));
+  }
+
+  Future changeOwnBanknote(Banknote banknote, OwnBanknote ownBanknote) async {
+    // TODO: change own to DB
+    banknote.ownBanknotes[banknote.ownBanknotes.indexOf(ownBanknote)] = ownBanknote;
   }
 }

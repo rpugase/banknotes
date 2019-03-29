@@ -3,6 +3,7 @@ import 'package:banknotes/domain/model/own_banknote.dart';
 import 'package:banknotes/presentation/banknote_image_detail/page.dart';
 import 'package:banknotes/presentation/own_banknote_detail/page.dart';
 import 'package:banknotes/presentation/widget/own_banknote_creator.dart';
+import 'package:banknotes/presentation/widget/quality_type_widget.dart';
 import 'package:banknotes/presentation/widget/reordeble_list_with_scroll_view.dart';
 import 'package:banknotes/util/localization.dart';
 import 'package:flutter/material.dart';
@@ -94,17 +95,17 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           _createDescriptionLine(
-              '${Localization.of(context).banknoteDescriptionEntryDate}',
+              Localization.of(context).banknoteDescriptionEntryDate,
               widget._banknote.description.entryDate),
           _createDescriptionLine(
-              '${Localization.of(context).banknoteDescription}',
+              Localization.of(context).banknoteDescription,
               widget._banknote.description.text),
 
           _createDescriptionLine(
-              '${Localization.of(context).banknoteDescriptionYear}',
+              Localization.of(context).banknoteDescriptionYear,
               widget._banknote.description.year),
           _createDescriptionLine(
-              '${Localization.of(context).banknoteDescriptionPrinter}',
+              Localization.of(context).banknoteDescriptionPrinter,
               widget._banknote.description.printer),
         ]);
   }
@@ -131,8 +132,8 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
         builder: (context) => BanknoteImageDetailPage()));
   }
 
-  void _addOwnBanknote() {
-    showDialog(
+  void _addOwnBanknote() async {
+    final OwnBanknote ownBanknote = await showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => SimpleDialog(
@@ -140,21 +141,28 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
         children: [OwnBanknoteCreator(widget._banknote)],
       )
     );
+
+    if (ownBanknote != null) setState(() {});
   }
 }
 
 class Item extends StatelessWidget {
+
   Item(this._banknote, {
     this.data,
     this.isFirst,
     this.isLast,
-
   });
 
   final Banknote _banknote;
   final OwnBanknote data;
   final bool isFirst;
   final bool isLast;
+
+  @override
+  Widget build(BuildContext context) {
+    return ReorderableItem(key: Key(data.id.toString()), childBuilder: _buildChild);
+  }
 
   Widget _buildChild(BuildContext context, ReorderableItemState state) {
     BoxDecoration decoration;
@@ -177,72 +185,40 @@ class Item extends StatelessWidget {
 
     Widget content = Container(
       decoration: decoration,
-      child: SafeArea(
-          top: false,
-          bottom: false,
-          child: Opacity(
-            opacity: state == ReorderableItemState.placeholder ? 0.0 : 1.0,
-            child: IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Expanded(
-                      child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 14.0, horizontal: 14.0),
-                    child: _createOwnBanknoteCell(data, context),
-                  )),
-                  Container(),
-                ],
-              ),
-            ),
-          )),
+      child: Opacity(
+        opacity: state == ReorderableItemState.placeholder ? 0.0 : 1.0,
+        child: IntrinsicHeight(
+          child: Row(
+            children: <Widget>[
+              Expanded(child: _createOwnBanknoteCell(data, context)),
+            ],
+          ),
+        ),
+      ),
     );
 
-    content = DelayedReorderableListener(
-      child: content,
-    );
-
-    return content;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ReorderableItem(
-        key: Key(data.id.toString()), childBuilder: _buildChild);
+    return DelayedReorderableListener(child: content);
   }
 
   Widget _createOwnBanknoteCell(OwnBanknote ownBanknote, BuildContext context) {
-    return GestureDetector(
+    return ListTile(
       onTap: () => _showOwnBanknote(ownBanknote, context),
-      child: Container(
-          child: ListTile(
-        onTap: () => _showOwnBanknote(ownBanknote, context),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              '${Localization.of(context).shoppingPrice}: ${ownBanknote.price} ${ownBanknote.currency.symbol}',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-            ),
-            Text(
-              '${Localization.of(context).shoppingDate}: ${ownBanknote.formatDate()}',
-              style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
-            ),
-          ],
-        ),
-        leading: Image.asset(
-          'resources/images/quality.png',
-          width: 30.0,
-          height: 30.0,
-        ),
-        trailing: Icon(Icons.menu),
-      )),
+      title: Text(
+        '${Localization.of(context).shoppingPrice}: ${ownBanknote.price} ${ownBanknote.currency.symbol}',
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+      ),
+      subtitle: Text(
+        '${Localization.of(context).shoppingDate}: ${ownBanknote.formatDate()}',
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+      ),
+      leading: QualityTypeWidget(ownBanknote.quality, 30.0),
+      trailing: Icon(Icons.menu),
     );
   }
 
   void _showOwnBanknote(OwnBanknote ownBanknote, BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => OwnBanknoteDetailPage(ownBanknote, _banknote)));
+        builder: (context) => OwnBanknoteDetailPage(ownBanknote, _banknote))
+    );
   }
 }

@@ -1,11 +1,12 @@
 import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
+import 'package:banknotes/presentation/widget/own_banknote_creator.dart';
 import 'package:banknotes/util/localization.dart';
 import 'package:flutter/material.dart';
 
 class OwnBanknoteDetailPage extends StatefulWidget {
-  OwnBanknote _ownBanknote;
-  Banknote _banknote;
+  final OwnBanknote _ownBanknote;
+  final Banknote _banknote;
 
   OwnBanknoteDetailPage(this._ownBanknote, this._banknote);
 
@@ -14,6 +15,15 @@ class OwnBanknoteDetailPage extends StatefulWidget {
 }
 
 class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
+
+  OwnBanknote _ownBanknote;
+
+  @override
+  void initState() {
+    _ownBanknote = widget._ownBanknote;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +35,7 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
           ),
           IconButton(
             icon: Icon(Icons.edit),
-            onPressed: () {},
+            onPressed: _changeBanknote,
           ),
           IconButton(
             icon: Icon(Icons.delete),
@@ -44,9 +54,7 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
         slivers: <Widget>[
           SliverList(
             delegate: SliverChildListDelegate(
-              [
-                DescriptionWidget(widget._banknote, widget._ownBanknote),
-              ],
+              [DescriptionWidget(widget._banknote, _ownBanknote)],
             ),
           ),
           SliverGrid(
@@ -60,9 +68,21 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
   }
 
   List<ImageWidget> _showAllImages() {
-    return widget._ownBanknote.images
+    return _ownBanknote.images
         .map((image) => ImageWidget(image.path))
         .toList();
+  }
+
+  void _changeBanknote() async {
+    final ownBanknote = await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => SimpleDialog(
+        children: [OwnBanknoteCreator(widget._banknote, _ownBanknote)],
+      )
+    );
+
+    if (ownBanknote != null) setState(() => _ownBanknote = ownBanknote);
   }
 }
 

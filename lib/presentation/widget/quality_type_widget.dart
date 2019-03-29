@@ -8,7 +8,7 @@ class QualityTypeWidget extends StatelessWidget {
 
   final QualityType qualityType;
   final Color _color;
-  final int size;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class QualityTypeWidget extends StatelessWidget {
         alignment: Alignment.center,
         child: Text(
           describeEnum(qualityType).toUpperCase(),
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white, fontSize: 12.0),
         ),
       ),
     );
