@@ -1,8 +1,8 @@
 import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
-import 'package:banknotes/presentation/attachment_own_banknote/page.dart';
 import 'package:banknotes/presentation/banknote_image_detail/page.dart';
 import 'package:banknotes/presentation/own_banknote_detail/page.dart';
+import 'package:banknotes/presentation/widget/own_banknote_creator.dart';
 import 'package:banknotes/presentation/widget/reordeble_list_with_scroll_view.dart';
 import 'package:banknotes/util/localization.dart';
 import 'package:flutter/material.dart';
@@ -132,8 +132,14 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
   }
 
   void _addOwnBanknote() {
-    Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => AttachmentOwnBanknotePage()));
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => SimpleDialog(
+        elevation: 24.0,
+        children: [OwnBanknoteCreator(widget._banknote)],
+      )
+    );
   }
 }
 

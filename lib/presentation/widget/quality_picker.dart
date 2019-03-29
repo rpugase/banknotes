@@ -61,6 +61,4 @@ class _QualityPickerState extends State<QualityPicker> {
       ],
     );
   }
-
-
 }

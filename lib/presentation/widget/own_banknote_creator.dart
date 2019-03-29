@@ -95,7 +95,7 @@ class _OwnBanknoteCreatorState extends State<OwnBanknoteCreator> {
       onTap: () async {
         await showCupertinoModalPopup<void>(
           context: context,
-          builder: (BuildContext context) => SlidePicker(
+          builder: (context) => SlidePicker(
             items: _currencies.map((currency) => currency.symbol).toList(),
             initialStateIndex: _currencyIndex,
             onSliderPickerSelectedListener: (index) => setState(() => _currencyIndex = index),

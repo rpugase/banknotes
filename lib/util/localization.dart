@@ -37,18 +37,15 @@ class Localization {
   String get comment => _sentences['comment'];
   String get errorEmpty => _sentences['error_empty'];
   String get add => _sentences['add'];
-  Map<String, String> get qualityMap => _sentences['quality_map'];
   String get shoppingPrice => _sentences['shopping_price'];
   String get shoppingDate => _sentences['shopping_date'];
   String get banknoteDescriptionPrinter => _sentences['printer'];
   String get banknoteDescription => _sentences['description'];
   String get banknoteDescriptionYear => _sentences['description_year'];
   String get banknoteDescriptionEntryDate => _sentences['entry_date'];
-
-
   String get faceValue => _sentences['face_value'];
   String get quality => _sentences['quality'];
-  String get comment => _sentences['comment'];
+  Map<String, String> get qualityMap => _sentences['quality_map'];
 }
 
 class LocalizationDelegate extends LocalizationsDelegate<Localization> {
