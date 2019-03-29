@@ -25,7 +25,6 @@ class ImageViewerState extends State<ImageViewerPage> {
       body: PhotoViewGallery(
         pageController: PageController(initialPage: widget._currentIndex),
         pageOptions: _showGallery(),
-        backgroundDecoration: BoxDecoration(),
       ),
     );
   }
@@ -35,7 +34,7 @@ class ImageViewerState extends State<ImageViewerPage> {
     for (int i = 0; i < widget._images.length; i++) {
       gallery.add(PhotoViewGalleryPageOptions(
         imageProvider: AssetImage(widget._images[i]),
-        heroTag: "${widget._heroTag}$i",
+        heroTag: '${widget._heroTag}$i',
       ));
     }
 

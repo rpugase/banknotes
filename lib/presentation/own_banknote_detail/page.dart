@@ -126,7 +126,7 @@ class ImageWidget extends StatelessWidget {
     var image = Padding(
         padding: EdgeInsets.only(right: 8, left: 8, top: 8, bottom: 8),
         child: Hero(
-          tag: "$_heroTag$_numberImageInGrid",
+          tag: '$_heroTag$_numberImageInGrid',
           child: Image.asset(
             _imagePath,
             fit: BoxFit.cover,
@@ -143,8 +143,7 @@ class ImageWidget extends StatelessWidget {
   }
 
   void _showAllImages(BuildContext context) {
-    List<String> images = [];
-     _ownBanknote.images.map((image) => images.add(image.path)).toList();
+    List<String> images = _ownBanknote.images.map((image) => image.path).toList();
 
     Navigator.of(context).push(
       PageRouteBuilder<Null>(
