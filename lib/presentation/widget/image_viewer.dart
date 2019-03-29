@@ -18,12 +18,14 @@ class ImageViewerState extends State<ImageViewerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body:
-      PhotoViewGallery(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+      ),
+      backgroundColor: Colors.black,
+      body: PhotoViewGallery(
         pageController: PageController(initialPage: widget._currentIndex),
         pageOptions: _showGallery(),
-        backgroundDecoration: BoxDecoration(color: Colors.white24),
+        backgroundDecoration: BoxDecoration(),
       ),
     );
   }
@@ -35,7 +37,6 @@ class ImageViewerState extends State<ImageViewerPage> {
         imageProvider: AssetImage(widget._images[i]),
         heroTag: "${widget._heroTag}$i",
       ));
-
     }
 
     return gallery;

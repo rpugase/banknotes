@@ -145,9 +145,21 @@ class ImageWidget extends StatelessWidget {
   void _showAllImages(BuildContext context) {
     List<String> images = [];
      _ownBanknote.images.map((image) => images.add(image.path)).toList();
-    print(images);
 
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ImageViewerPage(images, _numberImageInGrid, _heroTag)));
-
+    Navigator.of(context).push(
+      PageRouteBuilder<Null>(
+          pageBuilder: (BuildContext context, Animation<double> animation,
+              Animation<double> secondaryAnimation) {
+            return AnimatedBuilder(
+                animation: animation,
+                builder: (BuildContext context, Widget child) {
+                  return Opacity(
+                    opacity: animation.value,
+                    child: ImageViewerPage(images, _numberImageInGrid, _heroTag),
+                  );
+                });
+          },
+          transitionDuration: Duration(milliseconds: 600)),
+    );
   }
 }
