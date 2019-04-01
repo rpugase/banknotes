@@ -137,8 +137,8 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
       context: context,
       barrierDismissible: false,
       builder: (context) => SimpleDialog(
-        elevation: 24.0,
         children: [OwnBanknoteCreator(widget._banknote)],
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),
       )
     );
 

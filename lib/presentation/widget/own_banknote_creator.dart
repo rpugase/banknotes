@@ -122,9 +122,9 @@ class _OwnBanknoteCreatorState extends State<OwnBanknoteCreator> {
       _priceController.text.isEmpty ? 0.0 : double.parse(_priceController.text),
       _currencies[_currencyIndex],
       _commentController.text,
-      widget.ownBanknote.images,
-      id: widget.ownBanknote.id,
-      date: widget.ownBanknote.date,
+      widget.ownBanknote?.images ?? [],
+      id: widget.ownBanknote?.id,
+      date: widget.ownBanknote?.date,
     );
 
     if (_isCreator) {

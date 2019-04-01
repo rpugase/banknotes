@@ -79,6 +79,7 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
       barrierDismissible: false,
       builder: (context) => SimpleDialog(
         children: [OwnBanknoteCreator(widget._banknote, _ownBanknote)],
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),
       )
     );
 
