@@ -11,7 +11,7 @@ class OwnBanknote {
   final Currency currency;
   final QualityType quality;
   final String comment;
-  final List<Image> images;
+  final List<ImageModel> images;
   final DateTime date;
   
   OwnBanknote.fromEntity(OwnBanknoteEntity entity) :
@@ -20,7 +20,7 @@ class OwnBanknote {
         currency = Currency.fromStringCode(entity.currency), 
         quality = QualityType.values.firstWhere((quality) => quality.toString() == entity.quality),
         comment = entity.comment, 
-        images = entity.images.map((image) => Image.fromEntity(image)).toList(),
+        images = entity.images.map((image) => ImageModel.fromEntity(image)).toList(),
         date = entity.date;
 
   OwnBanknoteEntity toEntity(int banknotesId) => OwnBanknoteEntity.make(

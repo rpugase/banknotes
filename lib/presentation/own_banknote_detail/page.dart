@@ -1,8 +1,11 @@
+import 'dart:io';
 import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
 import 'package:banknotes/presentation/widget/image_viewer.dart';
 import 'package:banknotes/util/localization.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:banknotes/domain/model/image.dart';
 
 class OwnBanknoteDetailPage extends StatefulWidget {
   OwnBanknote _ownBanknote;
@@ -22,7 +25,7 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: () {},
+            onPressed: () => _showSimpleDialog(),
           ),
           IconButton(
             icon: Icon(Icons.edit),
@@ -40,7 +43,8 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
 
   Widget _buildView() {
     return Container(
-      child: Padding(padding: EdgeInsets.all(8),
+        child: Padding(
+      padding: EdgeInsets.all(8),
       child: CustomScrollView(
         slivers: <Widget>[
           SliverList(
@@ -52,21 +56,56 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
           ),
           SliverGrid(
             gridDelegate:
-            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
             delegate: SliverChildListDelegate(_showAllImages()),
           ),
         ],
-      ),)
-    );
+      ),
+    ));
   }
 
   List<ImageWidget> _showAllImages() {
     final List<ImageWidget> imageWidgets = [];
 
     for (int i = 0; i < widget._ownBanknote.images.length; i++) {
-      imageWidgets.add(ImageWidget(widget._ownBanknote.images[i].path, widget._ownBanknote, i));
+      imageWidgets.add(ImageWidget(
+          widget._ownBanknote.images[i].path, widget._ownBanknote, i));
     }
     return imageWidgets;
+  }
+
+  Future<void> _showSimpleDialog() async {
+    await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            children: <Widget>[
+              _getDialogCell(true, Localization.of(context).gallery),
+              _getDialogCell(false, Localization.of(context).camera),
+            ],
+          );
+        });
+  }
+
+  Widget _getDialogCell(bool isGallery, String title) {
+    return SimpleDialogOption(
+      onPressed: () {
+        _getImage(isGallery);
+        Navigator.pop(context);
+      },
+      child: Text(title),
+    );
+  }
+
+  Future<void> _getImage(bool isGallery) async {
+    await ImagePicker.pickImage(
+            source: isGallery ? ImageSource.gallery : ImageSource.camera)
+        .then((value) {
+      setState(() {
+        var image = ImageModel(value.path, ImageType.device);
+        widget._ownBanknote.images.add(image);
+      });
+    });
   }
 }
 
@@ -87,8 +126,8 @@ class DescriptionWidget extends StatelessWidget {
           _createDescriptionLine(
               Localization.of(context).banknoteDescriptionYear,
               _banknote.description.year),
-          _createDescriptionLine(
-              Localization.of(context).quality, _ownBanknote.quality.toString()),
+          _createDescriptionLine(Localization.of(context).quality,
+              _ownBanknote.quality.toString()),
           _createDescriptionLine(
               Localization.of(context).comment, _ownBanknote.comment),
         ]);
@@ -124,15 +163,14 @@ class ImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var image = Padding(
-        padding: EdgeInsets.only(right: 8, left: 8, top: 8, bottom: 8),
-        child: Hero(
+      padding: EdgeInsets.only(right: 8, left: 8, top: 8, bottom: 8),
+      child: Hero(
           tag: '$_heroTag$_numberImageInGrid',
           child: Image.asset(
             _imagePath,
             fit: BoxFit.cover,
           )),
-        )
-        ;
+    );
 
     return Container(
       child: GestureDetector(
@@ -143,7 +181,8 @@ class ImageWidget extends StatelessWidget {
   }
 
   void _showAllImages(BuildContext context) {
-    List<String> images = _ownBanknote.images.map((image) => image.path).toList();
+    List<String> images =
+        _ownBanknote.images.map((image) => image.path).toList();
 
     Navigator.of(context).push(
       PageRouteBuilder<Null>(
@@ -154,7 +193,8 @@ class ImageWidget extends StatelessWidget {
                 builder: (BuildContext context, Widget child) {
                   return Opacity(
                     opacity: animation.value,
-                    child: ImageViewerPage(images, _numberImageInGrid, _heroTag),
+                    child:
+                        ImageViewerPage(images, _numberImageInGrid, _heroTag),
                   );
                 });
           },

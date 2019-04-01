@@ -7,7 +7,7 @@ class Catalog {
 
   final int id;
   final String name;
-  final Image image;
+  final ImageModel image;
   final List<Modification> modifications;
   bool isFavourite;
 
@@ -21,7 +21,7 @@ class Catalog {
   Catalog.fromEntity(CatalogEntity catalogEntity) :
         id = catalogEntity.id,
         name = catalogEntity.name,
-        image = Image(catalogEntity.image, ImageType.assets),
+        image = ImageModel(catalogEntity.image, ImageType.assets),
         isFavourite = catalogEntity.isFavourite,
         modifications = catalogEntity.emissions.map((emission) => Modification.fromEntity(emission)).toList();
 

@@ -4,7 +4,7 @@ import 'package:banknotes/domain/model/own_banknote.dart';
 
 class Banknote {
   Banknote(this.id, this.name, this.description, this.parentId,
-      { List<Image> images, List<OwnBanknote> ownBanknotes }) {
+      { List<ImageModel> images, List<OwnBanknote> ownBanknotes }) {
     if (images != null) _images.addAll(images);
     if (ownBanknotes != null) _ownBanknotes.addAll(ownBanknotes);
   }
@@ -13,13 +13,13 @@ class Banknote {
   final String name;
   final Description description;
   final int parentId;
-  List<Image> _images = [];
+  List<ImageModel> _images = [];
   List<OwnBanknote> _ownBanknotes = [];
 
-  List<Image> get images => _images;
+  List<ImageModel> get images => _images;
   List<OwnBanknote> get ownBanknotes => _ownBanknotes;
-  Image get firstBanknoteImage =>
-     _images.isNotEmpty ? _images.first : Image('resources/images/no_image_icon.png', ImageType.assets);
+  ImageModel get firstBanknoteImage =>
+     _images.isNotEmpty ? _images.first : ImageModel('resources/images/no_image_icon.png', ImageType.assets);
 
 
   Banknote.fromEntity(BanknoteEntity entity) :
@@ -27,7 +27,7 @@ class Banknote {
         name = entity.name,
         description = Description(entity.description, entity.year, entity.printer, entity.entryDate),
         parentId = entity.parentId,
-        _images = entity.images.map((image) => Image.fromEntity(image)).toList(),
+        _images = entity.images.map((image) => ImageModel.fromEntity(image)).toList(),
         _ownBanknotes = entity.ownBanknotes.map((ownBanknote) => OwnBanknote.fromEntity(ownBanknote)).toList();
 
   BanknoteEntity toEntity(int emissionId) => BanknoteEntity.make(

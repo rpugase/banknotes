@@ -45,6 +45,8 @@ class Localization {
   String get banknoteDescriptionEntryDate => _sentences['entry_date'];
   String get faceValue => _sentences['face_value'];
   String get quality => _sentences['quality'];
+  String get gallery => _sentences['gallery'];
+  String get camera => _sentences['camera'];
   Map<String, String> get qualityMap => _sentences['quality_map'];
 }
 
