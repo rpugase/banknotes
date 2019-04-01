@@ -49,7 +49,7 @@ class _QualityPickerState extends State<QualityPicker> {
             style: TextStyle(fontSize: 16.0),
           ),
         )),
-        Center(child: Row(children: _qualityTypes)),
+        Center(child: Row(children: _qualityTypes.map((qtWidget) => Flexible(child: qtWidget, flex: 1)).toList())),
         Slider(
           max: _qualityTypes.length.toDouble(),
           value: _type,

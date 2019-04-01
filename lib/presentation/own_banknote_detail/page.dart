@@ -1,12 +1,13 @@
 import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
 import 'package:banknotes/presentation/widget/image_viewer.dart';
+import 'package:banknotes/presentation/widget/own_banknote_creator.dart';
 import 'package:banknotes/util/localization.dart';
 import 'package:flutter/material.dart';
 
 class OwnBanknoteDetailPage extends StatefulWidget {
-  OwnBanknote _ownBanknote;
-  Banknote _banknote;
+  final OwnBanknote _ownBanknote;
+  final Banknote _banknote;
 
   OwnBanknoteDetailPage(this._ownBanknote, this._banknote);
 
@@ -15,6 +16,15 @@ class OwnBanknoteDetailPage extends StatefulWidget {
 }
 
 class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
+
+  OwnBanknote _ownBanknote;
+
+  @override
+  void initState() {
+    _ownBanknote = widget._ownBanknote;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +36,7 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
           ),
           IconButton(
             icon: Icon(Icons.edit),
-            onPressed: () {},
+            onPressed: _changeBanknote,
           ),
           IconButton(
             icon: Icon(Icons.delete),
@@ -45,9 +55,7 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
         slivers: <Widget>[
           SliverList(
             delegate: SliverChildListDelegate(
-              [
-                DescriptionWidget(widget._banknote, widget._ownBanknote),
-              ],
+              [DescriptionWidget(widget._banknote, _ownBanknote)],
             ),
           ),
           SliverGrid(
@@ -64,9 +72,22 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
     final List<ImageWidget> imageWidgets = [];
 
     for (int i = 0; i < widget._ownBanknote.images.length; i++) {
-      imageWidgets.add(ImageWidget(widget._ownBanknote.images[i].path, widget._ownBanknote, i));
+      imageWidgets.add(ImageWidget(_ownBanknote.images[i].path, widget._ownBanknote, i));
     }
     return imageWidgets;
+  }
+
+  void _changeBanknote() async {
+    final ownBanknote = await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => SimpleDialog(
+        children: [OwnBanknoteCreator(widget._banknote, _ownBanknote)],
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),
+      )
+    );
+
+    if (ownBanknote != null) setState(() => _ownBanknote = ownBanknote);
   }
 }
 
@@ -124,7 +145,7 @@ class ImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var image = Padding(
-        padding: EdgeInsets.only(right: 8, left: 8, top: 8, bottom: 8),
+        padding: EdgeInsets.all(8.0),
         child: Hero(
           tag: '$_heroTag$_numberImageInGrid',
           child: Image.asset(

@@ -11,29 +11,27 @@ import 'package:flutter/material.dart';
 
 class OwnBanknoteCreator extends StatefulWidget {
 
-  OwnBanknoteCreator(this.banknote, {
-    this.qualityType,
-    this.price,
-    this.comment,
-    this.currency,
-  });
+  OwnBanknoteCreator(this.banknote, [this.ownBanknote]);
 
   final Banknote banknote;
-  final QualityType qualityType;
-  final String price;
-  final String comment;
-  final Currency currency;
+  final OwnBanknote ownBanknote;
 
   @override
-  State<StatefulWidget> createState() => _OwnBanknoteCreatorState(qualityType, price, comment, currency);
+  State<StatefulWidget> createState() => _OwnBanknoteCreatorState(
+      ownBanknote?.quality,
+      ownBanknote?.price?.toString(),
+      ownBanknote?.comment,
+      ownBanknote?.currency
+  );
 }
 
 class _OwnBanknoteCreatorState extends State<OwnBanknoteCreator> {
 
-  _OwnBanknoteCreatorState(QualityType qualityType, String price, 
-      String comment, Currency currency) : 
-        _priceController = _PriceEditingController(text: price), 
-        _commentController = TextEditingController(text: comment);
+  _OwnBanknoteCreatorState([QualityType qualityType, String price,
+      String comment, Currency currency]) :
+        _priceController = _PriceEditingController(text: price ?? ''),
+        _commentController = TextEditingController(text: comment ?? ''),
+        _qualityType = qualityType ?? QualityType.f;
 
   final DataManager _dataManager = Injector().dataManager;
 
@@ -44,12 +42,14 @@ class _OwnBanknoteCreatorState extends State<OwnBanknoteCreator> {
   int _currencyIndex = 0;
   QualityType _qualityType;
 
+  bool get _isCreator => widget.ownBanknote == null;
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         QualityPicker(
-          qualityType: widget.qualityType,
+          qualityType: _qualityType,
           qualitySelectedListener: (qualityType) => _qualityType = qualityType,
         ),
         Stack(
@@ -79,7 +79,7 @@ class _OwnBanknoteCreatorState extends State<OwnBanknoteCreator> {
                 onPressed: _onClosePressed,
               ),
               RaisedButton(
-                child: Text(Localization.of(context).add),
+                child: Text(_isCreator ? Localization.of(context).create : Localization.of(context).change),
                 onPressed: _onAddPressed,
                 textColor: Colors.white,
               ),
@@ -118,15 +118,24 @@ class _OwnBanknoteCreatorState extends State<OwnBanknoteCreator> {
 
   void _onAddPressed() {
     final OwnBanknote ownBanknote = OwnBanknote(
-        _qualityType,
-        _priceController.text.isEmpty ? 0.0 : double.parse(_priceController.text),
-        _currencies[_currencyIndex],
-        _commentController.text,
-        []);
+      _qualityType,
+      _priceController.text.isEmpty ? 0.0 : double.parse(_priceController.text),
+      _currencies[_currencyIndex],
+      _commentController.text,
+      widget.ownBanknote?.images ?? [],
+      id: widget.ownBanknote?.id,
+      date: widget.ownBanknote?.date,
+    );
 
-    _dataManager.addOwnBanknote(widget.banknote, ownBanknote)
-        .then((nothing) => Navigator.of(context).pop(ownBanknote),
-        onError: (error) => showError(context, error));
+    if (_isCreator) {
+      _dataManager.addOwnBanknote(widget.banknote, ownBanknote)
+          .then((nothing) => Navigator.of(context).pop(ownBanknote),
+          onError: (error) => showError(context, error));
+    } else {
+      _dataManager.changeOwnBanknote(widget.banknote, ownBanknote)
+          .then((nothing) => Navigator.of(context).pop(ownBanknote),
+          onError: (error) => showError(context, error));
+    }
   }
 }
 
@@ -138,10 +147,7 @@ class _TextField extends StatefulWidget {
   final TextEditingController _controller;
   final TextInputType _keyboardType;
 
-  final _formKey = GlobalKey<FormState>();
-
   String get text => _controller.text;
-  bool get validate => _formKey.currentState.validate();
 
   @override
   State<StatefulWidget> createState() => _TextFieldState();
@@ -154,7 +160,6 @@ class _TextFieldState extends State<_TextField> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Form(
-        key: widget._formKey,
         child: TextFormField(
           decoration: InputDecoration(hintText: widget._hint),
           controller: widget._controller,

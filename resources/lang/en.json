@@ -16,6 +16,8 @@
   "price" : "Price",
   "error_empty" : "Field can't be empty",
   "add" : "Add",
+  "change" : "Change",
+  "create" : "Create",
   "quality_map" : {
     "pr" : "Rag",
     "fr" : "Poor",
