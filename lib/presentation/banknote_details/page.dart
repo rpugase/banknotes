@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 
 class BanknoteDetailsPage extends StatefulWidget {
   final Banknote _banknote;
-  final String _heroTag = 'BanknoteDetailsPage';
 
   BanknoteDetailsPage(this._banknote);
 
@@ -26,7 +25,7 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.add),
-          onPressed: () => _addOwnBanknote(),
+          onPressed: _addOwnBanknote,
         ),
       ],
     );
