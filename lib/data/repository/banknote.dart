@@ -4,14 +4,14 @@ import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
 
 abstract class BanknoteRepository {
-  Future<List<BanknoteEntity>> getBanknotes(int modificationId);
+  Future<List<BanknoteEntity>> getBanknotes(int emissionId);
 }
 
 class BanknoteDBRepository implements BanknoteRepository {
   BanknoteDBRepository(this.banknoteBean);
   final BanknoteBean banknoteBean;
 
-  Future<List<BanknoteEntity>> getBanknotes(int modificationId) => throw UnimplementedError();
+  Future<List<BanknoteEntity>> getBanknotes(int emissionId) => throw UnimplementedError();
 }
 
 class BanknoteMockRepository implements BanknoteRepository {
@@ -35,7 +35,7 @@ class BanknoteMockRepository implements BanknoteRepository {
   ];
 
   @override
-  Future<List<BanknoteEntity>> getBanknotes(int modificationId) async {
+  Future<List<BanknoteEntity>> getBanknotes(int emissionId) async {
     await Future.delayed(Duration(seconds: 1));
 
     return banknotes;

@@ -1,14 +1,14 @@
 import 'package:banknotes/data/model/catalog.dart';
+import 'package:banknotes/domain/model/emission.dart';
 import 'package:banknotes/domain/model/image.dart';
-import 'package:banknotes/domain/model/modification.dart';
 
 class Catalog {
-  Catalog(this.id, this.name, this.image, {this.isFavourite = false}) : modifications = [];
+  Catalog(this.id, this.name, this.image, {this.isFavourite = false}) : emissions = [];
 
   final int id;
   final String name;
   final Image image;
-  final List<Modification> modifications;
+  final List<Emission> emissions;
   bool isFavourite;
 
   @override
@@ -23,8 +23,8 @@ class Catalog {
         name = catalogEntity.name,
         image = Image(catalogEntity.image, ImageType.assets),
         isFavourite = catalogEntity.isFavourite,
-        modifications = catalogEntity.emissions.map((emission) => Modification.fromEntity(emission)).toList();
+        emissions = catalogEntity.emissions.map((emission) => Emission.fromEntity(emission)).toList();
 
   CatalogEntity toEntity() => CatalogEntity.make(name, image.path, isFavourite,
-      modifications.map((modification) => modification.toEntity(id)).toList());
+      emissions.map((modification) => modification.toEntity(id)).toList());
 }

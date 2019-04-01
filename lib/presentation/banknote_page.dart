@@ -1,18 +1,15 @@
-import 'package:banknotes/presentation/banknote_details/page.dart';
-import 'package:flutter/material.dart';
-import 'package:banknotes/domain/model/banknote.dart';
-import 'package:banknotes/util/injector.dart';
 import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/banknote.dart';
-import 'package:banknotes/domain/model/modification.dart';
+import 'package:banknotes/domain/model/emission.dart';
+import 'package:banknotes/presentation/banknote_details_page.dart';
 import 'package:banknotes/util/error_handler.dart';
 import 'package:banknotes/util/injector.dart';
 import 'package:flutter/material.dart';
 
 class BanknotePage extends StatefulWidget {
 
-  BanknotePage(this._modification);
-  final Modification _modification;
+  BanknotePage(this._emission);
+  final Emission _emission;
 
   @override
   State<StatefulWidget> createState() => _BanknotePageState();
@@ -35,7 +32,7 @@ class _BanknotePageState extends State<BanknotePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget._modification.name),
+        title: Text(widget._emission.name),
       ),
       body: _isLoading ? _buildLoading() : _buildBanknotes(),
     );
@@ -65,7 +62,7 @@ class _BanknotePageState extends State<BanknotePage> {
   }
 
   void _loadData() {
-    _dataManager.getBanknotes(widget._modification).then((banknotes) {
+    _dataManager.getBanknotes(widget._emission).then((banknotes) {
       setState(() {
         _isLoading = false;
         _banknotes = banknotes;

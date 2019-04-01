@@ -1,4 +1,4 @@
-import 'package:banknotes/presentation/catalog/page.dart';
+import 'package:banknotes/presentation/catalog_page.dart';
 import 'package:banknotes/util/injector.dart';
 import 'package:banknotes/util/localization.dart';
 import 'package:flutter/material.dart';

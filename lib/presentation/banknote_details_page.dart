@@ -1,7 +1,6 @@
 import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
-import 'package:banknotes/presentation/banknote_image_detail/page.dart';
-import 'package:banknotes/presentation/own_banknote_detail/page.dart';
+import 'package:banknotes/presentation/own_banknote_detail_page.dart';
 import 'package:banknotes/presentation/widget/own_banknote_creator.dart';
 import 'package:banknotes/presentation/widget/quality_type_widget.dart';
 import 'package:banknotes/presentation/widget/reordeble_list_with_scroll_view.dart';
@@ -128,8 +127,7 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
   }
 
   void _openAllImages(Banknote banknote) {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => BanknoteImageDetailPage()));
+    Scaffold.of(context).showSnackBar(SnackBar(content: Text('No implementation')));
   }
 
   void _addOwnBanknote() async {

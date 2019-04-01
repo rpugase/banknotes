@@ -5,16 +5,16 @@ import 'package:banknotes/data/model/catalog.dart';
 import 'package:banknotes/data/model/emission.dart';
 import 'package:banknotes/data/repository/banknote.dart';
 import 'package:banknotes/data/repository/catalog.dart';
-import 'package:banknotes/data/repository/modification.dart';
+import 'package:banknotes/data/repository/emission.dart';
 import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/catalog.dart';
-import 'package:banknotes/domain/model/modification.dart';
+import 'package:banknotes/domain/model/emission.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
 
 class DataManager {
-  DataManager(this._catalogRepository, this._modificationRepository, this._banknoteRepository);
+  DataManager(this._catalogRepository, this._emissionRepository, this._banknoteRepository);
   final CatalogRepository _catalogRepository;
-  final EmissionRepository _modificationRepository;
+  final EmissionRepository _emissionRepository;
   final BanknoteRepository _banknoteRepository;
 
   final List<Catalog> _catalogs = [];
@@ -27,9 +27,9 @@ class DataManager {
     return _catalogs;
   }
 
-  Future<Map<int, List<Banknote>>> getBanknotes(Modification modification) async {
-    if (modification != null && modification.banknotes.isEmpty) {
-      final List<BanknoteEntity> banknotes = await _banknoteRepository.getBanknotes(modification.id);
+  Future<Map<int, List<Banknote>>> getBanknotes(Emission emission) async {
+    if (emission != null && emission.banknotes.isEmpty) {
+      final List<BanknoteEntity> banknotes = await _banknoteRepository.getBanknotes(emission.id);
       final Map<int, List<Banknote>> map = {};
       banknotes.forEach((banknote) {
         if (map[banknote.parentId] == null) {
@@ -39,10 +39,10 @@ class DataManager {
         }
       });
 
-      modification.banknotes.addAll(map);
+      emission.banknotes.addAll(map);
     }
 
-    return modification.banknotes;
+    return emission.banknotes;
   }
 
   Future<List<Catalog>> getFavouriteCatalogs() async {
@@ -61,13 +61,13 @@ class DataManager {
     return _catalogs.where((catalog) => catalog.isFavourite).toList();
   }
 
-  Future<List<Modification>> getModifications(Catalog catalog) async {
-    if (catalog != null && catalog.modifications.isEmpty) {
-      final List<EmissionEntity> emissions = await _modificationRepository.getFullModifications(catalog.id);
-      catalog.modifications.addAll(emissions.map((emission) => Modification.fromEntity(emission)).toList());
+  Future<List<Emission>> getEmissions(Catalog catalog) async {
+    if (catalog != null && catalog.emissions.isEmpty) {
+      final List<EmissionEntity> emissions = await _emissionRepository.getFullEmissions(catalog.id);
+      catalog.emissions.addAll(emissions.map((emission) => Emission.fromEntity(emission)).toList());
     }
 
-    return catalog.modifications;
+    return catalog.emissions;
   }
 
   Future changeFavouriteStatus(Catalog country) async {
