@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 
 class BanknoteDetailsPage extends StatefulWidget {
   final Banknote _banknote;
+  final String _heroTag = 'BanknoteDetailsPage';
 
   BanknoteDetailsPage(this._banknote);
 
