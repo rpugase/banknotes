@@ -9,19 +9,19 @@ import 'package:flutter/foundation.dart';
 
 abstract class EmissionRepository {
 
-  /// Get all modifications with Banknotes and OwnBanknotes.
-  Future<List<EmissionEntity>> getFullModifications(int catalogId);
+  /// Get all emissions with Banknotes and OwnBanknotes.
+  Future<List<EmissionEntity>> getFullEmissions(int catalogId);
 }
 
-class ModificationDbRepository implements EmissionRepository {
-  ModificationDbRepository(this.emissionBean);
+class EmissionDbRepository implements EmissionRepository {
+  EmissionDbRepository(this.emissionBean);
   final EmissionBean emissionBean;
 
   @override
-  Future<List<EmissionEntity>> getFullModifications(int catalogId) => throw UnimplementedError();
+  Future<List<EmissionEntity>> getFullEmissions(int catalogId) => throw UnimplementedError();
 }
 
-class ModificationMockRepository implements EmissionRepository {
+class EmissionMockRepository implements EmissionRepository {
 
   Description _description = Description.test();
 
@@ -58,7 +58,7 @@ class ModificationMockRepository implements EmissionRepository {
   ];
 
   @override
-  Future<List<EmissionEntity>> getFullModifications(int catalogId) async {
+  Future<List<EmissionEntity>> getFullEmissions(int catalogId) async {
     await Future.delayed(Duration(seconds: 1));
 
     return modifications;
