@@ -1,8 +1,8 @@
 import 'package:banknotes/data/model/emission.dart';
 import 'package:banknotes/domain/model/banknote.dart';
 
-class Modification {
-  Modification(this.id, this.name, [this.banknotes]);
+class Emission {
+  Emission(this.id, this.name, [this.banknotes]);
 
   final int id;
   final String name;
@@ -16,7 +16,7 @@ class Modification {
       .map((banknotes) => banknotes.where((banknote) => banknote.ownBanknotes.isNotEmpty).length)
       .reduce((value, element) => value + element);
 
-  Modification.fromEntity(EmissionEntity entity) :
+  Emission.fromEntity(EmissionEntity entity) :
         id = entity.id,
         name = entity.shortName,
         banknotes = Banknote.toMap(entity.banknotes);

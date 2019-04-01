@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 class ImageViewerPage extends StatefulWidget {
@@ -9,9 +8,7 @@ class ImageViewerPage extends StatefulWidget {
   ImageViewerPage(this._images, this._currentIndex, this._heroTag);
 
   @override
-  State<StatefulWidget> createState() {
-    return ImageViewerState();
-  }
+  State<StatefulWidget> createState() => ImageViewerState();
 }
 
 class ImageViewerState extends State<ImageViewerPage> {

@@ -1,28 +1,28 @@
 import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/catalog.dart';
-import 'package:banknotes/domain/model/modification.dart';
+import 'package:banknotes/domain/model/emission.dart';
+import 'package:banknotes/presentation/banknote_page.dart';
 import 'package:banknotes/util/error_handler.dart';
 import 'package:banknotes/util/injector.dart';
 import 'package:flutter/material.dart';
-import 'package:banknotes/presentation/banknote/page.dart';
 
-class ModificationPage extends StatefulWidget {
+class EmissionPage extends StatefulWidget {
 
-  ModificationPage(this._catalog);
+  EmissionPage(this._catalog);
   final Catalog _catalog;
 
   @override
   State<StatefulWidget> createState() {
-    return _ModificationPageState();
+    return _EmissionPageState();
   }
 }
 
-class _ModificationPageState extends State<ModificationPage> {
+class _EmissionPageState extends State<EmissionPage> {
 
   final DataManager _dataManager = Injector().dataManager;
 
   bool _isLoading = true;
-  List<Modification> _modifications = [];
+  List<Emission> _emissions = [];
 
   @override
   void initState() {
@@ -36,15 +36,15 @@ class _ModificationPageState extends State<ModificationPage> {
       appBar: AppBar(
         title: Text(widget._catalog.name),
       ),
-      body: _isLoading ? _buildLoading() : _buildModifications(),
+      body: _isLoading ? _buildLoading() : _buildEmissions(),
     );
   }
 
   void _loadData() {
-    _dataManager.getModifications(widget._catalog).then((modifications) {
+    _dataManager.getEmissions(widget._catalog).then((emissions) {
       setState(() {
         _isLoading = false;
-        _modifications = modifications;
+        _emissions = emissions;
       });
     }, onError: (error) => showError(context, error, _onError));
   }
@@ -59,26 +59,26 @@ class _ModificationPageState extends State<ModificationPage> {
     return Center(child: CircularProgressIndicator());
   }
 
-  Widget _buildModifications() {
+  Widget _buildEmissions() {
     return ListView.separated(
-        itemBuilder: (context, index) => _buildItem(_modifications[index]),
+        itemBuilder: (context, index) => _buildItem(_emissions[index]),
         separatorBuilder: (context, index) => Divider(color: Colors.grey),
-        itemCount: _modifications.length,
+        itemCount: _emissions.length,
     );
   }
 
-  Widget _buildItem(Modification modification) {
+  Widget _buildItem(Emission emission) {
     return ListTile(
-      title: Text(modification.name),
-      trailing: Text('${modification.ownBanknotesLength} / ${modification.banknotesLength}'),
+      title: Text(emission.name),
+      trailing: Text('${emission.ownBanknotesLength} / ${emission.banknotesLength}'),
       onTap: () {
-        _openBanknotePage(modification);
+        _openBanknotePage(emission);
       },
     );
   }
 
-  void _openBanknotePage(Modification modification) async {
-    await Navigator.of(context).push(MaterialPageRoute(builder: (context) => BanknotePage(modification)));
+  void _openBanknotePage(Emission emission) async {
+    await Navigator.of(context).push(MaterialPageRoute(builder: (context) => BanknotePage(emission)));
 
     _loadData();
   }

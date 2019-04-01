@@ -37,6 +37,16 @@ class OwnBanknote {
     var formatter = new DateFormat('yyyy-MM-dd');
     return formatter.format(date);
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is OwnBanknote &&
+              runtimeType == other.runtimeType &&
+              id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }
 
 class Currency {

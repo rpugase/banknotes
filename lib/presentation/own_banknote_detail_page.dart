@@ -1,15 +1,15 @@
-import 'dart:io';
 import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
 import 'package:banknotes/presentation/widget/image_viewer.dart';
+import 'package:banknotes/presentation/widget/own_banknote_creator.dart';
 import 'package:banknotes/util/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:banknotes/domain/model/image.dart';
 
 class OwnBanknoteDetailPage extends StatefulWidget {
-  OwnBanknote _ownBanknote;
-  Banknote _banknote;
+  final OwnBanknote _ownBanknote;
+  final Banknote _banknote;
 
   OwnBanknoteDetailPage(this._ownBanknote, this._banknote);
 
@@ -18,6 +18,15 @@ class OwnBanknoteDetailPage extends StatefulWidget {
 }
 
 class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
+
+  OwnBanknote _ownBanknote;
+
+  @override
+  void initState() {
+    _ownBanknote = widget._ownBanknote;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +34,7 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: () => _showSimpleDialog(),
+            onPressed: _changeBanknote,
           ),
           IconButton(
             icon: Icon(Icons.edit),
@@ -43,35 +52,44 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
 
   Widget _buildView() {
     return Container(
-        child: Padding(
-      padding: EdgeInsets.all(8),
+      child: Padding(padding: EdgeInsets.all(8),
       child: CustomScrollView(
         slivers: <Widget>[
           SliverList(
             delegate: SliverChildListDelegate(
-              [
-                DescriptionWidget(widget._banknote, widget._ownBanknote),
-              ],
+              [DescriptionWidget(widget._banknote, _ownBanknote)],
             ),
           ),
           SliverGrid(
             gridDelegate:
-                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
             delegate: SliverChildListDelegate(_showAllImages()),
           ),
         ],
-      ),
-    ));
+      ),)
+    );
   }
 
   List<ImageWidget> _showAllImages() {
     final List<ImageWidget> imageWidgets = [];
 
     for (int i = 0; i < widget._ownBanknote.images.length; i++) {
-      imageWidgets.add(ImageWidget(
-          widget._ownBanknote.images[i].path, widget._ownBanknote, i));
+      imageWidgets.add(ImageWidget(_ownBanknote.images[i].path, widget._ownBanknote, i));
     }
     return imageWidgets;
+  }
+
+  void _changeBanknote() async {
+    final ownBanknote = await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => SimpleDialog(
+        children: [OwnBanknoteCreator(widget._banknote, _ownBanknote)],
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),
+      )
+    );
+
+    if (ownBanknote != null) setState(() => _ownBanknote = ownBanknote);
   }
 
   Future<void> _showSimpleDialog() async {
@@ -163,8 +181,8 @@ class ImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var image = Padding(
-      padding: EdgeInsets.only(right: 8, left: 8, top: 8, bottom: 8),
-      child: Hero(
+        padding: EdgeInsets.all(8.0),
+        child: Hero(
           tag: '$_heroTag$_numberImageInGrid',
           child: Image.asset(
             _imagePath,
@@ -181,8 +199,7 @@ class ImageWidget extends StatelessWidget {
   }
 
   void _showAllImages(BuildContext context) {
-    List<String> images =
-        _ownBanknote.images.map((image) => image.path).toList();
+    List<String> images = _ownBanknote.images.map((image) => image.path).toList();
 
     Navigator.of(context).push(
       PageRouteBuilder<Null>(
@@ -193,8 +210,7 @@ class ImageWidget extends StatelessWidget {
                 builder: (BuildContext context, Widget child) {
                   return Opacity(
                     opacity: animation.value,
-                    child:
-                        ImageViewerPage(images, _numberImageInGrid, _heroTag),
+                    child: ImageViewerPage(images, _numberImageInGrid, _heroTag),
                   );
                 });
           },

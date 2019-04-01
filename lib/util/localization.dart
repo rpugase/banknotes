@@ -37,6 +37,8 @@ class Localization {
   String get comment => _sentences['comment'];
   String get errorEmpty => _sentences['error_empty'];
   String get add => _sentences['add'];
+  String get create => _sentences['create'];
+  String get change => _sentences['change'];
   String get shoppingPrice => _sentences['shopping_price'];
   String get shoppingDate => _sentences['shopping_date'];
   String get banknoteDescriptionPrinter => _sentences['printer'];

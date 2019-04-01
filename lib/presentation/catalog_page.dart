@@ -1,7 +1,7 @@
 import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/catalog.dart';
-import 'package:banknotes/presentation/full_catalog/page.dart';
-import 'package:banknotes/presentation/modification/page.dart';
+import 'package:banknotes/presentation/emission_page.dart';
+import 'package:banknotes/presentation/full_catalog_page.dart';
 import 'package:banknotes/presentation/widget/reorderable_list.dart';
 import 'package:banknotes/util/error_handler.dart';
 import 'package:banknotes/util/injector.dart';
@@ -114,6 +114,6 @@ class _CatalogPageState extends State<CatalogPage> {
   }
 
   void _openModificationPage(Catalog catalog) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ModificationPage(catalog)));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => EmissionPage(catalog)));
   }
 }
