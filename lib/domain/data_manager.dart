@@ -70,6 +70,14 @@ class DataManager {
     return catalog.emissions;
   }
 
+  Future<List<OwnBanknote>> replaceOwnBanknotesPositions(Banknote banknote, OwnBanknote oldOwnBanknote, OwnBanknote newOwnBanknote) async {
+    // TODO: change status in DB
+    final List<OwnBanknote> ownBanknotes = banknote.ownBanknotes;
+
+    ownBanknotes.insert(ownBanknotes.indexOf(newOwnBanknote), ownBanknotes.removeAt(ownBanknotes.indexOf(oldOwnBanknote)));
+    return ownBanknotes;
+  }
+
   Future changeFavouriteStatus(Catalog country) async {
     // TODO: change status in DB
     country.isFavourite = !country.isFavourite;

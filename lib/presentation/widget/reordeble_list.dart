@@ -1,18 +1,74 @@
 library flutter_reorderable_list;
 
+import 'dart:async';
+import 'dart:collection';
+import 'dart:math';
+import 'dart:ui' show lerpDouble;
+
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 
-import 'dart:collection';
-import 'dart:math';
-import 'dart:async';
-import 'dart:ui' show lerpDouble;
-
 typedef bool RedorderItemCallback(Key draggedItem, Key newPosition);
 typedef void ReorderCompleteCallback(Key draggedItem);
+typedef Widget OnItemCreate(BuildContext context);
+
+class CustomReorderableItem extends StatelessWidget {
+
+  CustomReorderableItem({
+    @required this.key,
+    this.isFirst,
+    this.isLast,
+    this.onItemCreate});
+
+  final Key key;
+  final bool isFirst;
+  final bool isLast;
+  final OnItemCreate onItemCreate;
+
+  @override
+  Widget build(BuildContext context) {
+    return ReorderableItem(key: key, childBuilder: _buildChild);
+  }
+
+  Widget _buildChild(BuildContext context, ReorderableItemState state) {
+    BoxDecoration decoration;
+
+    if (state == ReorderableItemState.dragProxy ||
+        state == ReorderableItemState.dragProxyFinished) {
+      decoration = BoxDecoration(color: Color(0xD0FFFFFF));
+    } else {
+      bool placeholder = state == ReorderableItemState.placeholder;
+      decoration = BoxDecoration(
+          border: Border(
+              top: isFirst && !placeholder
+                  ? Divider.createBorderSide(context)
+                  : BorderSide.none,
+              bottom: isLast && placeholder
+                  ? BorderSide.none
+                  : Divider.createBorderSide(context)),
+          color: placeholder ? null : Colors.white);
+    }
+
+    final Widget content = Container(
+      decoration: decoration,
+      child: Opacity(
+        opacity: state == ReorderableItemState.placeholder ? 0.0 : 1.0,
+        child: IntrinsicHeight(
+          child: Row(
+            children: <Widget>[
+              Expanded(child: onItemCreate(context)),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    return DelayedReorderableListener(child: content);
+  }
+}
 
 // Can be used to cancel reordering (i.e. when underlying data changed)
 class CancellationToken {
