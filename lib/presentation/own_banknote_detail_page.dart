@@ -111,9 +111,7 @@ Widget _buildDialogDeletingBanknote() {
                     Navigator.pop(context);
                     Navigator.pop(context);
                 })
-                .catchError((error) {
-                    showError(context, error);
-                });
+                .catchError((error) => showError(context, error));
 
           },
           child: Text(Localization.of(context).yes)),

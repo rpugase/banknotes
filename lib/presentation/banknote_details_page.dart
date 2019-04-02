@@ -69,12 +69,8 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
                                 _dataManager
                                     .deleteOwnBanknote(widget._banknote,
                                         widget._banknote.ownBanknotes[index])
-                                    .then(((value) {
-                                      setState(() {});
-                                    }))
-                                    .catchError((error) {
-                                      showError(context, error);
-                                    })
+                              .then(((value) => setState(() {})))
+                              .catchError((error) => showError(context, error))
                               },
                         ),
                       ],
