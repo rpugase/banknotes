@@ -34,7 +34,7 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> widgets = _openDialogAttachmentPhoto();
+    List<Widget> widgets = _buildDialogAttachmentPhoto();
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
@@ -48,7 +48,7 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
           ),
           IconButton(
             icon: Icon(Icons.delete),
-            onPressed: _deleteOwnBanknote,
+            onPressed: _showDialogBanknote,
           )
         ],
       ),
@@ -85,17 +85,16 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
     return imageWidgets;
   }
 
-  void _deleteOwnBanknote() {
+  void _showDialogBanknote() {
     showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (BuildContext context) {
-          return _openDialogDeletingBanknote();
-        });
+        builder: (context) => _buildDialogDeletingBanknote()
+    );
   }
 
 
-Widget _openDialogDeletingBanknote() {
+Widget _buildDialogDeletingBanknote() {
   return CupertinoAlertDialog(
     title: Text(Localization.of(context).deleteQuestion),
     actions: <Widget>[
@@ -107,9 +106,15 @@ Widget _openDialogDeletingBanknote() {
       ),
        CupertinoButton(
           onPressed: () {
-            _dataManager.deleteOwnBanknote(widget._banknote, widget._ownBanknote.id);
-            Navigator.pop(context);
-            Navigator.pop(context);
+            _dataManager.deleteOwnBanknote(widget._banknote, widget._ownBanknote)
+                .then((value) {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                })
+                .catchError((error) {
+                    showError(context, error);
+                });
+
           },
           child: Text(Localization.of(context).yes)),
     ],
@@ -130,7 +135,7 @@ Widget _openDialogDeletingBanknote() {
   }
 
 
-  List<Widget> _openDialogAttachmentPhoto() {
+  List<Widget> _buildDialogAttachmentPhoto() {
     return [
       _setDialogCell(true, Localization.of(context).gallery),
       Divider(),

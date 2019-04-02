@@ -19,11 +19,11 @@ class BanknoteDetailsPage extends StatefulWidget {
   BanknoteDetailsPage(this._banknote);
 
   @override
-  State<StatefulWidget> createState() => _BanknoteDetailsPageState(_banknote.ownBanknotes);
+  State<StatefulWidget> createState() =>
+      _BanknoteDetailsPageState(_banknote.ownBanknotes);
 }
 
 class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
-
   final DataManager _dataManager = Injector().dataManager;
 
   _BanknoteDetailsPageState(this._ownBanknotes);
@@ -61,20 +61,29 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
                     return Slidable(
                       delegate: SlidableStrechDelegate(),
                       secondaryActions: <Widget>[
-                         IconSlideAction(
+                        IconSlideAction(
                           caption: Localization.of(context).delete,
                           color: Colors.red,
                           icon: Icons.archive,
-                          onTap: () => setState(() {
-                            _dataManager.deleteOwnBanknote(widget._banknote, widget._banknote.ownBanknotes[index].id);
-                          }),
+                          onTap: () => {
+                                _dataManager
+                                    .deleteOwnBanknote(widget._banknote,
+                                        widget._banknote.ownBanknotes[index])
+                                    .then(((value) {
+                                      setState(() {});
+                                    }))
+                                    .catchError((error) {
+                                      showError(context, error);
+                                    })
+                              },
                         ),
                       ],
-                      child:CustomReorderableItem(
+                      child: CustomReorderableItem(
                         key: Key(_ownBanknotes[index].id.toString()),
                         isFirst: index == 0,
                         isLast: index == _ownBanknotes.length - 1,
-                        onItemCreate: (context) => _createOwnBanknoteCell(context, _ownBanknotes[index]),
+                        onItemCreate: (context) => _createOwnBanknoteCell(
+                            context, _ownBanknotes[index]),
                       ),
                     );
                   },
@@ -88,8 +97,8 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
 
   void _showOwnBanknote(OwnBanknote ownBanknote, BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => OwnBanknoteDetailPage(ownBanknote, widget._banknote))
-    );
+        builder: (context) =>
+            OwnBanknoteDetailPage(ownBanknote, widget._banknote)));
   }
 
   Widget _createOwnBanknoteCell(BuildContext context, OwnBanknote ownBanknote) {
@@ -125,17 +134,20 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
     int draggingIndex = _getIndexByKey(item);
     int newPositionIndex = _getIndexByKey(newPosition);
 
-    _dataManager.replaceOwnBanknotesPositions(
-      widget._banknote,
-      _ownBanknotes[draggingIndex],
-      _ownBanknotes[newPositionIndex],
-    ).then((ownBanknotes) => setState(() => _ownBanknotes = ownBanknotes),
-        onError: (error) => showError(context, error));
+    _dataManager
+        .replaceOwnBanknotesPositions(
+          widget._banknote,
+          _ownBanknotes[draggingIndex],
+          _ownBanknotes[newPositionIndex],
+        )
+        .then((ownBanknotes) => setState(() => _ownBanknotes = ownBanknotes),
+            onError: (error) => showError(context, error));
     return true;
   }
 
   int _getIndexByKey(Key key) {
-    return _ownBanknotes.indexWhere((ownBanknote) => Key(ownBanknote.id.toString()) == key);
+    return _ownBanknotes
+        .indexWhere((ownBanknote) => Key(ownBanknote.id.toString()) == key);
   }
 
   Widget _createDescriptionView() {
@@ -145,10 +157,8 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
           _createDescriptionLine(
               Localization.of(context).banknoteDescriptionEntryDate,
               widget._banknote.description.entryDate),
-          _createDescriptionLine(
-              Localization.of(context).banknoteDescription,
+          _createDescriptionLine(Localization.of(context).banknoteDescription,
               widget._banknote.description.text),
-
           _createDescriptionLine(
               Localization.of(context).banknoteDescriptionYear,
               widget._banknote.description.year),
@@ -160,36 +170,36 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
 
   Widget _createDescriptionLine(String title, String value) {
     return Padding(
-        padding: EdgeInsets.only(right: 16, left: 16, top: 8, bottom: 8),
-            child: RichText(
-              text:  TextSpan(
-                text: '$title: ',
-                style: TextStyle(fontSize: 15.0, color: Colors.black, fontWeight: FontWeight.bold),
-                children: <TextSpan>[
-                   TextSpan(
-                      text: value,
-                      style: TextStyle(fontWeight: FontWeight.normal)),
-                ],
-              ),
-            ),
+      padding: EdgeInsets.only(right: 16, left: 16, top: 8, bottom: 8),
+      child: RichText(
+        text: TextSpan(
+          text: '$title: ',
+          style: TextStyle(
+              fontSize: 15.0, color: Colors.black, fontWeight: FontWeight.bold),
+          children: <TextSpan>[
+            TextSpan(
+                text: value, style: TextStyle(fontWeight: FontWeight.normal)),
+          ],
+        ),
+      ),
     );
   }
 
   void _openAllImages(Banknote banknote) {
-    Scaffold.of(context).showSnackBar(SnackBar(content: Text('No implementation')));
+    Scaffold.of(context)
+        .showSnackBar(SnackBar(content: Text('No implementation')));
   }
 
   void _addOwnBanknote() async {
     final OwnBanknote ownBanknote = await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => SimpleDialog(
-        children: [OwnBanknoteCreator(widget._banknote)],
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),
-      )
-    );
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => SimpleDialog(
+              children: [OwnBanknoteCreator(widget._banknote)],
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8.0))),
+            ));
 
     if (ownBanknote != null) setState(() {});
   }
 }
-
