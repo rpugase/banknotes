@@ -2,10 +2,10 @@ import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/catalog.dart';
 import 'package:banknotes/presentation/emission_page.dart';
 import 'package:banknotes/presentation/full_catalog_page.dart';
-import 'package:banknotes/presentation/widget/reorderable_list.dart';
-import 'package:banknotes/util/utils_functions.dart';
+import 'package:banknotes/presentation/widget/reordeble_list.dart';
 import 'package:banknotes/util/injector.dart';
 import 'package:banknotes/util/localization.dart';
+import 'package:banknotes/util/utils_functions.dart';
 import 'package:flutter/material.dart';
 
 class CatalogPage extends StatefulWidget {
@@ -60,11 +60,19 @@ class _CatalogPageState extends State<CatalogPage> {
   }
 
   Widget _buildContent(List<Catalog> catalogs) {
-    return Scrollbar(
-      child: ReorderableList(
-        color: Colors.grey,
-        tiles: catalogs.map(_buildCategoryTile).toList(),
-        onReorder: _replaceCatalogsPositions,
+    return ReorderableList(
+      onReorder: _reorderCallback,
+      child: CustomScrollView(
+        slivers: <Widget>[
+          SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) => CustomReorderableItem(
+              key: Key(_catalogs[index].id.toString()),
+              isFirst: index == 0,
+              isLast: index == _catalogs.length - 1,
+              onItemCreate: (context) => _buildCategoryTile(_catalogs[index]),
+            ), childCount: _catalogs.length),
+          )
+        ],
       ),
     );
   }
@@ -72,7 +80,8 @@ class _CatalogPageState extends State<CatalogPage> {
   Widget _buildCategoryTile(Catalog catalog) {
     return ListTile(
       key: Key(catalog.id.toString()),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16.0, vertical: 8.0),
       leading: Image.network(
         catalog.image.path,
         width: 48.0,
@@ -84,6 +93,18 @@ class _CatalogPageState extends State<CatalogPage> {
     );
   }
 
+  bool _reorderCallback(Key item, Key newPosition) {
+    int _getIndexByKey(Key key) => _catalogs.indexWhere((catalog) => Key(catalog.id.toString()) == key);
+
+    int draggingIndex = _getIndexByKey(item);
+    int newPositionIndex = _getIndexByKey(newPosition);
+
+    _dataManager.replaceCatalogsPositions(_catalogs[draggingIndex], _catalogs[newPositionIndex])
+        .then((catalogs) => setState(() => _catalogs = catalogs),
+        onError: (error) => showError(context, error, _onError));
+    return true;
+  }
+
   void _loadData() {
     _dataManager.getFavouriteCatalogs().then((catalogs) {
       setState(() {
@@ -91,14 +112,6 @@ class _CatalogPageState extends State<CatalogPage> {
         _isLoading = false;
       });
     }, onError: (error) => showError(context, error, _onError));
-  }
-
-  void _replaceCatalogsPositions(int oldIndex, int newIndex) {
-    _dataManager.replaceCatalogsPositions(_catalogs[oldIndex], _catalogs[newIndex]).then((catalogs) =>
-      setState(() {
-        _catalogs = catalogs;
-      })
-    , onError: (error) => showError(context, error, _onError));
   }
 
   void _onError() {
