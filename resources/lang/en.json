@@ -33,6 +33,6 @@
   "camera" : "Camera",
   "yes": "Yes",
   "cancel": "Cancel",
-  "delete_question": "Are you sure you want to delete this banknote?"
-
+  "delete_question": "Are you sure you want to delete this banknote?",
+  "delete": "Delete"
 }

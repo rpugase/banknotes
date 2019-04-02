@@ -53,6 +53,7 @@ class Localization {
   String get yes => _sentences['yes'];
   String get cancel => _sentences['cancel'];
   String get deleteQuestion => _sentences['delete_question'];
+  String get delete => _sentences['delete'];
 }
 
 class LocalizationDelegate extends LocalizationsDelegate<Localization> {

@@ -1,11 +1,14 @@
+import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
 import 'package:banknotes/presentation/own_banknote_detail_page.dart';
 import 'package:banknotes/presentation/widget/own_banknote_creator.dart';
 import 'package:banknotes/presentation/widget/quality_type_widget.dart';
 import 'package:banknotes/presentation/widget/reordeble_list_with_scroll_view.dart';
+import 'package:banknotes/util/injector.dart';
 import 'package:banknotes/util/localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class BanknoteDetailsPage extends StatefulWidget {
   final Banknote _banknote;
@@ -17,6 +20,9 @@ class BanknoteDetailsPage extends StatefulWidget {
 }
 
 class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
+
+  final DataManager _dataManager = Injector().dataManager;
+
   @override
   Widget build(BuildContext context) {
     AppBar appBar = AppBar(
@@ -46,10 +52,23 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                    return Item(widget._banknote,
-                      data: widget._banknote.ownBanknotes[index],
-                      isFirst: index == 0,
-                      isLast: index == widget._banknote.ownBanknotes.length - 1,
+                    return Slidable(
+                      delegate: SlidableStrechDelegate(),
+                      secondaryActions: <Widget>[
+                         IconSlideAction(
+                          caption: Localization.of(context).delete,
+                          color: Colors.red,
+                          icon: Icons.archive,
+                          onTap: () => setState(() {
+                            _dataManager.deleteOwnBanknote(widget._banknote, widget._banknote.ownBanknotes[index].id);
+                          }),
+                        ),
+                      ],
+                      child: Item(widget._banknote,
+                        data: widget._banknote.ownBanknotes[index],
+                        isFirst: index == 0,
+                        isLast: index == widget._banknote.ownBanknotes.length - 1,
+                      ),
                     );
                   },
                   childCount: widget._banknote.ownBanknotes.length,

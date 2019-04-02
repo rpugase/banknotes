@@ -85,4 +85,9 @@ class DataManager {
     // TODO: change own to DB
     banknote.ownBanknotes[banknote.ownBanknotes.indexOf(ownBanknote)] = ownBanknote;
   }
+
+  Future deleteOwnBanknote(Banknote banknote, int ownBanknoteId) async {
+    // TODO: change own to DB
+    banknote.ownBanknotes.removeWhere((ownBanknote) => ownBanknote.id == ownBanknoteId);
+  }
 }

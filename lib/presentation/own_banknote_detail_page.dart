@@ -1,7 +1,9 @@
+import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
 import 'package:banknotes/presentation/widget/image_viewer.dart';
 import 'package:banknotes/presentation/widget/own_banknote_creator.dart';
+import 'package:banknotes/util/injector.dart';
 import 'package:banknotes/util/localization.dart';
 import 'package:banknotes/util/utils_functions.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,6 +24,7 @@ class OwnBanknoteDetailPage extends StatefulWidget {
 class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
 
   OwnBanknote _ownBanknote;
+  final DataManager _dataManager = Injector().dataManager;
 
   @override
   void initState() {
@@ -104,7 +107,7 @@ Widget _openDialogDeletingBanknote() {
       ),
        CupertinoButton(
           onPressed: () {
-            widget._banknote.ownBanknotes.removeWhere((value) => value.id == widget._ownBanknote.id);
+            _dataManager.deleteOwnBanknote(widget._banknote, widget._ownBanknote.id);
             Navigator.pop(context);
             Navigator.pop(context);
           },
