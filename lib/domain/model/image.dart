@@ -1,14 +1,14 @@
 import 'package:banknotes/data/model/image.dart';
 import 'package:flutter/foundation.dart';
 
-class Image {
-  Image(this.path, this.imageType, [this.main = true]);
+class ImageModel {
+  ImageModel(this.path, this.imageType, [this.main = true]);
 
   final String path;
   final ImageType imageType;
   final bool main;
 
-  Image.fromEntity(ImageEntity entity) :
+  ImageModel.fromEntity(ImageEntity entity) :
         path = entity.path,
         imageType = ImageType.values.firstWhere((type) => describeEnum(type) == entity.type),
         main = entity.main;

@@ -1,6 +1,6 @@
 import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/catalog.dart';
-import 'package:banknotes/util/error_handler.dart';
+import 'package:banknotes/util/utils_functions.dart';
 import 'package:banknotes/util/injector.dart';
 import 'package:banknotes/util/localization.dart';
 import 'package:flutter/material.dart';

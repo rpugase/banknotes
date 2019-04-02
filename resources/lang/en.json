@@ -28,5 +28,7 @@
     "ef" : "Extremely Fine",
     "au" : "AboutUncirculated",
     "unc" : "Uncirculated"
-  }
+  },
+  "gallery" : "Gallery",
+  "camera" : "Camera"
 }

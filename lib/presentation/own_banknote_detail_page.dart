@@ -3,7 +3,10 @@ import 'package:banknotes/domain/model/own_banknote.dart';
 import 'package:banknotes/presentation/widget/image_viewer.dart';
 import 'package:banknotes/presentation/widget/own_banknote_creator.dart';
 import 'package:banknotes/util/localization.dart';
+import 'package:banknotes/util/utils_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:banknotes/domain/model/image.dart';
 
 class OwnBanknoteDetailPage extends StatefulWidget {
   final OwnBanknote _ownBanknote;
@@ -27,12 +30,13 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> widgets = _openDialog();
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: () {},
+            onPressed: () => showCustomDialog(context, widgets),
           ),
           IconButton(
             icon: Icon(Icons.edit),
@@ -89,6 +93,35 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
 
     if (ownBanknote != null) setState(() => _ownBanknote = ownBanknote);
   }
+
+
+  List<Widget> _openDialog() {
+    return [
+      _setDialogCell(true, Localization.of(context).gallery),
+    Divider(),
+      _setDialogCell(false, Localization.of(context).camera)];
+  }
+
+  Widget _setDialogCell(bool isGallery, String title) {
+    return SimpleDialogOption(
+      onPressed: () {
+        _getImage(isGallery);
+        Navigator.pop(context);
+      },
+      child: Center(child: Text(title)),
+    );
+  }
+
+  Future<void> _getImage(bool isGallery) async {
+    await ImagePicker.pickImage(
+            source: isGallery ? ImageSource.gallery : ImageSource.camera)
+        .then((value) {
+      setState(() {
+        var image = ImageModel(value.path, ImageType.device);
+        widget._ownBanknote.images.add(image);
+      });
+    });
+  }
 }
 
 class DescriptionWidget extends StatelessWidget {
@@ -108,8 +141,8 @@ class DescriptionWidget extends StatelessWidget {
           _createDescriptionLine(
               Localization.of(context).banknoteDescriptionYear,
               _banknote.description.year),
-          _createDescriptionLine(
-              Localization.of(context).quality, _ownBanknote.quality.toString()),
+          _createDescriptionLine(Localization.of(context).quality,
+              _ownBanknote.quality.toString()),
           _createDescriptionLine(
               Localization.of(context).comment, _ownBanknote.comment),
         ]);
@@ -152,8 +185,7 @@ class ImageWidget extends StatelessWidget {
             _imagePath,
             fit: BoxFit.cover,
           )),
-        )
-        ;
+    );
 
     return Container(
       child: GestureDetector(
