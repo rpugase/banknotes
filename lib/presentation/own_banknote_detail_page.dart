@@ -1,5 +1,6 @@
 import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/banknote.dart';
+import 'package:banknotes/domain/model/image.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
 import 'package:banknotes/presentation/widget/image_viewer.dart';
 import 'package:banknotes/presentation/widget/own_banknote_creator.dart';
@@ -9,7 +10,6 @@ import 'package:banknotes/util/utils_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:banknotes/domain/model/image.dart';
 
 class OwnBanknoteDetailPage extends StatefulWidget {
   final OwnBanknote _ownBanknote;
@@ -120,13 +120,10 @@ Widget _buildDialogDeletingBanknote() {
 }
 
   void _changeBanknote() async {
-    final ownBanknote = await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => SimpleDialog(
-          children: [OwnBanknoteCreator(widget._banknote, _ownBanknote)],
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),
-        )
+    final ownBanknote = await showCustomDialog(
+        context,
+        [OwnBanknoteCreator(widget._banknote, _ownBanknote)],
+        barrierDismissible: false
     );
 
     if (ownBanknote != null) setState(() => _ownBanknote = ownBanknote);
