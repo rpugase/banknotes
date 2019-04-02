@@ -1,12 +1,15 @@
+import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/banknote.dart';
+import 'package:banknotes/domain/model/image.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
 import 'package:banknotes/presentation/widget/image_viewer.dart';
 import 'package:banknotes/presentation/widget/own_banknote_creator.dart';
+import 'package:banknotes/util/injector.dart';
 import 'package:banknotes/util/localization.dart';
 import 'package:banknotes/util/utils_functions.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:banknotes/domain/model/image.dart';
 
 class OwnBanknoteDetailPage extends StatefulWidget {
   final OwnBanknote _ownBanknote;
@@ -21,6 +24,7 @@ class OwnBanknoteDetailPage extends StatefulWidget {
 class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
 
   OwnBanknote _ownBanknote;
+  final DataManager _dataManager = Injector().dataManager;
 
   @override
   void initState() {
@@ -30,7 +34,7 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> widgets = _openDialog();
+    List<Widget> widgets = _buildDialogAttachmentPhoto();
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
@@ -44,7 +48,7 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
           ),
           IconButton(
             icon: Icon(Icons.delete),
-            onPressed: () {},
+            onPressed: _showDialogBanknote,
           )
         ],
       ),
@@ -81,24 +85,55 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
     return imageWidgets;
   }
 
+  void _showDialogBanknote() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => _buildDialogDeletingBanknote()
+    );
+  }
+
+
+Widget _buildDialogDeletingBanknote() {
+  return CupertinoAlertDialog(
+    title: Text(Localization.of(context).deleteQuestion),
+    actions: <Widget>[
+       CupertinoButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: Text(Localization.of(context).cancel),
+      ),
+       CupertinoButton(
+          onPressed: () {
+            _dataManager.deleteOwnBanknote(widget._banknote, widget._ownBanknote)
+                .then((value) {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                })
+                .catchError((error) => showError(context, error));
+
+          },
+          child: Text(Localization.of(context).yes)),
+    ],
+  );
+}
+
   void _changeBanknote() async {
-    final ownBanknote = await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => SimpleDialog(
-        children: [OwnBanknoteCreator(widget._banknote, _ownBanknote)],
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),
-      )
+    final ownBanknote = await showCustomDialog(
+        context,
+        [OwnBanknoteCreator(widget._banknote, _ownBanknote)],
+        barrierDismissible: false
     );
 
     if (ownBanknote != null) setState(() => _ownBanknote = ownBanknote);
   }
 
 
-  List<Widget> _openDialog() {
+  List<Widget> _buildDialogAttachmentPhoto() {
     return [
       _setDialogCell(true, Localization.of(context).gallery),
-    Divider(),
+      Divider(),
       _setDialogCell(false, Localization.of(context).camera)];
   }
 
@@ -114,7 +149,7 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
 
   Future<void> _getImage(bool isGallery) async {
     await ImagePicker.pickImage(
-            source: isGallery ? ImageSource.gallery : ImageSource.camera)
+        source: isGallery ? ImageSource.gallery : ImageSource.camera)
         .then((value) {
       setState(() {
         var image = ImageModel(value.path, ImageType.device);

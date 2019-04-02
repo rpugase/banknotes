@@ -22,10 +22,11 @@ void showError(BuildContext context, Error error, [Function func]) {
           ));
 }
 
-Future<void> showCustomDialog(BuildContext _context, List<Widget> children) async {
-  await showDialog(
-      context: _context,
-      builder: (context) {
+Future<T> showCustomDialog<T>(BuildContext context, List<Widget> children, {barrierDismissible: true}) {
+  return showDialog(
+      context: context,
+      barrierDismissible: barrierDismissible,
+      builder: (_context) {
         return SimpleDialog(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),
             children: children
