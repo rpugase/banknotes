@@ -1,10 +1,13 @@
+import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
 import 'package:banknotes/presentation/own_banknote_detail_page.dart';
 import 'package:banknotes/presentation/widget/own_banknote_creator.dart';
 import 'package:banknotes/presentation/widget/quality_type_widget.dart';
-import 'package:banknotes/presentation/widget/reordeble_list_with_scroll_view.dart';
+import 'package:banknotes/presentation/widget/reordeble_list.dart';
+import 'package:banknotes/util/injector.dart';
 import 'package:banknotes/util/localization.dart';
+import 'package:banknotes/util/utils_functions.dart';
 import 'package:flutter/material.dart';
 
 class BanknoteDetailsPage extends StatefulWidget {
@@ -13,10 +16,16 @@ class BanknoteDetailsPage extends StatefulWidget {
   BanknoteDetailsPage(this._banknote);
 
   @override
-  State<StatefulWidget> createState() => _BanknoteDetailsPageState();
+  State<StatefulWidget> createState() => _BanknoteDetailsPageState(_banknote.ownBanknotes);
 }
 
 class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
+  
+  final DataManager _dataManager = Injector().dataManager;
+
+  _BanknoteDetailsPageState(this._ownBanknotes);
+  List<OwnBanknote> _ownBanknotes;
+  
   @override
   Widget build(BuildContext context) {
     AppBar appBar = AppBar(
@@ -46,17 +55,34 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                    return Item(widget._banknote,
-                      data: widget._banknote.ownBanknotes[index],
+                    return CustomReorderableItem(
+                      key: Key(_ownBanknotes[index].id.toString()),
                       isFirst: index == 0,
-                      isLast: index == widget._banknote.ownBanknotes.length - 1,
+                      isLast: index == _ownBanknotes.length - 1,
+                      onItemCreate: (context) => _createOwnBanknoteCell(context, _ownBanknotes[index]),
                     );
                   },
-                  childCount: widget._banknote.ownBanknotes.length,
+                  childCount: _ownBanknotes.length,
                 ),
               )),
         ]),
       ),
+    );
+  }
+
+  Widget _createOwnBanknoteCell(BuildContext context, OwnBanknote ownBanknote) {
+    return ListTile(
+      onTap: () => _showOwnBanknote(ownBanknote, context),
+      title: Text(
+        '${Localization.of(context).shoppingPrice}: ${ownBanknote.price} ${ownBanknote.currency.symbol}',
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+      ),
+      subtitle: Text(
+        '${Localization.of(context).shoppingDate}: ${ownBanknote.formatDate()}',
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+      ),
+      leading: QualityTypeWidget(ownBanknote.quality, 30.0),
+      trailing: Icon(Icons.menu),
     );
   }
 
@@ -77,16 +103,17 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
     int draggingIndex = _getIndexByKey(item);
     int newPositionIndex = _getIndexByKey(newPosition);
 
-    setState(() {
-      final draggedItem = widget._banknote.ownBanknotes.removeAt(draggingIndex);
-      widget._banknote.ownBanknotes.insert(newPositionIndex, draggedItem);
-    });
+    _dataManager.replaceOwnBanknotesPositions(
+      widget._banknote,
+      _ownBanknotes[draggingIndex],
+      _ownBanknotes[newPositionIndex],
+    ).then((ownBanknotes) => setState(() => _ownBanknotes = ownBanknotes),
+        onError: (error) => showError(context, error));
     return true;
   }
 
   int _getIndexByKey(Key key) {
-    return widget._banknote.ownBanknotes
-        .indexWhere((ownBanknote) => Key(ownBanknote.id.toString()) == key);
+    return _ownBanknotes.indexWhere((ownBanknote) => Key(ownBanknote.id.toString()) == key);
   }
 
   Widget _createDescriptionView() {
@@ -142,81 +169,10 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
 
     if (ownBanknote != null) setState(() {});
   }
-}
-
-class Item extends StatelessWidget {
-
-  Item(this._banknote, {
-    this.data,
-    this.isFirst,
-    this.isLast,
-  });
-
-  final Banknote _banknote;
-  final OwnBanknote data;
-  final bool isFirst;
-  final bool isLast;
-
-  @override
-  Widget build(BuildContext context) {
-    return ReorderableItem(key: Key(data.id.toString()), childBuilder: _buildChild);
-  }
-
-  Widget _buildChild(BuildContext context, ReorderableItemState state) {
-    BoxDecoration decoration;
-
-    if (state == ReorderableItemState.dragProxy ||
-        state == ReorderableItemState.dragProxyFinished) {
-      decoration = BoxDecoration(color: Color(0xD0FFFFFF));
-    } else {
-      bool placeholder = state == ReorderableItemState.placeholder;
-      decoration = BoxDecoration(
-          border: Border(
-              top: isFirst && !placeholder
-                  ? Divider.createBorderSide(context)
-                  : BorderSide.none,
-              bottom: isLast && placeholder
-                  ? BorderSide.none
-                  : Divider.createBorderSide(context)),
-          color: placeholder ? null : Colors.white);
-    }
-
-    Widget content = Container(
-      decoration: decoration,
-      child: Opacity(
-        opacity: state == ReorderableItemState.placeholder ? 0.0 : 1.0,
-        child: IntrinsicHeight(
-          child: Row(
-            children: <Widget>[
-              Expanded(child: _createOwnBanknoteCell(data, context)),
-            ],
-          ),
-        ),
-      ),
-    );
-
-    return DelayedReorderableListener(child: content);
-  }
-
-  Widget _createOwnBanknoteCell(OwnBanknote ownBanknote, BuildContext context) {
-    return ListTile(
-      onTap: () => _showOwnBanknote(ownBanknote, context),
-      title: Text(
-        '${Localization.of(context).shoppingPrice}: ${ownBanknote.price} ${ownBanknote.currency.symbol}',
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-      ),
-      subtitle: Text(
-        '${Localization.of(context).shoppingDate}: ${ownBanknote.formatDate()}',
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-      ),
-      leading: QualityTypeWidget(ownBanknote.quality, 30.0),
-      trailing: Icon(Icons.menu),
-    );
-  }
 
   void _showOwnBanknote(OwnBanknote ownBanknote, BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => OwnBanknoteDetailPage(ownBanknote, _banknote))
+        builder: (context) => OwnBanknoteDetailPage(ownBanknote, widget._banknote))
     );
   }
 }
