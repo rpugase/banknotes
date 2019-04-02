@@ -3,7 +3,7 @@ import 'package:banknotes/domain/model/catalog.dart';
 import 'package:banknotes/presentation/emission_page.dart';
 import 'package:banknotes/presentation/full_catalog_page.dart';
 import 'package:banknotes/presentation/widget/reorderable_list.dart';
-import 'package:banknotes/util/error_handler.dart';
+import 'package:banknotes/util/utils_functions.dart';
 import 'package:banknotes/util/injector.dart';
 import 'package:banknotes/util/localization.dart';
 import 'package:flutter/material.dart';

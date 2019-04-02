@@ -3,7 +3,7 @@ import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
 import 'package:banknotes/presentation/widget/quality_picker.dart';
 import 'package:banknotes/presentation/widget/slide_picker.dart';
-import 'package:banknotes/util/error_handler.dart';
+import 'package:banknotes/util/utils_functions.dart';
 import 'package:banknotes/util/injector.dart';
 import 'package:banknotes/util/localization.dart';
 import 'package:flutter/cupertino.dart';

@@ -21,3 +21,14 @@ void showError(BuildContext context, Error error, [Function func]) {
             ],
           ));
 }
+
+Future<void> showCustomDialog(BuildContext _context, List<Widget> children) async {
+  await showDialog(
+      context: _context,
+      builder: (context) {
+        return SimpleDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),
+            children: children
+        );
+      });
+}

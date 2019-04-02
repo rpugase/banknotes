@@ -3,6 +3,7 @@ import 'package:banknotes/domain/model/own_banknote.dart';
 import 'package:banknotes/presentation/widget/image_viewer.dart';
 import 'package:banknotes/presentation/widget/own_banknote_creator.dart';
 import 'package:banknotes/util/localization.dart';
+import 'package:banknotes/util/utils_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:banknotes/domain/model/image.dart';
@@ -29,16 +30,17 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> widgets = _openDialog();
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: _changeBanknote,
+            onPressed: () => showCustomDialog(context, widgets),
           ),
           IconButton(
             icon: Icon(Icons.edit),
-            onPressed: () {},
+            onPressed: _changeBanknote,
           ),
           IconButton(
             icon: Icon(Icons.delete),
@@ -92,26 +94,21 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
     if (ownBanknote != null) setState(() => _ownBanknote = ownBanknote);
   }
 
-  Future<void> _showSimpleDialog() async {
-    await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return SimpleDialog(
-            children: <Widget>[
-              _getDialogCell(true, Localization.of(context).gallery),
-              _getDialogCell(false, Localization.of(context).camera),
-            ],
-          );
-        });
+
+  List<Widget> _openDialog() {
+    return [
+      _setDialogCell(true, Localization.of(context).gallery),
+    Divider(),
+      _setDialogCell(false, Localization.of(context).camera)];
   }
 
-  Widget _getDialogCell(bool isGallery, String title) {
+  Widget _setDialogCell(bool isGallery, String title) {
     return SimpleDialogOption(
       onPressed: () {
         _getImage(isGallery);
         Navigator.pop(context);
       },
-      child: Text(title),
+      child: Center(child: Text(title)),
     );
   }
 
