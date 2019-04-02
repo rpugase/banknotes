@@ -50,6 +50,9 @@ class Localization {
   String get gallery => _sentences['gallery'];
   String get camera => _sentences['camera'];
   Map<String, String> get qualityMap => _sentences['quality_map'];
+  String get yes => _sentences['yes'];
+  String get cancel => _sentences['cancel'];
+  String get deleteQuestion => _sentences['delete_question'];
 }
 
 class LocalizationDelegate extends LocalizationsDelegate<Localization> {
