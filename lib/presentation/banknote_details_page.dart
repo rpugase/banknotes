@@ -44,7 +44,17 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
         onReorder: _reorderCallback,
         child: CustomScrollView(slivers: <Widget>[
           SliverToBoxAdapter(
-            child: _createImageView(),
+            child: SizedBox(
+              height: 200,
+              width: MediaQuery.of(context).size.width,
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) => Container(
+                    child: _createImageView(index),
+                    margin: EdgeInsets.all(5.0),
+                  ),
+                  itemCount: widget._banknote.images.length),
+            ),
           ),
           SliverToBoxAdapter(
             child: _createDescriptionView(),
@@ -106,13 +116,12 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
     );
   }
 
-  Widget _createImageView() {
+  Widget _createImageView(int index) {
     return GestureDetector(
         onTap: () => _openAllImages(widget._banknote),
         child: Container(
-          color: Colors.blueGrey,
           child: Image.asset(
-            widget._banknote.firstBanknoteImage.path,
+            widget._banknote.images[index].path,
             width: MediaQuery.of(context).size.width,
             height: 200.0,
           ),
@@ -174,8 +183,7 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
   }
 
   void _openAllImages(Banknote banknote) {
-    Scaffold.of(context)
-        .showSnackBar(SnackBar(content: Text('No implementation')));
+
   }
 
   void _addOwnBanknote() async {
