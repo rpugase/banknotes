@@ -33,5 +33,7 @@ flutter:
   - resources/images/no_image_icon.png
   - resources/images/quality.png
   - resources/images/grn1.jpg
+  - resources/images/grn2.jpg
+  - resources/images/grn_all.jpeg
   - resources/images/grn100.jpg
   - resources/images/grn1001.jpg

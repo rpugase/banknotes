@@ -2,6 +2,7 @@ import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
 import 'package:banknotes/presentation/own_banknote_detail_page.dart';
+import 'package:banknotes/presentation/widget/image_viewer.dart';
 import 'package:banknotes/presentation/widget/own_banknote_creator.dart';
 import 'package:banknotes/presentation/widget/quality_type_widget.dart';
 import 'package:banknotes/presentation/widget/reordeble_list.dart';
@@ -10,6 +11,7 @@ import 'package:banknotes/util/localization.dart';
 import 'package:banknotes/util/utils_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+
 
 class BanknoteDetailsPage extends StatefulWidget {
   final Banknote _banknote;
@@ -25,6 +27,7 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
 
   _BanknoteDetailsPageState(this._ownBanknotes);
   List<OwnBanknote> _ownBanknotes;
+  final heroTag = 'BanknoteDetailsPage';
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +47,7 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
         onReorder: _reorderCallback,
         child: CustomScrollView(slivers: <Widget>[
           SliverToBoxAdapter(
+
             child: SizedBox(
               height: 200,
               width: MediaQuery.of(context).size.width,
@@ -118,12 +122,15 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
 
   Widget _createImageView(int index) {
     return GestureDetector(
-        onTap: () => _openAllImages(widget._banknote),
+        onTap: () =>_openSelectedImage(index),
         child: Container(
-          child: Image.asset(
-            widget._banknote.images[index].path,
-            width: MediaQuery.of(context).size.width,
-            height: 200.0,
+          child: Hero(
+            tag: '$heroTag$index',
+            child: Image.asset(
+              widget._banknote.images[index].path,
+              width: MediaQuery.of(context).size.width,
+              height: 200.0,
+            ),
           ),
         ));
   }
@@ -182,10 +189,6 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
     );
   }
 
-  void _openAllImages(Banknote banknote) {
-
-  }
-
   void _addOwnBanknote() async {
     final OwnBanknote ownBanknote = await showCustomDialog(
         context,
@@ -194,5 +197,25 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
     );
 
     if (ownBanknote != null) setState(() {});
+  }
+
+  void _openSelectedImage(int numberImage) {
+    List<String> images = widget._banknote.images.map((image) => image.path).toList();
+
+    Navigator.of(context).push(
+      PageRouteBuilder<Null>(
+          pageBuilder: (BuildContext context, Animation<double> animation,
+              Animation<double> secondaryAnimation) {
+            return AnimatedBuilder(
+                animation: animation,
+                builder: (BuildContext context, Widget child) {
+                  return Opacity(
+                    opacity: animation.value,
+                    child: ImageViewerPage(images, numberImage, heroTag),
+                  );
+                });
+          },
+          transitionDuration: Duration(milliseconds: 600)),
+    );
   }
 }
