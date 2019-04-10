@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
@@ -11,7 +13,7 @@ import 'package:banknotes/util/localization.dart';
 import 'package:banknotes/util/utils_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BanknoteDetailsPage extends StatefulWidget {
   final Banknote _banknote;
@@ -28,6 +30,15 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
   _BanknoteDetailsPageState(this._ownBanknotes);
   List<OwnBanknote> _ownBanknotes;
   final heroTag = 'BanknoteDetailsPage';
+  final imageNumberTag = 'BanknoteDetailsPage_imageNumber';
+  ScrollController _controller;
+  int imageCount = 0;
+
+  @override
+  void initState() {
+    _controller = ScrollController();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,17 +58,18 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
         onReorder: _reorderCallback,
         child: CustomScrollView(slivers: <Widget>[
           SliverToBoxAdapter(
-
             child: SizedBox(
               height: 200,
               width: MediaQuery.of(context).size.width,
               child: ListView.builder(
+                 controller: _controller,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) => Container(
                     child: _createImageView(index),
                     margin: EdgeInsets.all(5.0),
                   ),
-                  itemCount: widget._banknote.images.length),
+                  itemCount: widget._banknote.images.length,
+              ),
             ),
           ),
           SliverToBoxAdapter(
@@ -121,16 +133,18 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
   }
 
   Widget _createImageView(int index) {
+    var image = Image.asset(
+      widget._banknote.images[index].path,
+      width: MediaQuery.of(context).size.width,
+      height: 200.0,
+    );
+
     return GestureDetector(
         onTap: () =>_openSelectedImage(index),
         child: Container(
           child: Hero(
             tag: '$heroTag$index',
-            child: Image.asset(
-              widget._banknote.images[index].path,
-              width: MediaQuery.of(context).size.width,
-              height: 200.0,
-            ),
+            child: image,
           ),
         ));
   }
@@ -199,9 +213,16 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
     if (ownBanknote != null) setState(() {});
   }
 
+  void _getImageCount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    imageCount = prefs.get(imageNumberTag);
+    var screenWidth = MediaQuery.of(context).size.width;
+    _controller.jumpTo(screenWidth * imageCount);
+    prefs.setInt(imageNumberTag, null);
+  }
+
   void _openSelectedImage(int numberImage) {
     List<String> images = widget._banknote.images.map((image) => image.path).toList();
-
     Navigator.of(context).push(
       PageRouteBuilder<Null>(
           pageBuilder: (BuildContext context, Animation<double> animation,
@@ -216,6 +237,10 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
                 });
           },
           transitionDuration: Duration(milliseconds: 600)),
-    );
+    ).then((value) {
+      setState(() {
+        _getImageCount();
+      });
+    });
   }
 }
