@@ -10,6 +10,7 @@ import 'package:banknotes/util/utils_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OwnBanknoteDetailPage extends StatefulWidget {
   final OwnBanknote _ownBanknote;
@@ -25,10 +26,12 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
 
   OwnBanknote _ownBanknote;
   final DataManager _dataManager = Injector().dataManager;
+  ScrollController _controller;
 
   @override
   void initState() {
     _ownBanknote = widget._ownBanknote;
+    _controller = ScrollController();
     super.initState();
   }
 
@@ -60,6 +63,7 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
     return Container(
       child: Padding(padding: EdgeInsets.all(8),
       child: CustomScrollView(
+        controller: _controller,
         slivers: <Widget>[
           SliverList(
             delegate: SliverChildListDelegate(
@@ -80,7 +84,7 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
     final List<ImageWidget> imageWidgets = [];
 
     for (int i = 0; i < widget._ownBanknote.images.length; i++) {
-      imageWidgets.add(ImageWidget(_ownBanknote.images[i].path, widget._ownBanknote, i));
+      imageWidgets.add(ImageWidget(_ownBanknote.images[i].path, widget._ownBanknote, i, _controller));
     }
     return imageWidgets;
   }
@@ -205,10 +209,13 @@ class ImageWidget extends StatelessWidget {
   final String _imagePath;
   final OwnBanknote _ownBanknote;
   final int _numberImageInGrid;
+  final ScrollController _controller;
 
+  final imageNumberTag = 'imageNumber';
+  int imageCount = 0;
   final String _heroTag = 'OwnBanknoteDetailPage';
 
-  ImageWidget(this._imagePath, this._ownBanknote, this._numberImageInGrid);
+  ImageWidget(this._imagePath, this._ownBanknote, this._numberImageInGrid, this._controller);
 
   @override
   Widget build(BuildContext context) {
@@ -247,6 +254,15 @@ class ImageWidget extends StatelessWidget {
                 });
           },
           transitionDuration: Duration(milliseconds: 600)),
-    );
+    ).then((value) {
+        _getImageCount(context);
+    });
+  }
+
+  void _getImageCount(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    imageCount = prefs.get(imageNumberTag);
+    _controller.jumpTo(100 * (imageCount / 3));
+    prefs.setInt(imageNumberTag, null);
   }
 }

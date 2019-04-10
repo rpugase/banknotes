@@ -50,6 +50,6 @@ class ImageViewerState extends State<ImageViewerPage> {
 
   void _setImageCount(int index) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('BanknoteDetailsPage_imageNumber', index);
+    await prefs.setInt('imageNumber', index);
   }
 }

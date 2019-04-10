@@ -30,7 +30,7 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
   _BanknoteDetailsPageState(this._ownBanknotes);
   List<OwnBanknote> _ownBanknotes;
   final heroTag = 'BanknoteDetailsPage';
-  final imageNumberTag = 'BanknoteDetailsPage_imageNumber';
+  final imageNumberTag = 'imageNumber';
   ScrollController _controller;
   int imageCount = 0;
 
