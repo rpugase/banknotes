@@ -13,31 +13,48 @@ class ImageViewerPage extends StatefulWidget {
 }
 
 class ImageViewerState extends State<ImageViewerPage> {
+
+  var _appBarTitle = '';
+
+  PageController _pageController;
+
+  @override
+  void initState() {
+    _appBarTitle = '${widget._currentIndex + 1} / ${widget._images.length}';
+    _pageController = PageController(initialPage: widget._currentIndex);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     _setImageCount(widget._currentIndex);
 
-    var page = PageController(initialPage: widget._currentIndex);
-    page.addListener(() {
-      var currentPage = page.page.round();
-      _setImageCount(currentPage - widget._currentIndex);
+    _pageController.addListener(() {
+      _updateWidgetAfterSwiping();
     });
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-
+        title: Text(_appBarTitle),
       ),
       backgroundColor: Colors.black,
       body: PhotoViewGallery(
-        pageController: page,
+        pageController: _pageController,
         pageOptions: _showGallery(),
       ),
     );
   }
 
-  List<PhotoViewGalleryPageOptions> _showGallery() {
+  void _updateWidgetAfterSwiping() {
+    var currentPage = _pageController.page.round();
+    _setImageCount(currentPage - widget._currentIndex);
+    setState(() {
+      _appBarTitle = '${currentPage + 1} / ${widget._images.length}';
+    });
+  }
 
+  List<PhotoViewGalleryPageOptions> _showGallery() {
     List<PhotoViewGalleryPageOptions> gallery = [];
     for (int i = 0; i < widget._images.length; i++) {
       gallery.add(PhotoViewGalleryPageOptions(
