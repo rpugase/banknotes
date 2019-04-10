@@ -22,13 +22,12 @@ class ImageViewerState extends State<ImageViewerPage> {
   void initState() {
     _appBarTitle = '${widget._currentIndex + 1} / ${widget._images.length}';
     _pageController = PageController(initialPage: widget._currentIndex);
+    _setImageCount(widget._currentIndex);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    _setImageCount(widget._currentIndex);
-
     _pageController.addListener(() {
       _updateWidgetAfterSwiping();
     });
@@ -48,9 +47,13 @@ class ImageViewerState extends State<ImageViewerPage> {
 
   void _updateWidgetAfterSwiping() {
     var currentPage = _pageController.page.round();
+    print('currentPage: $currentPage');
+    print('widget._currentIndex: ${widget._currentIndex}');
     _setImageCount(currentPage - widget._currentIndex);
-    setState(() {
+
       _appBarTitle = '${currentPage + 1} / ${widget._images.length}';
+     setState(() {
+       _setImageCount(currentPage - widget._currentIndex);
     });
   }
 
