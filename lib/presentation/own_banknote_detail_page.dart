@@ -42,7 +42,7 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
       appBar: AppBar(
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.add),
+            icon: Icon(Icons.add_a_photo),
             onPressed: () => showCustomDialog(context, widgets),
           ),
           IconButton(

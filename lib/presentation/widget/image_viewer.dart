@@ -47,8 +47,6 @@ class ImageViewerState extends State<ImageViewerPage> {
 
   void _updateWidgetAfterSwiping() {
     var currentPage = _pageController.page.round();
-    print('currentPage: $currentPage');
-    print('widget._currentIndex: ${widget._currentIndex}');
     _setImageCount(currentPage - widget._currentIndex);
 
       _appBarTitle = '${currentPage + 1} / ${widget._images.length}';
