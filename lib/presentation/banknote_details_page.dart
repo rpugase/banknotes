@@ -61,15 +61,7 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
             child: SizedBox(
               height: 200,
               width: MediaQuery.of(context).size.width,
-              child: ListView.builder(
-                 controller: _controller,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => Container(
-                    child: _createImageView(index),
-                    margin: EdgeInsets.all(5.0),
-                  ),
-                  itemCount: widget._banknote.images.length,
-              ),
+              child: _createImageWidget(),
             ),
           ),
           SliverToBoxAdapter(
@@ -132,9 +124,23 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
     );
   }
 
+  Widget _createImageWidget() {
+    var imageSlider = ListView.builder(
+      controller: _controller,
+      scrollDirection: Axis.horizontal,
+      itemBuilder: (context, index1) => Container(
+        child: _createImageView(index1),
+        margin: EdgeInsets.all(5.0),
+      ),
+      itemCount: widget._banknote.images.length,
+    );
+
+    return widget._banknote.images.length == 0 ? _createImageView(-1) : imageSlider;
+  }
+
   Widget _createImageView(int index) {
     var image = Image.asset(
-      widget._banknote.images[index].path,
+      index == -1 ? 'resources/images/no_image_icon.png' : widget._banknote.images[index].path,
       width: MediaQuery.of(context).size.width,
       height: 200.0,
     );
