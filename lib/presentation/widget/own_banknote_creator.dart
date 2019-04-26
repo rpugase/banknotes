@@ -78,16 +78,17 @@ class _OwnBanknoteCreatorState extends State<OwnBanknoteCreator> {
             _commentController,
             TextInputType.multiline
         ),
-        FlatButton(
-          child:  Icon(Icons.add_a_photo),
-          onPressed: () => _addPhoto(context),
-        ),
+
         _addImageText(),
         Padding(
           padding: const EdgeInsets.only(top: 24.0, right: 16.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
+              FlatButton(
+                child:  Icon(Icons.add_a_photo),
+                onPressed: () => _addPhoto(context),
+              ),
               FlatButton(
                 child: Text(Localization.of(context).close),
                 onPressed: _onClosePressed,
@@ -108,13 +109,25 @@ class _OwnBanknoteCreatorState extends State<OwnBanknoteCreator> {
 
     List<Widget> widgets = [];
     _images.forEach((image) {
+      var imageText = image.path.substring(image.path.lastIndexOf('/') + 1);
       widgets.add(
         Padding(
           padding: const EdgeInsets.only(left: 16),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(image.hashCode.toString()),
+              //Text(imageText),
+              Flexible(
+                child: Container(
+                  child: Text(
+                    imageText,
+                   // overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 12.0,
+                    ),
+                  ),
+                ),
+              ),
               FlatButton(
                 child:  Icon(Icons.cancel),
                 onPressed: () => _deleteImage(image),
