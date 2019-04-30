@@ -139,14 +139,15 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
   }
 
   Widget _createImageView(int index) {
+    var isNoImage = index == -1;
     var image = Image.asset(
-      index == -1 ? 'resources/images/no_image_icon.png' : widget._banknote.images[index].path,
+      isNoImage ? 'resources/images/no_image_icon.png' : widget._banknote.images[index].path,
       width: MediaQuery.of(context).size.width,
       height: 200.0,
     );
 
     return GestureDetector(
-        onTap: () =>_openSelectedImage(index),
+        onTap: isNoImage ? () {} : () =>_openSelectedImage(index),
         child: Container(
           child: Hero(
             tag: '$heroTag$index',
