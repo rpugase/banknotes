@@ -1,13 +1,15 @@
 import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/banknote.dart';
+import 'package:banknotes/domain/model/image.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
 import 'package:banknotes/presentation/widget/quality_picker.dart';
 import 'package:banknotes/presentation/widget/slide_picker.dart';
-import 'package:banknotes/util/utils_functions.dart';
 import 'package:banknotes/util/injector.dart';
 import 'package:banknotes/util/localization.dart';
+import 'package:banknotes/util/utils_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class OwnBanknoteCreator extends StatefulWidget {
 
@@ -41,8 +43,15 @@ class _OwnBanknoteCreatorState extends State<OwnBanknoteCreator> {
 
   int _currencyIndex = 0;
   QualityType _qualityType;
+  List<ImageModel> _images = [];
 
   bool get _isCreator => widget.ownBanknote == null;
+
+  @override
+  void initState() {
+    _images = widget.ownBanknote?.images ?? [];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,11 +78,17 @@ class _OwnBanknoteCreatorState extends State<OwnBanknoteCreator> {
             _commentController,
             TextInputType.multiline
         ),
+
+        _addImageText(),
         Padding(
           padding: const EdgeInsets.only(top: 24.0, right: 16.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
+              FlatButton(
+                child:  Icon(Icons.add_a_photo),
+                onPressed: () => _addPhoto(context),
+              ),
               FlatButton(
                 child: Text(Localization.of(context).close),
                 onPressed: _onClosePressed,
@@ -88,6 +103,49 @@ class _OwnBanknoteCreatorState extends State<OwnBanknoteCreator> {
         ),
       ],
     );
+  }
+
+  Widget _addImageText() {
+
+    List<Widget> widgets = [];
+    _images.forEach((image) {
+      var imageText = image.path.substring(image.path.lastIndexOf('/') + 1);
+      widgets.add(
+        Padding(
+          padding: const EdgeInsets.only(left: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Flexible(
+                child: Container(
+                  child: Text(
+                    imageText,
+                   // overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 12.0,
+                    ),
+                  ),
+                ),
+              ),
+              FlatButton(
+                child:  Icon(Icons.cancel),
+                onPressed: () => _deleteImage(image),
+              ),
+            ],
+          ),
+        )
+      );
+    });
+
+    return Column(
+      children: widgets,
+    );
+  }
+
+  void _deleteImage(ImageModel image) {
+    setState(() {
+      _images.remove(image);
+    });
   }
 
   Widget _buildCurrencyPicker(BuildContext context) {
@@ -112,17 +170,51 @@ class _OwnBanknoteCreatorState extends State<OwnBanknoteCreator> {
     );
   }
 
+  void _addPhoto(BuildContext context) {
+
+    showCustomDialog(context, _buildDialogAttachmentPhoto());
+  }
+
+  List<Widget> _buildDialogAttachmentPhoto() {
+    return [
+      _setDialogCell(true, Localization.of(context).gallery),
+      Divider(),
+      _setDialogCell(false, Localization.of(context).camera)];
+  }
+
+  Widget _setDialogCell(bool isGallery, String title) {
+    return SimpleDialogOption(
+      onPressed: () {
+        _getImage(isGallery);
+        Navigator.pop(context);
+      },
+      child: Center(child: Text(title)),
+    );
+  }
+
+  Future<void> _getImage(bool isGallery) async {
+    await ImagePicker.pickImage(
+        source: isGallery ? ImageSource.gallery : ImageSource.camera)
+        .then((value) {
+      setState(() {
+        var image = ImageModel(value.path, ImageType.device);
+        _images.add(image);
+      });
+    });
+  }
+
   void _onClosePressed() {
     Navigator.of(context).pop();
   }
 
   void _onAddPressed() {
+
     final OwnBanknote ownBanknote = OwnBanknote(
       _qualityType,
       _priceController.text.isEmpty ? 0.0 : double.parse(_priceController.text),
       _currencies[_currencyIndex],
       _commentController.text,
-      widget.ownBanknote?.images ?? [],
+      _images,
       id: widget.ownBanknote?.id,
       date: widget.ownBanknote?.date,
     );

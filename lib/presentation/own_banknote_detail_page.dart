@@ -25,6 +25,7 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
 
   OwnBanknote _ownBanknote;
   final DataManager _dataManager = Injector().dataManager;
+  final ScrollController _controller = ScrollController();
 
   @override
   void initState() {
@@ -39,7 +40,7 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
       appBar: AppBar(
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.add),
+            icon: Icon(Icons.add_a_photo),
             onPressed: () => showCustomDialog(context, widgets),
           ),
           IconButton(
@@ -60,6 +61,7 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
     return Container(
       child: Padding(padding: EdgeInsets.all(8),
       child: CustomScrollView(
+        controller: _controller,
         slivers: <Widget>[
           SliverList(
             delegate: SliverChildListDelegate(
@@ -80,7 +82,7 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
     final List<ImageWidget> imageWidgets = [];
 
     for (int i = 0; i < widget._ownBanknote.images.length; i++) {
-      imageWidgets.add(ImageWidget(_ownBanknote.images[i].path, widget._ownBanknote, i));
+      imageWidgets.add(ImageWidget(_ownBanknote.images[i].path, widget._ownBanknote, i, _controller));
     }
     return imageWidgets;
   }
@@ -205,10 +207,12 @@ class ImageWidget extends StatelessWidget {
   final String _imagePath;
   final OwnBanknote _ownBanknote;
   final int _numberImageInGrid;
+  final ScrollController _controller;
 
+  int imageCount = 0;
   final String _heroTag = 'OwnBanknoteDetailPage';
 
-  ImageWidget(this._imagePath, this._ownBanknote, this._numberImageInGrid);
+  ImageWidget(this._imagePath, this._ownBanknote, this._numberImageInGrid, this._controller);
 
   @override
   Widget build(BuildContext context) {
@@ -230,11 +234,11 @@ class ImageWidget extends StatelessWidget {
     );
   }
 
-  void _showAllImages(BuildContext context) {
+  void _showAllImages(BuildContext context) async {
     List<String> images = _ownBanknote.images.map((image) => image.path).toList();
 
-    Navigator.of(context).push(
-      PageRouteBuilder<Null>(
+    int offsetImageNumber = await Navigator.of(context).push(
+      PageRouteBuilder(
           pageBuilder: (BuildContext context, Animation<double> animation,
               Animation<double> secondaryAnimation) {
             return AnimatedBuilder(
@@ -248,5 +252,7 @@ class ImageWidget extends StatelessWidget {
           },
           transitionDuration: Duration(milliseconds: 600)),
     );
+
+    _controller.jumpTo(100 * (offsetImageNumber / 3));
   }
 }

@@ -12,18 +12,55 @@ class ImageViewerPage extends StatefulWidget {
 }
 
 class ImageViewerState extends State<ImageViewerPage> {
+
+  String _appBarTitle;
+
+  PageController _pageController;
+  int offsetImageNumber;
+
+  @override
+  void initState() {
+    _appBarTitle = '${widget._currentIndex + 1} / ${widget._images.length}';
+    _pageController = PageController(initialPage: widget._currentIndex);
+    _setImageCount(widget._currentIndex);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+    _pageController.addListener(() {
+      _updateWidgetAfterSwiping();
+    });
+
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          title: Text(_appBarTitle),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              Navigator.pop(context, offsetImageNumber);
+            },
+          ),
+        ),
         backgroundColor: Colors.black,
-      ),
-      backgroundColor: Colors.black,
-      body: PhotoViewGallery(
-        pageController: PageController(initialPage: widget._currentIndex),
-        pageOptions: _showGallery(),
+        body: PhotoViewGallery(
+          pageController: _pageController,
+          pageOptions: _showGallery(),
+        ),
       ),
     );
+  }
+
+  void _updateWidgetAfterSwiping() {
+    var currentPage = _pageController.page.round();
+
+      _appBarTitle = '${currentPage + 1} / ${widget._images.length}';
+     setState(() {
+       _setImageCount(currentPage - widget._currentIndex);
+    });
   }
 
   List<PhotoViewGalleryPageOptions> _showGallery() {
@@ -34,7 +71,12 @@ class ImageViewerState extends State<ImageViewerPage> {
         heroTag: '${widget._heroTag}$i',
       ));
     }
-
     return gallery;
+  }
+
+
+
+  void _setImageCount(int offset) {
+    offsetImageNumber = offset;
   }
 }
