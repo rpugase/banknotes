@@ -4,9 +4,9 @@ import 'package:banknotes/domain/model/image.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
 import 'package:banknotes/presentation/widget/quality_picker.dart';
 import 'package:banknotes/presentation/widget/slide_picker.dart';
-import 'package:banknotes/util/utils_functions.dart';
 import 'package:banknotes/util/injector.dart';
 import 'package:banknotes/util/localization.dart';
+import 'package:banknotes/util/utils_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -116,7 +116,6 @@ class _OwnBanknoteCreatorState extends State<OwnBanknoteCreator> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              //Text(imageText),
               Flexible(
                 child: Container(
                   child: Text(

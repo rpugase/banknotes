@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ImageViewerPage extends StatefulWidget {
   final List<String> _images;
@@ -14,9 +13,10 @@ class ImageViewerPage extends StatefulWidget {
 
 class ImageViewerState extends State<ImageViewerPage> {
 
-  var _appBarTitle = '';
+  String _appBarTitle;
 
   PageController _pageController;
+  int offsetImageNumber;
 
   @override
   void initState() {
@@ -32,22 +32,30 @@ class ImageViewerState extends State<ImageViewerPage> {
       _updateWidgetAfterSwiping();
     });
 
-    return Scaffold(
-      appBar: AppBar(
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          title: Text(_appBarTitle),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              Navigator.pop(context, offsetImageNumber);
+            },
+          ),
+        ),
         backgroundColor: Colors.black,
-        title: Text(_appBarTitle),
-      ),
-      backgroundColor: Colors.black,
-      body: PhotoViewGallery(
-        pageController: _pageController,
-        pageOptions: _showGallery(),
+        body: PhotoViewGallery(
+          pageController: _pageController,
+          pageOptions: _showGallery(),
+        ),
       ),
     );
   }
 
   void _updateWidgetAfterSwiping() {
     var currentPage = _pageController.page.round();
-    _setImageCount(currentPage - widget._currentIndex);
 
       _appBarTitle = '${currentPage + 1} / ${widget._images.length}';
      setState(() {
@@ -66,8 +74,9 @@ class ImageViewerState extends State<ImageViewerPage> {
     return gallery;
   }
 
-  void _setImageCount(int index) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('imageNumber', index);
+
+
+  void _setImageCount(int offset) {
+    offsetImageNumber = offset;
   }
 }

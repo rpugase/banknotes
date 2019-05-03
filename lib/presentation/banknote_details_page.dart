@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:banknotes/domain/data_manager.dart';
 import 'package:banknotes/domain/model/banknote.dart';
 import 'package:banknotes/domain/model/own_banknote.dart';
@@ -13,7 +11,6 @@ import 'package:banknotes/util/localization.dart';
 import 'package:banknotes/util/utils_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class BanknoteDetailsPage extends StatefulWidget {
   final Banknote _banknote;
@@ -30,15 +27,7 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
   _BanknoteDetailsPageState(this._ownBanknotes);
   List<OwnBanknote> _ownBanknotes;
   final heroTag = 'BanknoteDetailsPage';
-  final imageNumberTag = 'imageNumber';
-  ScrollController _controller;
-  int imageCount = 0;
-
-  @override
-  void initState() {
-    _controller = ScrollController();
-    super.initState();
-  }
+  final ScrollController _controller = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -135,11 +124,11 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
       itemCount: widget._banknote.images.length,
     );
 
-    return widget._banknote.images.length == 0 ? _createImageView(-1) : imageSlider;
+    return widget._banknote.images.length == 0 ? _createImageView() : imageSlider;
   }
 
-  Widget _createImageView(int index) {
-    var isNoImage = index == -1;
+  Widget _createImageView([int index]) {
+    var isNoImage = index == null;
     var image = Image.asset(
       isNoImage ? 'resources/images/no_image_icon.png' : widget._banknote.images[index].path,
       width: MediaQuery.of(context).size.width,
@@ -220,18 +209,10 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
     if (ownBanknote != null) setState(() {});
   }
 
-  void _getImageCount() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    imageCount = prefs.get(imageNumberTag);
-    var screenWidth = MediaQuery.of(context).size.width;
-    _controller.jumpTo(screenWidth * imageCount);
-    prefs.setInt(imageNumberTag, null);
-  }
-
-  void _openSelectedImage(int numberImage) {
+  void _openSelectedImage(int numberImage) async {
     List<String> images = widget._banknote.images.map((image) => image.path).toList();
-    Navigator.of(context).push(
-      PageRouteBuilder<Null>(
+    int offsetImageNumber = await Navigator.of(context).push(
+      PageRouteBuilder(
           pageBuilder: (BuildContext context, Animation<double> animation,
               Animation<double> secondaryAnimation) {
             return AnimatedBuilder(
@@ -244,10 +225,10 @@ class _BanknoteDetailsPageState extends State<BanknoteDetailsPage> {
                 });
           },
           transitionDuration: Duration(milliseconds: 600)),
-    ).then((value) {
-      setState(() {
-        _getImageCount();
-      });
+    );
+
+    setState(() {
+      _controller.jumpTo(MediaQuery.of(context).size.width * offsetImageNumber);
     });
   }
 }

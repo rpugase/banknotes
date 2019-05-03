@@ -10,7 +10,6 @@ import 'package:banknotes/util/utils_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class OwnBanknoteDetailPage extends StatefulWidget {
   final OwnBanknote _ownBanknote;
@@ -26,12 +25,11 @@ class _OwnBanknoteDetailState extends State<OwnBanknoteDetailPage> {
 
   OwnBanknote _ownBanknote;
   final DataManager _dataManager = Injector().dataManager;
-  ScrollController _controller;
+  final ScrollController _controller = ScrollController();
 
   @override
   void initState() {
     _ownBanknote = widget._ownBanknote;
-    _controller = ScrollController();
     super.initState();
   }
 
@@ -211,7 +209,6 @@ class ImageWidget extends StatelessWidget {
   final int _numberImageInGrid;
   final ScrollController _controller;
 
-  final imageNumberTag = 'imageNumber';
   int imageCount = 0;
   final String _heroTag = 'OwnBanknoteDetailPage';
 
@@ -237,11 +234,11 @@ class ImageWidget extends StatelessWidget {
     );
   }
 
-  void _showAllImages(BuildContext context) {
+  void _showAllImages(BuildContext context) async {
     List<String> images = _ownBanknote.images.map((image) => image.path).toList();
 
-    Navigator.of(context).push(
-      PageRouteBuilder<Null>(
+    int offsetImageNumber = await Navigator.of(context).push(
+      PageRouteBuilder(
           pageBuilder: (BuildContext context, Animation<double> animation,
               Animation<double> secondaryAnimation) {
             return AnimatedBuilder(
@@ -254,15 +251,8 @@ class ImageWidget extends StatelessWidget {
                 });
           },
           transitionDuration: Duration(milliseconds: 600)),
-    ).then((value) {
-        _getImageCount(context);
-    });
-  }
+    );
 
-  void _getImageCount(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    imageCount = prefs.get(imageNumberTag);
-    _controller.jumpTo(100 * (imageCount / 3));
-    prefs.setInt(imageNumberTag, null);
+    _controller.jumpTo(100 * (offsetImageNumber / 3));
   }
 }
