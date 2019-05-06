@@ -29,8 +29,12 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+
   - resources/lang/en.json
   - resources/lang/ru.json
+
+  - resources/banknoteDB.json
+
   - resources/images/no_image_icon.png
   - resources/images/quality.png
   - resources/images/grn1.jpg
@@ -38,3 +42,5 @@ flutter:
   - resources/images/grn_all.jpeg
   - resources/images/grn100.jpg
   - resources/images/grn1001.jpg
+
+

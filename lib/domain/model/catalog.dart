@@ -27,4 +27,9 @@ class Catalog {
 
   CatalogEntity toEntity() => CatalogEntity.make(name, image.path, isFavourite,
       emissions.map((emission) => emission.toEntity(id)).toList());
+
+  CatalogEntity fromJson(dynamic emission) {
+    return CatalogEntity.make(name, image.path, isFavourite, []);
+  }
+
 }
