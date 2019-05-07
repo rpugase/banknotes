@@ -19,6 +19,12 @@ class EmissionEntity {
 
   @HasMany(BanknoteBean)
   List<BanknoteEntity> banknotes;
+
+  EmissionEntity.fromJson(dynamic emissionJson, catalogId) :
+        id = emissionJson['id'],
+        shortName = emissionJson['shortName'],
+        this.catalogId = catalogId,
+        banknotes = (emissionJson['banknotes'] as List<dynamic>).map((field) => BanknoteEntity.fromJson(field, emissionJson['id'])).toList();
 }
 
 @GenBean()

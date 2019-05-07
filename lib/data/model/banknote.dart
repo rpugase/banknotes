@@ -40,6 +40,16 @@ class BanknoteEntity {
 
   @HasMany(OwnBanknoteBean)
   List<OwnBanknoteEntity> ownBanknotes;
+
+  BanknoteEntity.fromJson(dynamic banknoteJson, emissionId) :
+        id = banknoteJson['id'],
+        name = banknoteJson['name'],
+        description = banknoteJson['description'],
+        year = banknoteJson['year'],
+        printer = banknoteJson['printer'],
+        entryDate = banknoteJson['entryDate'],
+        this.emissionId = emissionId,
+        parentId = banknoteJson['parentId'];
 }
 
 @GenBean()

@@ -24,6 +24,14 @@ class CatalogEntity {
 
   @HasMany(EmissionBean)
   List<EmissionEntity> emissions;
+
+  CatalogEntity.fromJson(dynamic catalogJson) :
+        id = catalogJson['id'],
+        name = catalogJson['country'],
+        image = catalogJson['flagImage'],
+        isFavourite = false,
+        position = 0,
+        emissions = (catalogJson['emissions'] as List<dynamic>).map((field) => EmissionEntity.fromJson(field, catalogJson['id'])).toList();
 }
 
 @GenBean()
