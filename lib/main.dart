@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:banknotes/data/model/catalog.dart';
 import 'package:banknotes/presentation/catalog_page.dart';
 import 'package:banknotes/util/injector.dart';
 import 'package:banknotes/util/localization.dart';
@@ -21,7 +24,7 @@ class MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-//    loadpp(context);
+    loadpp(context);
     super.initState();
   }
 
@@ -59,24 +62,23 @@ class MyAppState extends State<MyApp> {
     return supportedLocales.first;
   }
 
-//  void loadpp(BuildContext context) async {
-//    List<dynamic> decoded = jsonDecode(await DefaultAssetBundle.of(context).loadString('resources/banknoteDB.json'));
-//
-//    var catalogBean = Injector.catalogBean;
-//
-//    await Injector.sqfliteAdapter.connect();
-//
-//    await catalogBean.createTable(ifNotExists: true);
-//
-//    List<CatalogEntity> list = await catalogBean.getAll();
-//    list.forEach((catalog) => catalogBean.preload(catalog));
-//
-//    if (list.isEmpty) {
-//      list = decoded.map((catalog) => CatalogEntity.fromJson(catalog)).toList();
-//      await catalogBean.insertMany(list);
-//    }
-//
-//    await Injector.sqfliteAdapter.close();
-//  }
+  void loadpp(BuildContext context) async {
+    List<dynamic> decoded = jsonDecode(await DefaultAssetBundle.of(context).loadString('resources/banknoteDB.json'));
+
+    var catalogBean = Injector.catalogBean;
+
+    await Injector.sqfliteAdapter.connect();
+
+    await catalogBean.createTable(ifNotExists: true);
+
+    List<CatalogEntity> list = await catalogBean.getAll();
+
+    if (list.isEmpty) {
+      list = decoded.map((catalog) => CatalogEntity.fromJson(catalog)).toList();
+      await catalogBean.insertMany(list);
+    }
+
+    await Injector.sqfliteAdapter.close();
+  }
 
 }

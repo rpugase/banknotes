@@ -18,21 +18,21 @@ class Injector {
   Injector._internal();
 
   void init(SqfliteAdapter sqfliteAdapter) {
-    if (_sqfliteAdapter != null) throw Exception('Method init() need to call one time!');
+//    if (sqfliteAdapter != null) throw Exception('Method init() need to call one time!');
 
-    _sqfliteAdapter = sqfliteAdapter;
+    if (sqfliteAdapter != null) Injector.sqfliteAdapter = sqfliteAdapter;
   }
 
-  static SqfliteAdapter _sqfliteAdapter;
+  static SqfliteAdapter sqfliteAdapter;
 
   /// Bean
-  static CatalogBean get _catalogBean => CatalogBean(_sqfliteAdapter);
-  static EmissionBean get _emissionBean => EmissionBean(_sqfliteAdapter);
-  static BanknoteBean get _banknoteBean => BanknoteBean(_sqfliteAdapter);
+  static CatalogBean get catalogBean => CatalogBean(sqfliteAdapter);
+  static EmissionBean get _emissionBean => EmissionBean(sqfliteAdapter);
+  static BanknoteBean get _banknoteBean => BanknoteBean(sqfliteAdapter);
 
   /// Repository
   static CatalogRepository get _catalogRepository
-  => (_useMock) ? CatalogMockRepository() : CatalogDbRepository(_catalogBean);
+  => (_useMock) ? CatalogMockRepository() : CatalogDbRepository(catalogBean);
 
   static EmissionRepository get _emissionRepository
   => (_useMock) ? EmissionMockRepository() : EmissionDbRepository(_emissionBean);
