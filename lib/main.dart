@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:banknotes/data/model/catalog.dart';
 import 'package:banknotes/presentation/catalog_page.dart';
@@ -7,10 +8,14 @@ import 'package:banknotes/util/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:jaguar_query_sqflite/jaguar_query_sqflite.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 void main() async {
-  Injector().init(SqfliteAdapter(await getDatabasesPath(), version: 1));
+  Directory directory = await getApplicationDocumentsDirectory();
+  String path = p.join(directory.toString());
+
+  Injector().init(SqfliteAdapter(path, version: 1));
   runApp(MyApp());
 }
 
